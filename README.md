@@ -1,1 +1,1 @@
-# ref_scca_enclave_starter
+# Create a SCCA compliant Mission Enclave with an web app workload using Terraform and GitHub #
