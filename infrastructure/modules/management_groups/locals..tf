@@ -12,9 +12,9 @@ locals {
 # The following locals are used to convert provided input
 # variables to locals before use elsewhere in the module
 locals {
-  root_id                           = var.root_management_group_id
-  root_name                         = var.root_management_group_display_name  
-  management_groups                 = var.management_groups
+  root_id           = var.root_management_group_id
+  root_name         = var.root_management_group_display_name
+  management_groups = var.management_groups
 }
 
 # The following locals are used to define base Azure

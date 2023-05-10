@@ -65,7 +65,7 @@ output "operations_default_subnet_name" {
 
 output "ops_logging_workspace_id" {
   description = "Resource ID of Log Analytics Workspace"
-  value = module.mod_operational_logging.laws_resource_id
+  value       = module.mod_operational_logging.laws_resource_id
 }
 
 # svcs_network module outputs

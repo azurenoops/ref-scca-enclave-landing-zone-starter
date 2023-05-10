@@ -20,7 +20,7 @@ terraform {
       source  = "azurenoops/azurenoopsutils"
       version = "~> 1.0.4"
     }
-  } 
+  }
 }
 
 provider "azurerm" {

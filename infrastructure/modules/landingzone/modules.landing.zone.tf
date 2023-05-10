@@ -23,84 +23,23 @@ AUTHOR/S: jspinella
 ### Hub/Spoke Configuations  ###
 ################################
 
-###########################################
-### Operational Logging Configuration   ###
-###########################################
-
-module "mod_operational_logging" {
-  providers = { azurerm = azurerm.operations }
-  source    = "azurenoops/overlays-hubspoke/azurerm//modules/operational-logging"
-  version   = ">= 1.0.0"
-
-  #####################################
-  ## Global Settings Configuration  ###
-  #####################################
-
-  location           = module.mod_azure_region_lookup.location_cli
-  deploy_environment = var.required.deploy_environment
-  org_name           = var.required.org_name
-  environment        = var.required.environment
-  workload_name      = var.ops_logging_name
-
-  #############################
-  ## Logging Configuration  ###
-  #############################
-
-  # (Optional) Enable Azure Sentinel
-  enable_sentinel = var.enable_sentinel
-
-  # (Required) To enable Azure Monitoring
-  # Sku Name - Possible values are PerGB2018 and Free
-  # Log Retention in days - Possible values range between 30 and 730
-  log_analytics_workspace_sku          = var.log_analytics_workspace_sku
-  log_analytics_logs_retention_in_days = var.log_analytics_retention
-
-  ######################################
-  ## Private EndPoint Configuration  ###
-  ######################################
-
-  # (Required) To enable Private Endpoint
-  private_endpoint_subnet_id = module.mod_ops_network.default_subnet_id
-
-  ################################
-  ## Defender Configuration    ###
-  ################################
-
-  # Enable Security Center API Setting
-  enable_security_center_setting = false
-
-  # Enable auto provision of log analytics agents on VM's if they doesn't exist. 
-  enable_security_center_auto_provisioning = "Off"
-
-  # Subscription Security Center contacts
-  # One or more email addresses seperated by commas not supported by Azure proivider currently
-  security_center_contacts = var.security_center_contacts
-
-  #############################
-  ## Misc Configuration     ###
-  #############################
-
-  # By default, this will apply resource locks to all resources created by this module.
-  # To disable resource locks, set the argument to `enable_resource_locks = false`.
-  enable_resource_locks = var.enable_resource_locks
-
-  # Tags
-  add_tags = var.operations_resources_tags # Tags to be applied to all resources
-}
-
 #######################################
 ### Hub Network Configuration       ###
 #######################################
 
 module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
-  source    = "azurenoops/overlays-hubspoke/azurerm//modules/virtual-network-hub"
+  source    = "azurenoops/overlays-management-hub/azurerm"
   version   = ">= 1.0.0"
 
   #####################################
   ## Global Settings Configuration  ###
   #####################################
 
+  # By default, this module will create a resource group, and set the argument to `create_resource_group = true`.
+  # To use an existing resource group, specify the existing resource group name, 
+  # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
+  create_resource_group = true
   location           = module.mod_azure_region_lookup.location_cli
   deploy_environment = var.deploy_environment
   org_name           = var.org_name
@@ -112,8 +51,13 @@ module "mod_hub_network" {
   #########################
 
   # (Required)  Hub Virtual Network Parameters   
-  virtual_network_address_space = var.hub_vnet_address_space
-
+  # Provide valid VNet Address space and specify valid domain name for Private DNS Zone.  
+  virtual_network_address_space           = var.hub_vnet_address_space    # (Required)  Hub Virtual Network Parameters  
+  firewall_subnet_address_prefix          = var.fw_client_snet_address_prefixes   # (Required)  Hub Firewall Subnet Parameters  
+  ampls_subnet_address_prefix             = var.ampls_subnet_address_prefix   # (Required)  AMPLS Subnet Parameters
+  firewall_management_snet_address_prefix = var.fw_management_snet_address_prefixes # (Optional)  Hub Firewall Management Subnet Parameters
+  gateway_subnet_address_prefix           = ["10.0.100.192/27"] # (Optional)  Hub Gateway Subnet Parameters
+  
   # (Optional) Create DDOS Plan. Default is false
   create_ddos_plan = var.create_ddos_plan
 
@@ -126,18 +70,55 @@ module "mod_hub_network" {
   # First address ranges from VNet Address space reserved for Firewall Subnets. 
   # ex.: For 10.0.100.128/27 address space, usable address range start from 10.0.100.0/24 for all subnets.
   # default subnet name will be set as per Azure NoOps naming convention by defaut.
-  hub_subnet_address_prefix    = var.hub_subnet_addresses
-  hub_subnet_service_endpoints = var.hub_subnet_service_endpoints
+  # Multiple Subnets, Service delegation, Service Endpoints, Network security groups
+  # These are default subnets with required configuration, check README.md for more details
+  # NSG association to be added automatically for all subnets listed here.
+  # First two address ranges from VNet Address space reserved for Gateway And Firewall Subnets. 
+  # ex.: For 10.1.0.0/16 address space, usable address range start from 10.1.2.0/24 for all subnets.
+  # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
+  hub_subnets = {
+    default = {
+      name                                       = "hub-core"
+      address_prefixes                           = var.hub_subnet_addresses
+      service_endpoints                          = var.hub_subnet_service_endpoints
+      private_endpoint_network_policies_enabled  = false
+      private_endpoint_service_endpoints_enabled = true
+    }
 
-  hub_private_endpoint_network_policies_enabled     = false
-  hub_private_link_service_network_policies_enabled = true
+    dmz = {
+      name                                       = "app-gateway"
+      address_prefixes                           = ["10.0.100.224/27"]
+      service_endpoints                          = ["Microsoft.Storage"]
+      private_endpoint_network_policies_enabled  = false
+      private_endpoint_service_endpoints_enabled = true
+      nsg_subnet_inbound_rules = [
+        # [name, priority, direction, access, protocol, destination_port_range, source_address_prefix, destination_address_prefixes]
+        # To use defaults, use "" without adding any value and to use this subnet as a source or destination prefix.
+        # 65200-65335 port to be opened if you planning to create application gateway
+        ["http", "100", "Inbound", "Allow", "Tcp", "80", "*", ["0.0.0.0/0"]],
+        ["https", "200", "Inbound", "Allow", "Tcp", "443", "*", [""]],
+        ["appgwports", "300", "Inbound", "Allow", "Tcp", "65200-65335", "*", [""]],
 
-  # (Optional) Hub Network Security Group
-  # This is default values, do not need this if keeping default values
-  # NSG rules are not created by default for Azure NoOps Hub Subnet
+      ]
+      nsg_subnet_outbound_rules = [
+        # [name, priority, direction, access, protocol, destination_port_range, source_address_prefix, destination_address_prefixes]
+        # To use defaults, use "" without adding any value and to use this subnet as a source or destination prefix.
+        ["ntp_out", "400", "Outbound", "Allow", "Udp", "123", "", ["0.0.0.0/0"]],
+      ]
+    }
+  }
 
-  # To deactivate default deny all rule
-  deny_all_inbound = var.hub_deny_all_inbound
+  ########################################
+  ## Management Logging Configuration  ###
+  ########################################
+
+  # By default, this will module will deploy management logging.
+  # If you do not want to enable management logging, 
+  # set enable_management_logging to false.
+  # All Log solutions are enabled (true) by default. To disable a solution, set the argument to `enable_<solution_name> = false`.
+  enable_management_logging = true
+  log_analytics_workspace_sku = var.log_analytics_workspace_sku
+  log_analytics_workspace_retention_in_days = var.log_analytics_workspace_retention_in_days
 
   ##############################
   ## Firewall Configuration  ###
@@ -154,21 +135,29 @@ module "mod_hub_network" {
   # set enable_forced_tunneling to false.
   enable_forced_tunneling = var.enable_forced_tunneling
 
-  // Firewall Subnets
-  fw_client_snet_address_prefix     = var.fw_client_snet_address_prefixes
-  fw_management_snet_address_prefix = var.fw_management_snet_address_prefixes
-
-  # Firewall Config
-  # This is default values, do not need this if keeping default values
-  firewall_config = var.firewall_config
+  # (Optional) To enable the availability zones for firewall. 
+  # Availability Zones can only be configured during deployment 
+  # You can't modify an existing firewall to include Availability Zones
+  firewall_zones = var.firewall_zones
 
   # # (Optional) specify the Network rules for Azure Firewall l
   # This is default values, do not need this if keeping default values
-  network_rule_collection = var.network_rule_collection
+  firewall_network_rules_collection = var.network_rule_collection
 
   # (Optional) specify the application rules for Azure Firewall
   # This is default values, do not need this if keeping default values
-  application_rule_collection = var.application_rule_collection
+  firewall_application_rule_collection = var.application_rule_collection
+
+  #########################
+  ## DNS Configuration  ###
+  #########################
+
+  # Private DNS Zone Settings
+  # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
+  # If you do want to create addtional Private DNS Zones, 
+  # add in the list of private_dns_zones to be created.
+  # else, remove the private_dns_zones argument.
+  private_dns_zones = ["privatelink.file.core.windows.net"]
 
   #############################
   ## Bastion Configuration  ###
@@ -206,7 +195,7 @@ module "mod_ops_network" {
     module.mod_hub_network
   ]
   providers = { azurerm = azurerm.operations }
-  source    = "azurenoops/overlays-hubspoke/azurerm//modules/virtual-network-spoke"
+  source    = "azurenoops/overlays-management-spoke/azurerm"
   version   = ">= 1.0.0"
 
   #####################################

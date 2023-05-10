@@ -9,7 +9,7 @@
 ##########################
 # Budget Configuration  ##
 ##########################
-  
+
 variable "contact_emails" {
   type        = list(string)
   description = "The list of email addresses to be used for contact information for the policy assignments."
@@ -17,7 +17,7 @@ variable "contact_emails" {
 
 variable "budget_scope" {
   type        = string
-  description = "The scope of the budget. This can be either a subscription, a resource group, or a management group." 
+  description = "The scope of the budget. This can be either a subscription, a resource group, or a management group."
 }
 
 

@@ -13,7 +13,7 @@ AUTHOR/S: jspinella
 ###############################
 
 # This module will create a budget in the workloads management group
-module "mod_mpe_mg_budgets" {   
+module "mod_mpe_mg_budgets" {
   source  = "azurenoops/overlays-cost-management/azurerm//modules/budgets/managementGroup"
   version = "~> 1.0.1"
 

@@ -12,7 +12,7 @@ AUTHOR/S: jspinella
 ###  Management Group Configuations  ###
 ########################################
 
-module "mod_management_group" {  
+module "mod_management_group" {
   source            = "azurenoops/overlays-management-groups/azurerm"
   version           = "~> 1.0.0"
   root_id           = local.root_id

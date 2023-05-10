@@ -36,7 +36,7 @@ variable "root_management_group_display_name" {
 ####################################
 
 variable "management_groups" {
-  type = any
+  type        = any
   description = "A list of Management Groups to create."
 }
 

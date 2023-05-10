@@ -1,4 +1,4 @@
-# Create a SCCA compliant Mission Enclave with an web app workload using Terraform and GitHub #
+# Create a SCCA compliant Mission Enclave with an web app service workload using Terraform and GitHub #
 
 This reference implementation shows how to create a [Mission Enclave](https://docs.microsoft.com/en-us/azure) with an web app workload using:
 

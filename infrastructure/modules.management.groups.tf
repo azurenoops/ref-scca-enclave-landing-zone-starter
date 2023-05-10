@@ -19,7 +19,7 @@ module "mod_management_groups" {
   # Global Configuration
   root_management_group_id           = local.root_id
   root_management_group_display_name = local.root_name
-  management_groups                  = local.management_groups  
+  management_groups                  = local.management_groups
 }
 
 module "mod_management_groups_budgets" {

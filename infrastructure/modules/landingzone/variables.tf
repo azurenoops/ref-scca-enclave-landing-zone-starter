@@ -109,20 +109,14 @@ variable "lock_level" {
 # Landing Zone Configuration  ##
 ################################
 
-##################
-# Ops Logging  ###
-##################
+#########################
+# Management Logging  ###
+#########################
 
-variable "ops_logging_name" {
+variable "ampls_subnet_address_prefix" {
   description = "A name for the ops logging. It defaults to ops-logging-core."
   type        = string
-  default     = "ops-logging-core"
-}
-
-variable "enable_sentinel" {
-  description = "Enables an Azure Sentinel Log Analytics Workspace Solution"
-  type        = bool
-  default     = true
+  default     =  ["10.0.125.0/26"]
 }
 
 variable "log_analytics_workspace_sku" {
@@ -173,6 +167,23 @@ variable "firewall_supernet_IP_address" {
   description = "The IP address of the firewall supernet."
   type        = string
   default     = "10.0.96.0/19"
+}
+
+variable "fw_client_snet_address_prefixes" {
+  description = "The address prefix of the firewall subnet."
+  type        = list(string)
+  default     = [""]
+}
+
+variable "fw_management_snet_address_prefixes" {
+  description = "The address prefix of the firewall subnet."
+  type        = list(string)
+  default     = [""]
+}
+
+variable "firewall_zones" {
+  description = "The zones of the firewall. Valid values are 1, 2, and 3."
+  default     = [1, 2, 3]
 }
 
 variable "enable_firewall" {

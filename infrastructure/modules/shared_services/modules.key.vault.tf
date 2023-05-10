@@ -36,8 +36,8 @@ module "mod_shared_keyvault" {
 
   # This is to enable the network access to the key vault
   network_acls = {
-    bypass                     = "AzureServices"
-    default_action             = "Allow"
+    bypass         = "AzureServices"
+    default_action = "Allow"
   }
 
   # Creating Private Endpoint requires, VNet name to create a Private Endpoint
