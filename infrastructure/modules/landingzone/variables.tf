@@ -12,7 +12,7 @@
 variable "required" {
   description = "A map of required variables for the deployment"
   default = {
-    org_name           = "ampe"
+    org_name           = "anoa"
     deploy_environment = "devtest"
     environment        = "public"
     metadata_host      = "management.azure.com"
