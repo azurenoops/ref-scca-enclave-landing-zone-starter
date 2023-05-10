@@ -31,8 +31,7 @@ module "landing_zone" {
   lock_level            = var.lock_level
 
   # Operations Logging Configuration
-  ops_logging_name                     = var.ops_logging_name
-  enable_sentinel                      = var.enable_sentinel
+  enable_management_logging                = var.enable_management_logging
   log_analytics_workspace_sku          = var.log_analytics_workspace_sku
   log_analytics_logs_retention_in_days = var.log_analytics_logs_retention_in_days
 

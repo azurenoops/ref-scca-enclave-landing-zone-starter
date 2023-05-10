@@ -135,32 +135,15 @@ variable "log_analytics_logs_retention_in_days" {
 # Hub  ###
 ##########
 
-variable "hub_name" {
-  description = "A name for the hub. It defaults to hub-core."
-  type        = string
-  default     = "hub-core"
-}
-
 variable "hub_vnet_address_space" {
   description = "The address space of the hub virtual network."
   type        = list(string)
   default     = ["10.0.100.0/24"]
 }
 
-variable "hub_vnet_subnet_address_prefixes" {
-  description = "The address prefixes of the hub virtual network subnets."
-  type        = list(string)
-  default     = ["10.0.100.128/27"]
-}
-
-variable "hub_vnet_subnet_service_endpoints" {
-  description = "The service endpoints of the hub virtual network subnets."
-  type        = list(string)
-  default = [
-    "Microsoft.KeyVault",
-    "Microsoft.Sql",
-    "Microsoft.Storage",
-  ]
+variable "hub_subnets" {
+  description = "The subnets of the hub virtual network."  
+  default     = {}
 }
 
 variable "firewall_supernet_IP_address" {

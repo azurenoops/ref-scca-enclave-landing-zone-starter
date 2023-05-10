@@ -66,47 +66,8 @@ module "mod_hub_network" {
 
   # (Required) Hub Subnets 
   # Default Subnets, Service Endpoints
-  # This is the default subnet with required configuration, check README.md for more details
-  # First address ranges from VNet Address space reserved for Firewall Subnets. 
-  # ex.: For 10.0.100.128/27 address space, usable address range start from 10.0.100.0/24 for all subnets.
-  # default subnet name will be set as per Azure NoOps naming convention by defaut.
-  # Multiple Subnets, Service delegation, Service Endpoints, Network security groups
-  # These are default subnets with required configuration, check README.md for more details
-  # NSG association to be added automatically for all subnets listed here.
-  # First two address ranges from VNet Address space reserved for Gateway And Firewall Subnets. 
-  # ex.: For 10.1.0.0/16 address space, usable address range start from 10.1.2.0/24 for all subnets.
-  # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
-  hub_subnets = {
-    default = {
-      name                                       = "hub-core"
-      address_prefixes                           = var.hub_subnet_addresses
-      service_endpoints                          = var.hub_subnet_service_endpoints
-      private_endpoint_network_policies_enabled  = false
-      private_endpoint_service_endpoints_enabled = true
-    }
-
-    dmz = {
-      name                                       = "app-gateway"
-      address_prefixes                           = ["10.0.100.224/27"]
-      service_endpoints                          = ["Microsoft.Storage"]
-      private_endpoint_network_policies_enabled  = false
-      private_endpoint_service_endpoints_enabled = true
-      nsg_subnet_inbound_rules = [
-        # [name, priority, direction, access, protocol, destination_port_range, source_address_prefix, destination_address_prefixes]
-        # To use defaults, use "" without adding any value and to use this subnet as a source or destination prefix.
-        # 65200-65335 port to be opened if you planning to create application gateway
-        ["http", "100", "Inbound", "Allow", "Tcp", "80", "*", ["0.0.0.0/0"]],
-        ["https", "200", "Inbound", "Allow", "Tcp", "443", "*", [""]],
-        ["appgwports", "300", "Inbound", "Allow", "Tcp", "65200-65335", "*", [""]],
-
-      ]
-      nsg_subnet_outbound_rules = [
-        # [name, priority, direction, access, protocol, destination_port_range, source_address_prefix, destination_address_prefixes]
-        # To use defaults, use "" without adding any value and to use this subnet as a source or destination prefix.
-        ["ntp_out", "400", "Outbound", "Allow", "Udp", "123", "", ["0.0.0.0/0"]],
-      ]
-    }
-  }
+  # This is the default subnet with required configuration, check README.md for more details  
+  hub_subnets = var.hub_subnets
 
   ########################################
   ## Management Logging Configuration  ###
