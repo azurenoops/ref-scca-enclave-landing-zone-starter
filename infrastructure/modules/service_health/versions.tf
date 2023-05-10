@@ -9,18 +9,7 @@ AUTHOR/S: jspinella
 */
 
 # Configure the minimum required providers supported by this module
-terraform {
-  required_version = ">= 1.3"
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.36"
-    }
-    azurenoopsutils = {
-      source  = "azurenoops/azurenoopsutils"
-      version = "~> 1.0.4"
-    }
-  }
+terraform { 
   backend "azurerm" {
     resource_group_name  = var.state_sa_rg
     storage_account_name = var.state_sa_name

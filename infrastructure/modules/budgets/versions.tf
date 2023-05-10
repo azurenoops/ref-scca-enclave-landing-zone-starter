@@ -17,13 +17,16 @@ DESCRIPTION: The following components will be options in this deployment
 AUTHOR/S: jspinella
 */
 
-terraform {
-  required_version = ">= 1.3"
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.36"
-    }
+terraform {  
+  backend "azurerm" {
+    # resource_group_name  = ""   # Partial configuration, provided during "terraform init"
+    # storage_account_name = ""   # Partial configuration, provided during "terraform init"
+    # container_name       = ""   # Partial configuration, provided during "terraform init"
+    key                    = "budgets"
   }
+}
+
+provider "azurerm" {
+  features {}
 }
 
