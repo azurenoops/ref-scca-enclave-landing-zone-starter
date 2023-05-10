@@ -62,10 +62,10 @@ Pick the below scenario to get started on a reference implementation. Each scena
 :arrow_forward: [Baseline](/infrastructure/README.md)
 
 Deployment Details:
-| Deployment Methodology | GitHub Actions
+| Deployment Methodology | GitHub Actions | Azure DevOps |
 |--------------|--------------|
-|Terraform|[Published](./docs/Terraform/e2e-githubaction.md)|
-|Bicep|Coming soon|
+|Terraform|[Published](./docs/Terraform/e2e-githubaction.md)| Coming soon |
+|Bicep|Coming soon| Coming soon |
 
 ## Got a feedback
 
