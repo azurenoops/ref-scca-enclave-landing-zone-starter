@@ -25,11 +25,11 @@ In addition, the reference implementation creates a private endpoint to access a
 
 The following picture shows the high-level architecture created by the Terraform modules included in this reference implementation:
 
-![Architecture](images/normalized-architecture.png)
+![Architecture](./docs/images/normalized-architecture.png)
 
 The following picture provides a more detailed view of the infrastructure on Azure.
 
-![Architecture](images/overall-architecture.png)
+![Architecture](./docs/images/overall-architecture.png)
 
 The architecture is composed of the following elements:
 
@@ -54,3 +54,45 @@ Terraform stores [state](https://www.terraform.io/docs/language/state/index.html
 - Storing state locally increases the chance of inadvertent deletion.
 
 Each Terraform configuration can specify a [backend](https://www.terraform.io/docs/language/settings/backends/index.html), which defines where and how operations are performed, where [state](https://www.terraform.io/docs/language/state/index.html) snapshots are stored. The [Azure Provider](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs) or **azurerm** can be used to configure infrastructure in Microsoft Azure using the Azure Resource Manager API's. Terraform provides a [backend](https://www.terraform.io/docs/language/settings/backends/azurerm.html) for the Azure Provider that allows to store the state as a Blob with the given Key within a given Blob Container inside a Blob Storage Account. This backend also supports state locking and consistency checking via native capabilities of the Azure Blob Storage. [](https://www.terraform.io/docs/language/settings/backends/azurerm.html) When using Azure DevOps to deploy services to a cloud environment, you should use this backend to store the state to a remote storage account. For more information on how to create to use a storage account to store remote Terraform state, state locking, and encryption at rest, see [Store Terraform state in Azure Storage](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli). Under the [storage-account](./storage-account) folder in this reference implementation, you can find a Terraform module and bash script to deploy an Azure storage account where you can persist the Terraform state as a blob.
+
+## Next Steps to implement Mission Enclave Starter
+
+Pick the below scenario to get started on a reference implementation. Each scenario has a detailed README.md that will walk you through the deployment steps.
+
+:arrow_forward: [Baseline](/infrastructure/README.md)
+
+Deployment Details:
+| Deployment Methodology | GitHub Actions
+|--------------|--------------|
+|Terraform|[Published](./docs/Terraform/e2e-githubaction.md)|
+|Bicep|Coming soon|
+
+## Got a feedback
+
+Please leverage issues if you have any feedback or request on how we can improve on this repository.
+
+## Data Collection
+
+The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services. You may turn off the telemetry as described in the repository. There are also some features in the software that may enable you and Microsoft to collect data from users of your applications. If you use these features, you must comply with applicable law, including providing appropriate notices to users of your applications together with a copy of Microsoft's privacy statement. Our privacy statement is located at https://go.microsoft.com/fwlink/?LinkId=521839. You can learn more about data collection and use in the help documentation and our privacy statement. Your use of the software operates as your consent to these practices.
+
+## Contributing
+
+This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
+the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+
+When you submit a pull request, a CLA bot will automatically determine whether you need to provide
+a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
+provided by the bot. You will only need to do this once across all repos using our CLA.
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
+contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## Trademarks
+
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
+trademarks or logos is subject to and must follow 
+[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/legal/intellectualproperty/trademarks/usage/general).
+Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
+Any use of third-party trademarks or logos are subject to those third-party's policies.
