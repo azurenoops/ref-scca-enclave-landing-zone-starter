@@ -63,7 +63,7 @@ Pick the below scenario to get started on a reference implementation. Each scena
 
 Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
-|--------------|--------------|
+|--------------|--------------|--------------|
 |Terraform|[Published](./docs/Terraform/e2e-githubaction.md)| Coming soon |
 |Bicep|Coming soon| Coming soon |
 
