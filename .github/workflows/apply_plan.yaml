@@ -1,0 +1,40 @@
+name: Apply MPE Managment plan
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  plan:    
+    runs-on: ubuntu-latest
+    name: Apply terraform plan for an MPE Management terraform configuration
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_PROD_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: terraform apply
+        uses: azurenoops/terraform-github-actions/terraform-apply@v1.34.2
+        with:
+          path: src
+          variables: |
+            subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"            
+            state_sa_name                     = "${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}"
+            state_sa_rg                       = "${{ secrets.TFSTATE_RG }}"
+            state_sa_container_name           = "${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}"
+          var_file: |
+            src/tfvars/production/parameters.prod.tfvars
+          backend_config: |
+            storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
+            container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}            
+            resource_group_name=${{ secrets.TFSTATE_RG }}

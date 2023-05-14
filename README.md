@@ -5,7 +5,7 @@ This reference implementation shows how to create a [Mission Enclave](https://do
 - [Terraform](https://www.terraform.io/intro/index.html) as infrastructure as code (IaC) tool to build, change, and version the infrastructure on Azure in a safe, repeatable, and efficient way.
 - [Github Actions or Azure DevOps Pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops) to automate the deployment and undeployment of the entire infrastructure on multiple environments on the Azure platform.
 
-In a Mission Enclave, the private network is not exposed via to the internet. Hence, to manage any managed services such as an web app, you will need to use a virtual machine that has access to the WebApp's Azure Virtual Network (VNet). This reference implementation deploys a jumpbox virtual machine in the hub virtual network peered with the virtual network that hosts the WebApp. There are several options for establishing network connectivity to the WebApp.
+In a Mission Enclave, the private network is not exposed via to the internet. Hence, to manage any managed services such as an web app, you will need to use a virtual machine that has access to the WebApp's Azure Virtual Network (VNet). This reference implementation deploys a jumpbox virtual machine in the shared services virtual network peered with the virtual network that hosts the WebApp. There are several options for establishing network connectivity to the WebApp.
 
 - Create a virtual machine in the same Azure Virtual Network (VNet) as the WebApp.
 - Use a virtual machine in a separate network and set up Virtual network peering. See the section below for more information on this option.
@@ -17,6 +17,7 @@ In addition, the reference implementation creates a private endpoint to access a
 
 - Azure Storage Account
 - Azure Key Vault
+- Log Analytics Workspace
 
 > **NOTE**  
 > If you want to deploy a web app in a private network, you can use the [Azure Private Link](https://docs.microsoft.com/en-us/azure/private-link/private-link-overview) service to access the web app. For more information, see [Tutorial: Create and configure an Azure Private Link service using the Azure portal](https://docs.microsoft.com/en-us/azure/private-link/create-private-link-service-portal).
@@ -33,6 +34,25 @@ The following picture provides a more detailed view of the infrastructure on Azu
 
 The architecture is composed of the following elements:
 
+- A hub virtual network with three subnets:
+  - AzureBastionSubnet used by Azure Bastion
+  - AzureFirewallSubnet used by Azure Firewall
+  - AzureManagementFirewallSubnet used by Azure Firewall
+- A Operations virtual network
+- A shared services virtual network with three subnets:
+  - VmSubnet used by the jumpbox virtual machine and private endpoints
+- An Azure Firewall used to control the egress traffic from the private AKS cluster. For more information on how to lock down your private AKS cluster and filter outbound traffic, see: 
+  - [Control egress traffic for cluster nodes in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic)
+  - [Use Azure Firewall to protect Azure Kubernetes Service (AKS) Deployments](https://docs.microsoft.com/en-us/azure/firewall/protect-azure-kubernetes-service)
+- An AKS cluster with a private endpoint to the API server hosted by an AKS-managed Azure subscription. The cluster can communicate with the API server exposed via a Private Link Service using a private endpoint.
+- An Azure Bastion resource that provides secure and seamless SSH connectivity to the Vm virtual machine directly in the Azure portal over SSL
+- An Azure Container Registry (ACR) to build, store, and manage container images and artifacts in a private registry for all types of container deployments.
+- When the ACR SKU is equal to Premium, a Private Endpoint is created to allow the private AKS cluster to access ACR via a private IP address. For more information, see [Connect privately to an Azure container registry using Azure Private Link](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-private-link).
+- A jumpbox virtual machine used to manage the Azure Web App Service
+- A Private DNS Zone for the name resolution of each private endpoint.
+- A Virtual Network Link between each Private DNS Zone and both the hub and spoke virtual networks
+- A Log Analytics workspace to collect the diagnostics logs and metrics of both the Web App Service and Vm virtual machine.
+
 ## Limitations ##
 
 ## Requirements ##
@@ -40,6 +60,14 @@ The architecture is composed of the following elements:
 There are some requirements you need to complete before we can deploy Terraform modules using Github or Azure DevOps.
 
 - Store the Terraform state file to an Azure storage account. For more information on how to create to use a storage account to store remote Terraform state, state locking, and encryption at rest, see [Store Terraform state in Azure Storage](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli)
+
+### GitHub
+
+- Create an GitHub Project. For more information, see [Create a project in GitHub](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page)
+- Create an [Azure DevOps Service Connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) to your Azure subscription. No matter you use Service Principal Authentication (SPA) or an Azure-Managed Service Identity when creating the service connection, make sure that the service principal or managed identity used by Azure DevOps to connect to your Azure subscription is assigned the owner role on the entire subscription.
+
+### Azure DevOps Service
+
 - Create an Azure DevOps Project. For more information, see [Create a project in Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page)
 - Create an [Azure DevOps Service Connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) to your Azure subscription. No matter you use Service Principal Authentication (SPA) or an Azure-Managed Service Identity when creating the service connection, make sure that the service principal or managed identity used by Azure DevOps to connect to your Azure subscription is assigned the owner role on the entire subscription.
 
@@ -57,7 +85,7 @@ Each Terraform configuration can specify a [backend](https://www.terraform.io/do
 
 ## Next Steps to implement Mission Enclave Starter
 
-Pick the below scenario to get started on a reference implementation. Each scenario has a detailed README.md that will walk you through the deployment steps.
+Pick the below scenario to get started on a reference implementation. This implementation has a detailed README.md that will walk you through the deployment steps.
 
 :arrow_forward: [Baseline](/infrastructure/README.md)
 
@@ -67,19 +95,19 @@ Deployment Details:
 |Terraform|[Published](./docs/Terraform/e2e-githubaction.md)| Coming soon |
 |Bicep|Coming soon| Coming soon |
 
-## Got a feedback
+## Got feedback
 
 Please leverage issues if you have any feedback or request on how we can improve on this repository.
 
 ## Data Collection
 
-The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services. You may turn off the telemetry as described in the repository. There are also some features in the software that may enable you and Microsoft to collect data from users of your applications. If you use these features, you must comply with applicable law, including providing appropriate notices to users of your applications together with a copy of Microsoft's privacy statement. Our privacy statement is located at https://go.microsoft.com/fwlink/?LinkId=521839. You can learn more about data collection and use in the help documentation and our privacy statement. Your use of the software operates as your consent to these practices.
+The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services. You may turn off the telemetry as described in the repository. There are also some features in the software that may enable you and Microsoft to collect data from users of your applications. If you use these features, you must comply with applicable law, including providing appropriate notices to users of your applications together with a copy of Microsoft's privacy statement. Our privacy statement is located at <https://go.microsoft.com/fwlink/?LinkId=521839>. You can learn more about data collection and use in the help documentation and our privacy statement. Your use of the software operates as your consent to these practices.
 
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+the rights to use your contribution. For details, visit <https://cla.opensource.microsoft.com>.
 
 When you submit a pull request, a CLA bot will automatically determine whether you need to provide
 a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
@@ -91,8 +119,8 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
+trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
