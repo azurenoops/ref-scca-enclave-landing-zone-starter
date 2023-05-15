@@ -1,4 +1,4 @@
-name: Destroy MPE Managment plan [USE WITH CAUTION]
+name: Destroy Mission Enclave Managment plan [USE WITH CAUTION]
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ permissions:
 jobs:
   plan:    
     runs-on: ubuntu-latest
-    name: Destroy terraform configuration plan for an MPE Management terraform configuration
+    name: Destroy terraform configuration plan for an Mission Enclave Management terraform configuration
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}

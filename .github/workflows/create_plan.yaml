@@ -1,4 +1,4 @@
-name: Create MPE Management terraform plan
+name: Create Mission Enclave Management terraform plan
 
 on:
   - pull_request
@@ -10,7 +10,7 @@ permissions:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    name: Create a plan for an MPE Management terraform configuration
+    name: Create a plan for an Mission Enclave Management terraform configuration
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}

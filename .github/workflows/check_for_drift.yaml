@@ -1,4 +1,4 @@
-name: Check for infrastructure drift on Management
+name: Check for infrastructure drift on Mission Enclave Management
 
 on:
   schedule:
@@ -7,7 +7,7 @@ on:
 jobs:
   check_drift:
     runs-on: ubuntu-latest
-    name: Check for drift of MPE Transport terraform configuration
+    name: Check for drift of Mission Enclave Transport terraform configuration
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
