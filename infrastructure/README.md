@@ -21,6 +21,6 @@ This reference implementation can be used for experimenting with web app service
 
 Pick one of the IaC options below and follow the instructions to deploy the Mission Enclave reference implementation.
 
-:arrow_forward: [Terraform](./infrastructure/Terraform)
+:arrow_forward: [Terraform](../docs/00-Remote-State-Storage.md)
 
 :arrow_forward: [Bicep](./infrastructure/Bicep) (coming soon)

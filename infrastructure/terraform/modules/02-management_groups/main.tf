@@ -14,11 +14,12 @@ AUTHOR/S: jspinella
 
 module "mod_management_group" {
   source            = "azurenoops/overlays-management-groups/azurerm"
-  version           = "~> 1.0.0"
-  root_id           = local.root_id
+  version           = ">= 1.0.0"
+  count             = var.enable_management_groups ? 1 : 0 # used in testing
+  root_id           = var.root_management_group_id
   root_parent_id    = data.azurerm_subscription.current.tenant_id
-  root_name         = local.root_name
-  management_groups = local.management_groups
+  root_name         = var.root_management_group_display_name
+  management_groups = var.management_groups
 }
 
 resource "time_sleep" "after_azurerm_management_group" {
@@ -26,7 +27,7 @@ resource "time_sleep" "after_azurerm_management_group" {
     module.mod_management_group,
   ]
   triggers = {
-    "azurerm_management_group" = jsonencode(keys(module.mod_management_group))
+    "azurerm_management_group" = jsonencode(keys(module.mod_management_group[0]))
   }
 
   create_duration  = local.create_duration_delay["after_azurerm_management_group"]

@@ -14,10 +14,16 @@
 # Management Logging  ###
 #########################
 
-variable "ampls_subnet_address_prefix" {
+variable "enable_management_logging" {
+  description = "Enable Management Logging. It defaults to true."
+  type        = bool
+  default     = true
+}
+
+variable "ampls_subnet_address_prefixes" {
   description = "A name for the ops logging. It defaults to ops-logging-core."
-  type        = string
-  default     =  ["10.8.5.160/27"] 
+  type        = list(string)
+  default     = ["10.8.5.160/27"]
 }
 
 variable "log_analytics_workspace_sku" {
@@ -36,15 +42,33 @@ variable "log_analytics_logs_retention_in_days" {
 # Hub  ###
 ##########
 
+variable "hub_name" {
+  description = "A name for the hub. It defaults to hub-core."
+  type        = string
+  default     = "hub-core"
+}
+
 variable "hub_vnet_address_space" {
   description = "The address space of the hub virtual network."
   type        = list(string)
-  default     = ["10.8.4.0/23"]  
+  default     = ["10.8.4.0/23"]
 }
 
 variable "hub_subnets" {
-  description = "The subnets of the hub virtual network."  
+  description = "The subnets of the hub virtual network."
   default     = {}
+}
+
+variable "enable_traffic_analytics" {
+  description = "Enable Traffic Analytics for NSG Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "hub_private_dns_zones" {
+  description = "The private DNS zones of the hub virtual network."
+  type        = list(string)
+  default     = []
 }
 
 variable "firewall_supernet_IP_address" {
@@ -56,13 +80,13 @@ variable "firewall_supernet_IP_address" {
 variable "fw_client_snet_address_prefixes" {
   description = "The address prefix of the firewall subnet."
   type        = list(string)
-  default     = ["10.8.4.64/26"]  
+  default     = ["10.8.4.64/26"]
 }
 
 variable "fw_management_snet_address_prefixes" {
   description = "The address prefix of the firewall subnet."
   type        = list(string)
-  default     = ["10.8.4.128/26"]  
+  default     = ["10.8.4.128/26"]
 }
 
 variable "firewall_zones" {
@@ -78,51 +102,17 @@ variable "enable_firewall" {
 
 variable "firewall_application_rules" {
   description = "List of application rules to apply to firewall."
-  type = list(object({
-    name             = string
-    description      = optional(string)
-    action           = string
-    source_addresses = optional(list(string))
-    source_ip_groups = optional(list(string))
-    fqdn_tags        = optional(list(string))
-    target_fqdns     = optional(list(string))
-    protocol = optional(object({
-      type = string
-      port = string
-    }))
-  }))
-  default = []
+  default     = {}  
 }
 
 variable "firewall_network_rules" {
   description = "List of network rules to apply to firewall."
-  type = list(object({
-    name                  = string
-    description           = optional(string)
-    action                = string
-    source_addresses      = optional(list(string))
-    destination_ports     = list(string)
-    destination_addresses = optional(list(string))
-    destination_fqdns     = optional(list(string))
-    protocols             = list(string)
-  }))
-  default = []
+  default     = {}
 }
 
 variable "firewall_nat_rules" {
   description = "List of nat rules to apply to firewall."
-  type = list(object({
-    name                  = string
-    description           = optional(string)
-    action                = string
-    source_addresses      = optional(list(string))
-    destination_ports     = list(string)
-    destination_addresses = list(string)
-    protocols             = list(string)
-    translated_address    = string
-    translated_port       = string
-  }))
-  default = []
+  default     = {}
 }
 
 variable "enable_forced_tunneling" {
@@ -145,14 +135,14 @@ variable "azure_bastion_host_sku" {
 
 variable "azure_bastion_subnet_address_prefix" {
   description = "The address prefix of the Azure Bastion Host subnet."
-  type        = string
+  type        = list(string)
   default     = null
 }
 
 variable "gateway_vnet_address_space" {
   description = "The address space of the gateway virtual network."
   type        = list(string)
-  default     = ["10.8.4.0/27"]  
+  default     = ["10.8.4.0/27"]
 }
 
 #################
@@ -168,11 +158,11 @@ variable "ops_name" {
 variable "ops_vnet_address_space" {
   description = "The address space of the operations virtual network."
   type        = list(string)
-  default     = ["10.8.6.0/26"]  
+  default     = ["10.8.6.0/26"]
 }
 
 variable "ops_subnets" {
-  description = "The subnets of the operations virtual network."  
+  description = "The subnets of the operations virtual network."
   default     = {}
 }
 
@@ -207,11 +197,11 @@ variable "svcs_name" {
 variable "svcs_vnet_address_space" {
   description = "The address space of the svcs virtual network."
   type        = list(string)
-  default     = ["10.8.7.0/26"]  
+  default     = ["10.8.7.0/26"]
 }
 
 variable "svcs_subnets" {
-  description = "The subnets of the svcs virtual network."  
+  description = "The subnets of the svcs virtual network."
   default     = {}
 }
 

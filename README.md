@@ -1,36 +1,20 @@
-# Create a SCCA compliant Mission Enclave with an web app service workload using Terraform and GitHub #
+# Create a SCCA compliant Mission Enclave with an web app service and sql db workload using Terraform and GitHub #
 
-This reference implementation shows how to create a [Mission Enclave](https://docs.microsoft.com/en-us/azure) with an web app workload using:
+This reference implementation shows how to create a [SCCA Compliant Mission Enclave](https://docs.microsoft.com/en-us/azure) with an web app and sql db workload using:
 
 - [Terraform](https://www.terraform.io/intro/index.html) as infrastructure as code (IaC) tool to build, change, and version the infrastructure on Azure in a safe, repeatable, and efficient way.
-- [Github Actions or Azure DevOps Pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops) to automate the deployment and undeployment of the entire infrastructure on multiple environments on the Azure platform.
+- [Github Actions](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops) to automate the deployment and undeployment of the entire infrastructure on multiple environments on the Azure platform.
 
-In a Mission Enclave, the private network is not exposed via to the internet. Hence, to manage any managed services such as an web app, you will need to use a virtual machine that has access to the WebApp's Azure Virtual Network (VNet). This reference implementation deploys a jumpbox virtual machine in the shared services virtual network peered with the virtual network that hosts the WebApp. There are several options for establishing network connectivity to the WebApp.
+In a SCCA Compliant Mission Enclave, the private network is not exposed via to the internet. Hence, to manage any managed services such as an web app, you will need to use a virtual machine that has access to the WebApp's Azure Virtual Network (VNet).
 
-- Create a virtual machine in the same Azure Virtual Network (VNet) as the WebApp.
-- Use a virtual machine in a separate network and set up Virtual network peering. See the section below for more information on this option.
-- Use an Express Route or VPN connection.
-
-Creating a virtual machine in the same virtual network as the WebApp or in a peered virtual network is the easiest option. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. For more information on Azure Private Links, see [What is Azure Private Link?](https://docs.microsoft.com/en-us/azure/private-link/private-link-overview)
-
-In addition, the reference implementation creates a private endpoint to access all the managed services deployed by the Terraform modules via a private IP address:
-
-- Azure Storage Account
-- Azure Key Vault
-- Log Analytics Workspace
-
-> **NOTE**  
-> If you want to deploy a web app in a private network, you can use the [Azure Private Link](https://docs.microsoft.com/en-us/azure/private-link/private-link-overview) service to access the web app. For more information, see [Tutorial: Create and configure an Azure Private Link service using the Azure portal](https://docs.microsoft.com/en-us/azure/private-link/create-private-link-service-portal).
+> **NOTE**
+> This reference implementation deploys a jumpbox virtual machine in the shared services virtual network peered with the virtual network that hosts the WebApp. There are several options for establishing network connectivity to the WebApp.
 
 ## Architecture ##
 
 The following picture shows the high-level architecture created by the Terraform modules included in this reference implementation:
 
 ![Architecture](./docs/images/normalized-architecture.png)
-
-The following picture provides a more detailed view of the infrastructure on Azure.
-
-![Architecture](./docs/images/overall-architecture.png)
 
 The architecture is composed of the following elements:
 
@@ -39,19 +23,41 @@ The architecture is composed of the following elements:
   - AzureFirewallSubnet used by Azure Firewall
   - AzureManagementFirewallSubnet used by Azure Firewall
 - A Operations virtual network
-- A shared services virtual network with three subnets:
+- A shared services virtual network with two subnets:
   - VmSubnet used by the jumpbox virtual machine and private endpoints
-- An Azure Firewall used to control the egress traffic from the private AKS cluster. For more information on how to lock down your private AKS cluster and filter outbound traffic, see: 
+- An Azure Firewall used to control the egress traffic from the private web app. For more information on how to lock down your private web app and filter outbound traffic, see: 
   - [Control egress traffic for cluster nodes in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic)
-  - [Use Azure Firewall to protect Azure Kubernetes Service (AKS) Deployments](https://docs.microsoft.com/en-us/azure/firewall/protect-azure-kubernetes-service)
-- An AKS cluster with a private endpoint to the API server hosted by an AKS-managed Azure subscription. The cluster can communicate with the API server exposed via a Private Link Service using a private endpoint.
 - An Azure Bastion resource that provides secure and seamless SSH connectivity to the Vm virtual machine directly in the Azure portal over SSL
-- An Azure Container Registry (ACR) to build, store, and manage container images and artifacts in a private registry for all types of container deployments.
-- When the ACR SKU is equal to Premium, a Private Endpoint is created to allow the private AKS cluster to access ACR via a private IP address. For more information, see [Connect privately to an Azure container registry using Azure Private Link](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-private-link).
 - A jumpbox virtual machine used to manage the Azure Web App Service
 - A Private DNS Zone for the name resolution of each private endpoint.
 - A Virtual Network Link between each Private DNS Zone and both the hub and spoke virtual networks
 - A Log Analytics workspace to collect the diagnostics logs and metrics of both the Web App Service and Vm virtual machine.
+
+## Importance of Separation of Duties (Azure NoOps Shared Responsibility Model) ##
+
+In this is a reference implementation, the repo is self contained and contains all the Terraform modules and configuration files to deploy the infrastructure on Azure. This does not take into account of roles. Azure NoOps Shared Responsibility Model pushes the need to seperate roles. In a production environment, you will need to separate the Terraform modules and configuration files into different repositories. For example, you can have the following repositories:
+
+- A repository for the Management Layer Terraform modules (includes management groups, management service such as budgets, landing zones, and shared services)
+- A repository for the Management Policy Terraform modules
+- A repository for the Workload Terraform modules (includes workload spoke and workload services such as web app, and Azure SQL Database)
+
+The following picture shows the separation of duties for the Terraform modules and configuration files:
+
+![Separation of Duties](./docs/images/separation-of-duties.png)
+
+It is important to understand how you would set this up for a production environment. The separation of duties is important to ensure that the Terraform modules can be reused across multiple environments and aloows the right role to control changes.
+
+## Policy ##
+
+Policy is a important piece of an Mission Enclave and required for a ATO to your environment. It is too broad of a topic to add to this reference implementation.
+
+If you are interested in learning more about how to apply policy to use in an Mission Enclave, you can use the following resources:
+
+- [Azure NoOps Policy Starter](https://github.com) (Coming Soon)
+
+However, you can use the following resources to learn more about policy in general:
+
+- [Azure Policy](https://docs.microsoft.com/en-us/azure/governance/policy/overview)
 
 ## Limitations ##
 
@@ -87,7 +93,7 @@ Each Terraform configuration can specify a [backend](https://www.terraform.io/do
 
 Pick the below scenario to get started on a reference implementation. This implementation has a detailed README.md that will walk you through the deployment steps.
 
-:arrow_forward: [Baseline](/infrastructure/README.md)
+:arrow_forward: [Mission Enclave Starter](/infrastructure/README.md)
 
 Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
@@ -107,7 +113,7 @@ The software may collect information about you and your use of the software and 
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit <https://cla.opensource.microsoft.com>.
+the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
 
 When you submit a pull request, a CLA bot will automatically determine whether you need to provide
 a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
@@ -116,6 +122,23 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## Legal Notices
+
+Microsoft and any contributors grant you a license to the Microsoft documentation and other content
+in this repository under the [Creative Commons Attribution 4.0 International Public License](https://creativecommons.org/licenses/by/4.0/legalcode),
+see the [LICENSE](LICENSE) file, and grant you a license to any code in the repository under the [MIT License](https://opensource.org/licenses/MIT), see the
+[LICENSE-CODE](LICENSE-CODE) file.
+
+Microsoft, Windows, Microsoft Azure and/or other Microsoft products and services referenced in the documentation
+may be either trademarks or registered trademarks of Microsoft in the United States and/or other countries.
+The licenses for this project do not grant you rights to use any Microsoft names, logos, or trademarks.
+Microsoft's general trademark guidelines can be found at http://go.microsoft.com/fwlink/?LinkID=254653.
+
+Privacy information can be found at https://privacy.microsoft.com/en-us/
+
+Microsoft and any contributors reserve all other rights, whether under their respective copyrights, patents,
+or trademarks, whether by implication, estoppel or otherwise.
 
 ## Trademarks
 

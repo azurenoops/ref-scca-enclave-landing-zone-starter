@@ -9,6 +9,12 @@
 #################################
 # Global Configuration
 #################################
+variable "enable_management_groups" {
+  description = "Enable Management Groups"
+  type        = bool
+  default     = false
+}
+
 variable "root_management_group_id" {
   type        = string
   description = "If specified, will set a custom Name (ID) value for the \"root\" Management Group, and append this to the ID for all core Management Groups."

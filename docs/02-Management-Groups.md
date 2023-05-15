@@ -70,39 +70,8 @@ locals {
 
 ```
 
-## Deployment
-
-Deployment is done using github actions.  The following steps are for manual deployment.
-
-Navigate to the "/infrastructure/terraform/modules/02-management_groups" directory.
-
-```bash
-cd //infrastructure/terraform/modules/02-management_groups
-```
-Deploy using Terraform Init, Plan and Apply
-
-```bash
-
-# Ensure the following state management runtime variables have been defined:
-#   STORAGEACCOUNTNAME = 'xxxxx'
-#   CONTAINERNAME      = 'xxxxx'
-#   TFSTATE_RG         = 'xxxxx'
-
-
-
-terraform init -backend-config="resource_group_name=$TFSTATE_RG" -backend-config="storage_account_name=$STORAGEACCOUNTNAME" -backend-config="container_name=$CONTAINERNAME"
-```
-
-```bash
-terraform plan -out test.plan --var-file ../tfvars/parameters.tfvars
-```
-
-```bash
-terraform apply test.plan
-```
-
-After Modifying the variables, move on to deploying the Policy.
+After Modifying the variables, move on to Management Groups Budgets.
 
 ### Next step
 
-:arrow_forward: [Deploy the Policy](./03-Policy.md)
+:arrow_forward: [Deploy the Management Groups Budgets](./03-Management-Groups-Budgets.md)

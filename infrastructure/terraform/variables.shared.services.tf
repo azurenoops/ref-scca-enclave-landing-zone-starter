@@ -31,4 +31,5 @@ variable "enabled_for_template_deployment" {
 variable "admin_group_name" {
   description = "The name of the group to be given access to the Key Vault."
   type        = string
+  default     = "Key Vault Admins"
 }

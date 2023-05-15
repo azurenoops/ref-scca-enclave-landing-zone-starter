@@ -31,11 +31,10 @@ AUTHOR/S: jspinella
 ### Hub Network Configuration       ###
 #######################################
 
-
-module "mod_vnet_hub" {
+module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
   source    = "azurenoops/overlays-management-hub/azurerm"
-  version   = ">= 1.0.0"
+  version   = ">= 2.0.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -59,6 +58,10 @@ module "mod_vnet_hub" {
   # This is the default subnet with required configuration, check README.md for more details
   # subnet name will be set as per Azure NoOps naming convention by defaut. expected value here is: <App or project name>
   hub_subnets = var.hub_subnets
+
+  # Enable Flow Logs
+  # By default, this will enable flow logs for all subnets.
+  enable_traffic_analytics = var.enable_traffic_analytics
 
   # By default, this will module will deploy management logging.
   # If you do not want to enable management logging, 
@@ -95,7 +98,7 @@ module "mod_vnet_hub" {
   # If you do want to create addtional Private DNS Zones, 
   # add in the list of private_dns_zones to be created.
   # else, remove the private_dns_zones argument.
-  private_dns_zones = var.private_dns_zones
+  private_dns_zones = var.hub_private_dns_zones
 
   # By default, this module will create a bastion host, 
   # and set the argument to `enable_bastion_host = false`, to disable the bastion host.
@@ -108,7 +111,7 @@ module "mod_vnet_hub" {
   enable_resource_locks = var.enable_resource_locks
 
   # Tags
-  add_tags = var.hub_resources_tags # Tags to be applied to all resources
+  add_tags = local.hub_resources_tags # Tags to be applied to all resources
 }
 
 #############################
@@ -117,14 +120,11 @@ module "mod_vnet_hub" {
 
 // Resources for the Operations Spoke
 module "mod_ops_network" {
-  depends_on = [
-    module.mod_hub_network
-  ]
   providers = { azurerm = azurerm.operations }
   source    = "azurenoops/overlays-management-spoke/azurerm"
   version   = ">= 2.0.0"
 
-   # By default, this module will create a resource group, provide the name here
+  # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
   create_resource_group = true
@@ -133,7 +133,7 @@ module "mod_ops_network" {
   org_name              = var.org_name
   environment           = var.environment
   workload_name         = var.ops_name
-
+  
   # Collect Spoke Virtual Network Parameters
   # Spoke network details to create peering and other setup
   hub_virtual_network_id          = module.mod_hub_network.virtual_network_id
@@ -143,8 +143,8 @@ module "mod_ops_network" {
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
   # Possible values range between 30 and 730
-  log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_storage_account_workspace_id
-  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_storage_account_workspace_id # this is a issue in management module, need to fix. This hould not have storage_account in the name
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    
@@ -157,7 +157,11 @@ module "mod_ops_network" {
   # These are default subnets with required configuration, check README.md for more details
   # Route_table and NSG association to be added automatically for all subnets listed here.
   # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
-  spoke_subnets = var.ops_spoke_subnets
+  spoke_subnets = var.ops_subnets
+
+  # Enable Flow Logs
+  # By default, this will enable flow logs for all subnets.
+  enable_traffic_analytics = var.enable_traffic_analytics
 
   # By default, forced tunneling is enabled for the spoke.
   # If you do not want to enable forced tunneling on the spoke route table, 
@@ -181,19 +185,16 @@ module "mod_ops_network" {
   enable_resource_locks = var.enable_resource_locks
 
   # Tags
-  add_tags = var.operations_resources_tags # Tags to be applied to all resources
+  add_tags = local.operations_resources_tags # Tags to be applied to all resources
 }
 
 // Resources for the Shared Services Spoke
-module "mod_svcs_network" {
-  depends_on = [
-    module.mod_hub_network
-  ]
+module "mod_svcs_network" {  
   providers = { azurerm = azurerm.sharedservices }
   source    = "azurenoops/overlays-management-spoke/azurerm"
   version   = ">= 2.0.0"
 
-   # By default, this module will create a resource group, provide the name here
+  # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
   create_resource_group = true
@@ -201,7 +202,7 @@ module "mod_svcs_network" {
   deploy_environment    = var.deploy_environment
   org_name              = var.org_name
   environment           = var.environment
-  workload_name         = var.ops_name
+  workload_name         = var.svcs_name
 
   # Collect Spoke Virtual Network Parameters
   # Spoke network details to create peering and other setup
@@ -212,8 +213,8 @@ module "mod_svcs_network" {
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
   # Possible values range between 30 and 730
-  log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_storage_account_workspace_id
-  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_storage_account_workspace_id # this is a issue in management module, need to fix
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    
@@ -226,7 +227,11 @@ module "mod_svcs_network" {
   # These are default subnets with required configuration, check README.md for more details
   # Route_table and NSG association to be added automatically for all subnets listed here.
   # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
-  spoke_subnets = var.svcs_spoke_subnets
+  spoke_subnets = var.svcs_subnets
+
+  # Enable Flow Logs
+  # By default, this will enable flow logs for all subnets.
+  enable_traffic_analytics = var.enable_traffic_analytics
 
   # By default, forced tunneling is enabled for the spoke.
   # If you do not want to enable forced tunneling on the spoke route table, 
@@ -250,7 +255,7 @@ module "mod_svcs_network" {
   enable_resource_locks = var.enable_resource_locks
 
   # Tags
-  add_tags = var.operations_resources_tags # Tags to be applied to all resources
+  add_tags = local.sharedservices_resources_tags # Tags to be applied to all resources
 }
 
 

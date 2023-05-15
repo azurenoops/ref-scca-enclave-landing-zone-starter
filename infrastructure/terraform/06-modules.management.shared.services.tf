@@ -6,7 +6,7 @@
 ################################
 
 /* module "shared_services" {
-  source = "./modules/shared_services"
+  source = "./modules/06-shared_services"
 
   # Global Configuration
   required                = var.required

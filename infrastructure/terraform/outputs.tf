@@ -1,10 +1,11 @@
 
 # management_groups module outputs
 output "management_groups" {
-  value = module.mod_management_group.management_groups
+  value = module.mod_management_groups.management_groups
+  sensitive = true
 }
 
-# policy module outputs
+# management_groups budgets module outputs
 
 # landing_zone module outputs
 output "hub_resource_group_name" {
@@ -22,14 +23,14 @@ output "hub_virtual_network_id" {
   value       = module.landing_zone.hub_virtual_network_id
 }
 
-output "hub_default_subnet_id" {
+output "hub_default_subnet_ids" {
   description = "The id of the default subnet"
-  value       = module.landing_zone.hub_default_subnet_id
+  value       = module.landing_zone.hub_default_subnet_ids
 }
 
-output "hub_default_subnet_name" {
+output "hub_default_subnet_names" {
   description = "The name of the default subnet"
-  value       = module.landing_zone.hub_default_subnet_name
+  value       = module.landing_zone.hub_default_subnet_names
 }
 
 # landing_zone firewall module outputs
@@ -59,21 +60,26 @@ output "operations_virtual_network_name" {
   value       = module.landing_zone.operations_virtual_network_name
 }
 
-output "operations_default_subnet_id" {
+output "operations_default_subnet_ids" {
   description = "The id of the default subnet"
-  value       = module.landing_zone.operations_default_subnet_id
-}
-
-output "operations_default_subnet_name" {
-  description = "The id of the default subnet"
-  value       = module.landing_zone.operations_default_subnet_name
+  value       = module.landing_zone.operations_default_subnet_ids
 }
 
 # operational logging module outputs
 
-output "ops_logging_workspace_id" {
+output "ops_logging_resource_id" {
   description = "Resource ID of Log Analytics Workspace"
-  value = module.landing_zone.ops_logging_workspace_id
+  value = module.landing_zone.ops_logging_resource_id
+}
+
+output "ops_logging_log_analytics_name" {
+  description = "Resource ID of Log Analytics Workspace"
+  value = module.landing_zone.ops_logging_log_analytics_name
+}
+
+output "ops_logging_storage_account_id" {
+  description = "Resource ID of Log Analytics Storage Account Id"
+  value = module.landing_zone.ops_logging_storage_account_id
 }
 
 # svcs_network module outputs
@@ -87,12 +93,7 @@ output "svcs_virtual_network_name" {
   value       = module.landing_zone.svcs_virtual_network_name
 }
 
-output "svcs_default_subnet_id" {
+output "svcs_default_subnet_ids" {
   description = "The id of the default subnet"
-  value       = module.landing_zone.svcs_default_subnet_id
-}
-
-output "svcs_default_subnet_name" {
-  description = "The id of the default subnet"
-  value       = module.landing_zone.svcs_default_subnet_name
+  value       = module.landing_zone.svcs_default_subnet_ids
 }

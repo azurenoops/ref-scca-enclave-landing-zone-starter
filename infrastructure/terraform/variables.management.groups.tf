@@ -29,7 +29,7 @@ variable "root_management_group_id" {
 variable "root_management_group_display_name" {
   type        = string
   description = "If specified, will set a custom Display Name value for the \"root\" Management Group."
-
+  default = "value"
   validation {
     condition     = can(regex("^[A-Za-z][A-Za-z0-9- ._]{1,22}[A-Za-z0-9]?$", var.root_management_group_display_name))
     error_message = "Value must be between 2 to 24 characters long, start with a letter, end with a letter or number, and can only contain space, hyphen, underscore or period characters."
@@ -78,24 +78,3 @@ variable "destroy_duration_delay" {
   }
 }
 
-##########################
-# Budget Configuration  ##
-##########################
-
-variable "enable_management_groups_budgets" {
-  type        = bool
-  description = "Enable the management groups budgets module."
-  default     = false
-}
-
-variable "budget_contact_emails" {
-  type        = list(string)
-  description = "The list of email addresses to be used for contact information for the policy assignments."
-  default     = null
-}
-
-variable "budget_scope" {
-  type        = string
-  description = "The scope of the budget. This can be either a subscription, a resource group, or a management group."
-  default     = null
-}

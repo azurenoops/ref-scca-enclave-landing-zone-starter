@@ -1,4 +1,4 @@
-# Use the Azure CLI to create a storage account to store the Terraform state files for MPE
+# Use the Azure CLI to create a storage account to store the Terraform state files for Mission Encalve Starter
 
 This storage account will be used to store the state of each deployment step and will be accessed by Terraform to reference values stored in the various deployment state files.
 
@@ -6,7 +6,7 @@ This storage account will be used to store the state of each deployment step and
 
 For simple test scripts or for development, a local state file will work. However, if we are working in a team, deploying our infrastructure from a CI/CD tool or developing a Terraform using multiple layers, we need to store the state file in a remote backend and lock the file to avoid mistakes or damage the existing infrastructure.
 
-We can use remote backends, such as Azure Storage, Google Cloud Storage, Amazon S3, and HashiCorp Terraform Cloud & Terraform Enterprise, to keep our files safe and share between multiple users.
+We can use remote backends, such as Azure Storage to keep our files safe and share between multiple users.
 
 ## Creating a Service Principal and a Client Secret
 
@@ -45,6 +45,12 @@ These values will be mapped to these Terraform variables:
 - password (Azure) → client_secret (Terraform).
 - tenant (Azure) → tenant_id (Terraform).
 
+## Configuring the Remote Backend to use Azure Storage with Terraform (Preferred Method)
+
+Before we can deploy the reference implementation, we will need to create the storage account in Azure Storage using Terraform. This will have to be done manually using the Azure Portal or using the Azure CLI. We will use the Azure CLI to create the storage account and the container.
+
+We will start using a files called az-remote-backend-*.tf located in [01-remote-backend](../infrastructure/terraform/modules/01-remote-state/) to create the storage account and the container.
+
 ## Configuring the Remote Backend to use Azure Storage in Azure CLI
 
 We need to create a storage account and a container to store the Terraform state file. We can use the Azure CLI to create the storage account and the container.
@@ -60,12 +66,6 @@ az storage container create --name <container-name> --account-name <storage-acco
 or
 
 You can use the bash script ["az-remote-backend.sh"](../src/modules/network_artifacts/remote-backend/az-remote-backend.sh) to create the storage account and the container.
-
-## Configuring the Remote Backend to use Azure Storage with Terraform
-
-We can also use Terraform to create the storage account in Azure Storage.
-
-We will start using a files called az-remote-backend-*.tf located in [remote-backend](../src/modules/network_artifacts/remote-backend) to create the storage account and the container.
 
 ## Authenticating to Azure using a Service Principal (SPN) to use State Files in Remote Backend
 
@@ -86,10 +86,10 @@ then we create the file versions.tf and add the code to manage the Terraform and
 terraform {
   required_version = ">= 0.12"
   backend "azurerm" {
-    resource_group_name  = "mpe-tfstate-rg"
-    storage_account_name = "mpetfstate"
+    resource_group_name  = "me-tfstate-rg"
+    storage_account_name = "metfstate"
     container_name       = "core-tfstate"
-    key                  = "core.mpe.tfstate"
+    key                  = "core.me.tfstate"
   }
 }
 # Configure the Azure provider
@@ -132,4 +132,4 @@ Sample:
 
 ### Next step
 
-:arrow_forward: [Deploy the Management Groups](./02-Management-Groups.md)
+:arrow_forward: [Mission Enclave Global Configuration](./01-Global-Configuration.md)

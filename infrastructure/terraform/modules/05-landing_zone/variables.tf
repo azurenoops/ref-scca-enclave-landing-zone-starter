@@ -1,11 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-/*
-  PARAMETERS
-  Here are all the variables a user can override.
-*/
-
 #################################
 # Global Configuration
 #################################
@@ -75,27 +70,6 @@ variable "subscription_id_sharedservices" {
 }
 
 #################################
-# Remote State Configuration
-#################################
-
-## This is required for retrieving state
-variable "state_sa_name" {
-  type        = string
-  description = "The name of the storage account to use for storing the Terraform state."
-}
-
-variable "state_sa_container_name" {
-  type        = string
-  description = "The name of the container to use for storing the Terraform state."
-}
-
-# Storage Account Resource Group
-variable "state_sa_rg" {
-  type        = string
-  description = "The name of the resource group in which the storage account is located."
-}
-
-#################################
 # Resource Lock Configuration
 #################################
 
@@ -121,7 +95,7 @@ variable "lock_level" {
 
 variable "ampls_subnet_address_prefix" {
   description = "A name for the ops logging. It defaults to ops-logging-core."
-  type        = string
+  type        = list(string)
   default     = ["10.8.5.160/27"]
 }
 
@@ -158,6 +132,18 @@ variable "hub_subnets" {
   default     = {}
 }
 
+variable "enable_traffic_analytics" {
+  description = "Enable Traffic Analytics for NSG Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "hub_private_dns_zones" {
+  description = "The private DNS zones of the hub virtual network."
+  type        = list(string)
+  default     = []
+}
+
 variable "firewall_supernet_IP_address" {
   description = "The IP address of the firewall supernet."
   type        = string
@@ -189,51 +175,17 @@ variable "enable_firewall" {
 
 variable "firewall_application_rules" {
   description = "List of application rules to apply to firewall."
-  type = list(object({
-    name             = string
-    description      = optional(string)
-    action           = string
-    source_addresses = optional(list(string))
-    source_ip_groups = optional(list(string))
-    fqdn_tags        = optional(list(string))
-    target_fqdns     = optional(list(string))
-    protocol = optional(object({
-      type = string
-      port = string
-    }))
-  }))
-  default = []
+  default     = {}
 }
 
 variable "firewall_network_rules" {
   description = "List of network rules to apply to firewall."
-  type = list(object({
-    name                  = string
-    description           = optional(string)
-    action                = string
-    source_addresses      = optional(list(string))
-    destination_ports     = list(string)
-    destination_addresses = optional(list(string))
-    destination_fqdns     = optional(list(string))
-    protocols             = list(string)
-  }))
-  default = []
+  default     = {}
 }
 
 variable "firewall_nat_rules" {
   description = "List of nat rules to apply to firewall."
-  type = list(object({
-    name                  = string
-    description           = optional(string)
-    action                = string
-    source_addresses      = optional(list(string))
-    destination_ports     = list(string)
-    destination_addresses = list(string)
-    protocols             = list(string)
-    translated_address    = string
-    translated_port       = string
-  }))
-  default = []
+  default     = {}
 }
 
 variable "enable_forced_tunneling" {
@@ -256,7 +208,7 @@ variable "azure_bastion_host_sku" {
 
 variable "azure_bastion_subnet_address_prefix" {
   description = "The address prefix of the Azure Bastion Host subnet."
-  type        = string
+  type        = list(string)
   default     = null
 }
 
