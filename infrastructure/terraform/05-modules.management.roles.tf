@@ -6,7 +6,9 @@
 #############################
 
 # Roles Hierarchy
-/* module "mod_mpr_roles" {
-  source = "./modules/roles" 
-
-} */
+module "mod_custom_roles" {
+  source = "./modules/04-roles" 
+  
+  deploy_custom_roles = var.deploy_custom_roles
+  custom_role_definitions = var.custom_role_definitions
+}
