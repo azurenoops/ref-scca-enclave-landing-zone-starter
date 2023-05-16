@@ -67,9 +67,9 @@ output "operations_default_subnet_ids" {
 
 # operational logging module outputs
 
-output "ops_logging_resource_id" {
+output "ops_logging_log_analytics_resource_id" {
   description = "Resource ID of Log Analytics Workspace"
-  value = module.mod_landing_zone.ops_logging_resource_id
+  value = module.mod_landing_zone.ops_logging_log_analytics_resource_id
 }
 
 output "ops_logging_log_analytics_name" {

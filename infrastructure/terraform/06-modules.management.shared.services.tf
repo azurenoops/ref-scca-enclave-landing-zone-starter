@@ -31,12 +31,11 @@ module "mod_shared_services" {
 
   # Bastion VM Configuration 
   # This module supports multiple Pre-Defined windows and Windows Distributions.
-  # Check the README.md file for more pre-defined images for Ubuntu, Centos, RedHat.
-  os_type                   = "windows"
+  # Check the README.md file for more pre-defined images for Ubuntu, Centos, RedHat.  
   windows_distribution_name = var.windows_distribution_name
   virtual_machine_size      = var.virtual_machine_size
-  admin_username            = var.admin_username
-  admin_password            = var.admin_password
+  admin_username            = var.vm_admin_username
+  admin_password            = var.vm_admin_password
   instances_count           = var.instances_count # Number of VM's to be deployed
 
   # The proximity placement group, Availability Set, and assigning a public IP address to VMs are all optional.
@@ -49,7 +48,7 @@ module "mod_shared_services" {
   # NSG association for all network interfaces to be added automatically.
   # Using 'existing_network_security_group_name' is supplied then the module will use the existing NSG.
   existing_network_security_group_name = var.existing_network_security_group_name
-  nsg_inbound_rules = var.nsg_inbound_rules
+  nsg_inbound_rules                    = var.nsg_inbound_rules
 
   # Boot diagnostics are used to troubleshoot virtual machines by default. 
   # To use a custom storage account, supply a valid name for'storage_account_name'. 
@@ -63,11 +62,11 @@ module "mod_shared_services" {
 
   # (Optional) To activate Azure Monitoring and install log analytics agents 
   # (Optional) To save monitoring logs to storage, specify'storage_account_name'.    
-  log_analytics_workspace_id = module.mod_landing_zone.ops_logging_resource_id
-  
+  log_analytics_resource_id = module.mod_landing_zone.ops_logging_log_analytics_resource_id
+
   # Deploy log analytics agents on a virtual machine. 
   # Customer id and primary shared key for Log Analytics workspace are required.
-  deploy_log_analytics_agent                 = var.deploy_log_analytics_agent
-  log_analytics_customer_id                  = module.mod_landing_zone.ops_logging_log_analytics_workspace_id
-  log_analytics_workspace_primary_shared_key = module.mod_landing_zone.ops_logging_log_analytics_primary_shared_key
+  deploy_log_analytics_agent       = var.deploy_log_analytics_agent
+  log_analytics_workspace_id       = module.mod_landing_zone.ops_logging_log_analytics_workspace_id
+  log_analytics_primary_shared_key = module.mod_landing_zone.ops_logging_log_analytics_primary_shared_key
 }

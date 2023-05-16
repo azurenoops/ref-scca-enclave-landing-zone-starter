@@ -94,6 +94,11 @@ output "ops_logging_log_analytics_workspace_id" {
   value       = module.mod_hub_network.managmement_logging_storage_account_workspace_id
 }
 
+output "ops_logging_log_analytics_primary_shared_key" {
+  description = "Resource ID of Managment Logging Log Analytics Workspace"
+  value       = module.mod_hub_network.managmement_logging_log_analytics_primary_shared_key
+}
+
 # svcs_network module outputs
 output "svcs_resource_group_name" {
   description = "The name of the shared services resource group"
