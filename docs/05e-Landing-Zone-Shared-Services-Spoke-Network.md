@@ -5,15 +5,15 @@ The following will be created:
 * Resource Groups for Spoke Networking
 * Spoke Networks (Shared Services)
 
-Review and if needed, comment out and modify the variables within the "04 Landing Zone Configuration" section under "05e Shared Services Management Spoke Virtual Network" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "05e Shared Services Management Spoke Virtual Network" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
 ```bash
 
-###################################
-# 04 Landing Zone Configuration  ##
-###################################
+################################
+# Landing Zone Configuration  ##
+################################
 
 ##########################################################
 # 05e Shared Services Management Spoke Virtual Network ###

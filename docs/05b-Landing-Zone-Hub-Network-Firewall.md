@@ -5,19 +5,19 @@ The following will be created:
 * Azure Firewall (main.tf)
 * Required Firewall rules (main.tf)
 
-Review and if needed, comment out and modify the variables within the "04 Landing Zone Configuration" section under "Management Hub Firewall" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Management Hub Firewall" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
 ```bash
 
-###################################
-# 04 Landing Zone Configuration  ##
-###################################
+################################
+# Landing Zone Configuration  ##
+################################
 
-#############################
-# Management Hub Firewall ###
-#############################
+#################################
+# 05b Management Hub Firewall ###
+#################################
 
 # Firewall Settings
 # By default, Azure NoOps will create Azure Firewall in Hub VNet. 

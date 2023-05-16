@@ -14,12 +14,7 @@ Sample:
 # 04 Management Groups Roles Configuration  ##
 ##############################################
 
-enable_management_groups           = true   # enable management groups for this subscription
-root_management_group_id           = "anoa" # the root management group id for this subscription
-root_management_group_display_name = "anoa" # the root management group display name for this subscription
 
-# Management groups to create
-# The management group structure is created in the locals.tf file
 
 ```
 

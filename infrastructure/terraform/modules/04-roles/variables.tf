@@ -1,23 +1,20 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-/*
-  PARAMETERS
-  Here are all the variables a user can override.
-*/
-
 ##########################
-# Budget Configuration  ##
+# Role Configuration    ##
 ##########################
 
-variable "contact_emails" {
-  type        = list(string)
-  description = "The list of email addresses to be used for contact information for the policy assignments."
+variable "deploy_custom_roles" {
+  type        = bool
+  default     = false
+  description = "Specifies whether custom RBAC roles should be created"
 }
 
-variable "budget_scope" {
-  type        = string
-  description = "The scope of the budget. This can be either a subscription, a resource group, or a management group."
+variable "custom_role_definitions" {
+  description = "A list of custom role definitions to be created."
+  type        = list(any)
+  default     = []
 }
 
 
