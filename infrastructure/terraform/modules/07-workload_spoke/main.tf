@@ -13,7 +13,7 @@ AUTHOR/S: jspinella
 #############################
 
 // Resources for the Operations Spoke
-module "mod_ops_network" {
+module "mod_workload_network" {
   source    = "azurenoops/overlays-workload-spoke/azurerm"
   version   = ">= 2.0.0"
 
