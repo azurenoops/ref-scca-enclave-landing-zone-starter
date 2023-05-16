@@ -74,7 +74,7 @@ output "operations_default_subnet_ids" {
 
 # operational logging module outputs
 
-output "ops_logging_resource_id" {
+output "ops_logging_log_analytics_resource_id" {
   description = "Resource ID of Managment Logging Log Analytics Workspace"
   value       = module.mod_hub_network.managmement_logging_log_analytics_id
 }
@@ -87,6 +87,11 @@ output "ops_logging_log_analytics_name" {
 output "ops_logging_storage_account_id" {
   description = "Name of Managment Logging Storage Account Id"
   value       = module.mod_hub_network.managmement_logging_storage_account_id
+}
+
+output "ops_logging_log_analytics_workspace_id" {
+  description = "Resource ID of Managment Logging Log Analytics Workspace"
+  value       = module.mod_hub_network.managmement_logging_storage_account_workspace_id
 }
 
 # svcs_network module outputs

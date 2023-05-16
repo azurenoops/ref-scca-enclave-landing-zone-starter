@@ -1,6 +1,6 @@
 # Deploying the Mission Enclave with Web App Service workload E2E using GitHub Actions
 
-To deploy the Mission Enclave with Web App Service workload, we'll setup a GitHub Actions CI/CD workflow that will build and deploy our application whenever we push new commits to the main branch of our repository.
+To deploy the Mission Enclave with Web App Service with Azure SQL workload, we'll setup a GitHub Actions CI/CD workflow that will build and deploy our application whenever we push new commits to the main branch of our repository.
 
 ## What's CI/CD?
 
@@ -77,4 +77,57 @@ Then just like in the previous step, create a new secret in your repository name
 
 ![GitHub Secrets](../../../images/github_anoa_secrets.png)
 
-<TODO: finish doc>
+## Modify variables in GitHub Actions
+
+The workflow files can be found in your repository with the path [`.github/workflows`](../../../.github/workflows/) :
+
+* Replace the value of the `SRINGAPPS_SPN_OBJECT_ID` environment variable in the [deploy.yaml](../../../.github/workflows/deploy.yml) file with the value of the the Object ID for the "Azure Spring Apps Resource Provider" service principal in your Azure AD Tenant.
+You use the command below to obtain the value of the variable:
+
+      az ad sp show --id e8de9221-a19c-4c81-b814-fd37c6caf9d2 --query id --output tsv
+
+* Replace the value of  TFSTATE_RG, STORAGEACCOUNTNAME and CONTAINERNAME in [deploy.yaml](../../../.github/workflows/deploy.yml) to point to your Terraform backend.
+* You can also set the deploy_firewall and destroy values in [deploy.yaml](../../../.github/workflows/deploy.yml) depending on your usecase.
+
+This workflow will be triggered every time a commit is pushed to the `main` branch.
+It will then run a job with the following steps:
+
+* Deploy 02 Hub Network
+* Deploy 03 LZ Network
+* Deploy 04 LZ Shared Resources
+* Deploy 05 Hub Firewall
+* Deploy 06 LZ Spring Apps Standard
+* Deploy Pet Clinic Infrastructure
+
+After the above steps are successful, you will have a functioning landing zone and the Azure Spring App instance available. After the above, the workflow also runs the below build step to build and deploy the petclinic microservices in the Azure Spring Apps instance.
+
+* Build and Deploy Pet Clinic Microservices
+
+Make sure to keep the correct indentation for the steps if you make changes to the deploy.yaml file directly.
+YAML is very sensitive to indentation.
+
+## [!TIP]
+
+* If you do not want to provision the firewall or destroy the E2E infra once the pipeline run in complete, make sure to set those values to false in the deploy.yaml
+* If a particular step errors out you can run only that step from the pipeline directly.Most errors should be transient errors.
+
+## Running the workflow
+
+Now that we've defined our workflow and prepared everything, we can run it to deploy our landing zone and the petclinic application to Azure Spring Apps.
+Commit and push your changes to your repository, and go to the `Actions` tab of your repository to see the workflow running.
+It should take a few minutes to complete.
+A successful run using github actions should look like below:
+
+![successful e2e run](../../../images/github_asa_successful_run.png)
+
+## Testing the deployed application
+
+Once your workflow is completed, let's make a quick test on our deployed apps.
+First we need to get the ingress URL by running the following command:
+
+```bash
+    az spring app show -g rg-springlza-APPS -s spring-springlza-dev-o7o6 \
+    --name api-gateway --query "properties.url" --output tsv    
+```
+
+Then we can use `curl` to test our applications using the above endpoint. This assumes that there's no Application Gateway and you would access your spring app using the spring apps ingress url for the api-gateway app instance. Since the applications are deployed in an internal only environment you would need to do the curl from a jumpbox or bastion host.

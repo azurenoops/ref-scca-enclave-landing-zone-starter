@@ -5,7 +5,7 @@
 ### Hub/Spoke Configuations  ###
 ################################
 
-module "landing_zone" {
+module "mod_landing_zone" {
   source = "./modules/05-landing_zone"
 
   # Global Configuration

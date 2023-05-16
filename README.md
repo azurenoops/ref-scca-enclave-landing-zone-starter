@@ -3,7 +3,7 @@
 This reference implementation shows how to create a [SCCA Compliant Mission Enclave](https://docs.microsoft.com/en-us/azure) with an web app and sql db workload using:
 
 - [Terraform](https://www.terraform.io/intro/index.html) as infrastructure as code (IaC) tool to build, change, and version the infrastructure on Azure in a safe, repeatable, and efficient way.
-- [Github Actions](https://docs.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops) to automate the deployment and undeployment of the entire infrastructure on multiple environments on the Azure platform.
+- [Github Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) is a continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline.Use these pipelines to automate the deployment and undeployment of the entire infrastructure on multiple environments on the Azure platform.
 
 In a SCCA Compliant Mission Enclave, the private network is not exposed via to the internet. Hence, to manage any managed services such as an web app, you will need to use a virtual machine that has access to the WebApp's Azure Virtual Network (VNet).
 
@@ -69,13 +69,8 @@ There are some requirements you need to complete before we can deploy Terraform 
 
 ### GitHub
 
-- Create an GitHub Project. For more information, see [Create a project in GitHub](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page)
-- Create an [Azure DevOps Service Connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) to your Azure subscription. No matter you use Service Principal Authentication (SPA) or an Azure-Managed Service Identity when creating the service connection, make sure that the service principal or managed identity used by Azure DevOps to connect to your Azure subscription is assigned the owner role on the entire subscription.
-
-### Azure DevOps Service
-
-- Create an Azure DevOps Project. For more information, see [Create a project in Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page)
-- Create an [Azure DevOps Service Connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) to your Azure subscription. No matter you use Service Principal Authentication (SPA) or an Azure-Managed Service Identity when creating the service connection, make sure that the service principal or managed identity used by Azure DevOps to connect to your Azure subscription is assigned the owner role on the entire subscription.
+- Create an GitHub Project. For more information, see [Create a project in GitHub](https://docs.github.com/en/issues/planning-and-tracking-with-projects/creating-projects/creating-a-project)
+- Create an [GitHub Secrets](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows) to your Azure subscription.
 
 ## Terraform State ##
 
@@ -98,8 +93,7 @@ Pick the below scenario to get started on a reference implementation. This imple
 Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
 |--------------|--------------|--------------|
-|Terraform|[Published](./docs/Terraform/e2e-githubaction.md)| Coming soon |
-|Bicep|Coming soon| Coming soon |
+|Terraform|[Published](./docs/11-e2e-githubaction.md)| Coming soon |
 
 ## Got feedback
 

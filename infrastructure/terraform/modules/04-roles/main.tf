@@ -1,19 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-/*
-SUMMARY: Module to deploy an Azure Budgets for a Partner Environment
-DESCRIPTION: The following components will be options in this deployment
-             * Budgets
-AUTHOR/S: jspinella
-*/
+###########################
+### Roles Configuations ###
+###########################
 
-###############################
-### MG Budget Configuations ###
-###############################
-
-# This module will create a budget in the workloads management group
-module "mod_mpe_mg_budgets" {
+module "mod_roles" {
   source  = "azurenoops/overlays-cost-management/azurerm//modules/budgets/managementGroup"
   version = ">= 1.0.0"
 

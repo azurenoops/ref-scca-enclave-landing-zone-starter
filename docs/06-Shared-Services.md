@@ -1,4 +1,4 @@
-# Deploy the Landing Zone - Shared Services Managmement Spoke Virtual Network
+# Deploy Shared Services
 
 The following will be created:
 
