@@ -39,3 +39,15 @@ variable "wl_private_dns_zones" {
   type        = list(string)
   default     = []
 }
+
+variable "hub_managmement_logging_log_analytics_id" {
+  description = "The Log Analytics resource ID for the hub management logging."
+  type        = string
+  default     = null
+}
+
+variable "hub_managmement_logging_workspace_id" {
+  description = "The Log Analytics workspace ID for the hub management logging."
+  type        = string
+  default     = null
+}

@@ -109,4 +109,20 @@ variable "wl_private_dns_zones" {
   default     = []
 }
 
+variable "use_source_remote_spoke_gateway" {
+  description = "Indicates whether to use the source remote spoke gateway."
+  type        = bool
+  default     = false
+}
 
+variable "hub_managmement_logging_log_analytics_id" {
+  description = "The Log Analytics resource ID for the hub management logging."
+  type        = string
+  default     = null
+}
+
+variable "hub_managmement_logging_workspace_id" {
+  description = "The Log Analytics workspace ID for the hub management logging."
+  type        = string
+  default     = null
+}
