@@ -144,7 +144,7 @@ module "mod_ops_network" {
   # pick the values for log analytics workspace which created by Spoke module
   # Possible values range between 30 and 730
   log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
-  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_storage_account_workspace_id # this is a issue in management module, need to fix. This hould not have storage_account in the name
+  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_workspace_id # this is a issue in management module, need to fix. This hould not have storage_account in the name
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    
@@ -214,7 +214,7 @@ module "mod_svcs_network" {
   # pick the values for log analytics workspace which created by Spoke module
   # Possible values range between 30 and 730
   log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
-  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_storage_account_workspace_id # this is a issue in management module, need to fix
+  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_workspace_id # this is a issue in management module, need to fix
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    

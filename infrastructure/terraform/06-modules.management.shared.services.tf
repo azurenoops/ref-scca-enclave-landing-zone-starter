@@ -47,7 +47,7 @@ module "mod_shared_services" {
   # Network Seurity group port definitions for each Virtual Machine 
   # NSG association for all network interfaces to be added automatically.
   # Using 'existing_network_security_group_name' is supplied then the module will use the existing NSG.
-  existing_network_security_group_name = var.existing_network_security_group_name
+  existing_network_security_group_name = "anoa-eus-svcs-core-dev-vm-nsg"#var.existing_network_security_group_name
   nsg_inbound_rules                    = var.nsg_inbound_rules
 
   # Boot diagnostics are used to troubleshoot virtual machines by default. 

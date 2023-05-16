@@ -15,6 +15,13 @@ Sample:
 ################################################
 
 deploy_custom_roles = true # true | false
+
+```
+
+Main roles structure is located in locals.tf. It uses the 'data.azurerm_client_config.current.subscription_id' for the scope of the roles. Modify the following to meet your needs.
+
+```terraform
+
 custom_role_definitions = [
   {
     role_definition_name = "Custom - Network Operations (NetOps)"
