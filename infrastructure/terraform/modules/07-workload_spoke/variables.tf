@@ -126,3 +126,9 @@ variable "hub_managmement_logging_workspace_id" {
   type        = string
   default     = null
 }
+
+variable "enable_traffic_analytics" {
+  description = "Enable Traffic Analytics for NSG Flow Logs"
+  type        = bool
+  default     = false
+}
