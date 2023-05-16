@@ -23,7 +23,7 @@ root_management_group_display_name = "anoa" # the root management group display 
 
 ```
 
-Main managment group structure is located in locals.tf. It uses the 'root_management_group_id' for the top level groups. Modify the following to meet your needs.
+Main managment group structure is located in locals.tf at the root (terraform) folder. It uses the 'root_management_group_id' for the top level groups. Modify the following to meet your needs.
 
 ```terraform
 # The following locals are used to define the management groups

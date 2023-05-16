@@ -18,7 +18,7 @@ deploy_custom_roles = true # true | false
 
 ```
 
-Main roles structure is located in locals.tf. It uses the 'data.azurerm_client_config.current.subscription_id' for the scope of the roles. Modify the following to meet your needs.
+Main roles structure is located in locals.tf at the root (terraform) folder. It uses the 'data.azurerm_client_config.current.subscription_id' for the scope of the roles. Modify the following to meet your needs.
 
 ```terraform
 
