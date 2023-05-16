@@ -28,6 +28,12 @@ svcs_subnets                                    = {
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
     private_endpoint_service_endpoints_enabled = true
+    nsg_subnet_inbound_rules = [
+      # [name, description, priority, direction, access, protocol, destination_port_range, source_address_prefixes, destination_address_prefix]
+      # Use "" for description to use default description
+      # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
+      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.6.0/24","10.8.8.0/24"], ["10.8.7.0/24"]],
+    ]
   }
 }
 svcs_private_dns_zones                          = []
