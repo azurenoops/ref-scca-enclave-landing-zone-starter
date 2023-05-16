@@ -115,6 +115,24 @@ variable "use_source_remote_spoke_gateway" {
   default     = false
 }
 
+variable "hub_virtual_network_id" {
+  description = "The ID of the hub virtual network."
+  type        = string
+  default     = null
+}
+
+variable "firewall_private_ip" {
+  description = "The private IP address of the firewall."
+  type        = string
+  default     = null
+}
+
+variable "hub_storage_account_id" {
+  description = "The ID of the hub storage account."
+  type        = string
+  default     = null
+}
+
 variable "hub_managmement_logging_log_analytics_id" {
   description = "The Log Analytics resource ID for the hub management logging."
   type        = string

@@ -29,6 +29,11 @@ output "hub_default_subnet_names" {
   value       = module.mod_hub_network.subnet_names
 }
 
+output "hub_storage_account_id" {
+  description = "The name of the default subnet"
+  value       = module.mod_hub_network.storage_account_id
+}
+
 # hub_network firewall module outputs
 output "firewall_id" {
   description = "The ID of the Azure Firewall"

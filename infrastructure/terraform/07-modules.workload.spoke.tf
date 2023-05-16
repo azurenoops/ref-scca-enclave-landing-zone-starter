@@ -15,6 +15,13 @@ module "mod_workload_spoke" {
   environment              = var.environment
   subscription_id_workload = data.azurerm_client_config.current.subscription_id #var.subscription_id_workload_dev Change this to the subscription ID of the workload subscription
 
+  # Hub Configuration
+  hub_virtual_network_id = module.mod_landing_zone.hub_virtual_network_id
+  firewall_private_ip    = module.mod_landing_zone.firewall_private_ip
+  hub_storage_account_id = module.mod_landing_zone.hub_storage_account_id
+  hub_managmement_logging_log_analytics_id = module.mod_landing_zone.ops_logging_log_analytics_resource_id
+  hub_managmement_logging_workspace_id = module.mod_landing_zone.ops_logging_log_analytics_workspace_id
+
   # Resource Lock Configuration
   enable_resource_locks = var.enable_resource_locks
   lock_level            = var.lock_level
