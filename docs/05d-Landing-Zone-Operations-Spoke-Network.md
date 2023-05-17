@@ -5,19 +5,19 @@ The following will be created:
 * Resource Groups for Spoke Networking
 * Spoke Networks (Operations)
 
-Review and if needed, comment out and modify the variables within the "04 Landing Zone Configuration" section under "Operations Management Spoke Virtual Network" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Operations Management Spoke Virtual Network" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
 ```bash
 
-###################################
-# 04 Landing Zone Configuration  ##
-###################################
+################################
+# Landing Zone Configuration  ##
+################################
 
-#################################################
-# Operations Management Spoke Virtual Network ###
-#################################################
+####################################################
+# 5d Operations Management Spoke Virtual Network ###
+####################################################
 
 ops_name                                       = "ops-core"
 ops_vnet_address_space                         = ["10.8.6.0/24"]
@@ -28,6 +28,12 @@ ops_subnets                                    = {
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
     private_endpoint_service_endpoints_enabled = true
+    nsg_subnet_inbound_rules = [
+      # [name, description, priority, direction, access, protocol, destination_port_range, source_address_prefixes, destination_address_prefix]
+      # Use "" for description to use default description
+      # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
+      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.7.0/24","10.8.8.0/24"], ["10.8.6.0/24"]],
+    ]
   }
 }
 ops_private_dns_zones                          = []

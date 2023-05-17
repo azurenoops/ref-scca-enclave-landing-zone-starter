@@ -11,7 +11,7 @@ module "mod_management_groups" {
   enable_management_groups           = var.enable_management_groups
   root_management_group_id           = var.root_management_group_id
   root_management_group_display_name = var.root_management_group_display_name
-  management_groups                  = local.management_groups
+  management_groups                  = local.management_groups # from locals.tf
 }
 
 

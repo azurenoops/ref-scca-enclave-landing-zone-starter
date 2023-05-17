@@ -109,4 +109,44 @@ variable "wl_private_dns_zones" {
   default     = []
 }
 
+variable "use_source_remote_spoke_gateway" {
+  description = "Indicates whether to use the source remote spoke gateway."
+  type        = bool
+  default     = false
+}
 
+variable "hub_virtual_network_id" {
+  description = "The ID of the hub virtual network."
+  type        = string
+  default     = null
+}
+
+variable "firewall_private_ip" {
+  description = "The private IP address of the firewall."
+  type        = string
+  default     = null
+}
+
+variable "hub_storage_account_id" {
+  description = "The ID of the hub storage account."
+  type        = string
+  default     = null
+}
+
+variable "hub_managmement_logging_log_analytics_id" {
+  description = "The Log Analytics resource ID for the hub management logging."
+  type        = string
+  default     = null
+}
+
+variable "hub_managmement_logging_workspace_id" {
+  description = "The Log Analytics workspace ID for the hub management logging."
+  type        = string
+  default     = null
+}
+
+variable "enable_traffic_analytics" {
+  description = "Enable Traffic Analytics for NSG Flow Logs"
+  type        = bool
+  default     = false
+}

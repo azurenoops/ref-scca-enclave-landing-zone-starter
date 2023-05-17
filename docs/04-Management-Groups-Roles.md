@@ -10,16 +10,41 @@ Sample:
 
 ```bash
 
-##############################################
+################################################
 # 04 Management Groups Roles Configuration  ##
-##############################################
+################################################
 
-enable_management_groups           = true   # enable management groups for this subscription
-root_management_group_id           = "anoa" # the root management group id for this subscription
-root_management_group_display_name = "anoa" # the root management group display name for this subscription
+deploy_custom_roles = true # true | false
 
-# Management groups to create
-# The management group structure is created in the locals.tf file
+```
+
+Main roles structure is located in locals.tf at the root (terraform) folder. It uses the 'data.azurerm_client_config.current.subscription_id' for the scope of the roles. Modify the following to meet your needs.
+
+```terraform
+
+custom_role_definitions = [
+  {
+    role_definition_name = "Custom - Network Operations (NetOps)"
+    scope                = "${data.azurerm_client_config.current.subscription_id}" ## This setting is optional. (If not defined current subscription ID is used).
+    description          = "Platform-wide global connectivity management: virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others."
+    permissions = {
+      actions = [
+        "Microsoft.Network/virtualNetworks/read",
+        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/read",
+        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write",
+        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/delete",
+        "Microsoft.Network/virtualNetworks/peer/action",
+        "Microsoft.Resources/deployments/operationStatuses/read",
+        "Microsoft.Resources/deployments/write",
+        "Microsoft.Resources/deployments/read"
+      ]
+      data_actions     = []
+      not_actions      = []
+      not_data_actions = []
+    }
+    assignable_scopes = [["${module.mod_management_group.0.management_groups["/providers/Microsoft.Management/managementGroups/platforms"].id}"]] ## This setting is optional. (If not defined current subscription ID is used).
+  }
+]
 
 ```
 

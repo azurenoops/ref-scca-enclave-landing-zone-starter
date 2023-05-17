@@ -6,19 +6,19 @@ The following will be created:
 * Hub Network (main.tf)
 * Hub Subnets (main.tf)
 
-Review and if needed, comment out and modify the variables within the "04 Landing Zone Configuration" section under "OperationL Logging" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "OperationL Logging" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
 ```bash
 
-###################################
-# 04 Landing Zone Configuration  ##
-###################################
+################################
+# Landing Zone Configuration  ##
+################################
 
-#########################
-# OperationL Logging  ###
-#########################
+########################################
+# 05a Management OperationL Logging  ###
+########################################
 
 # By default, this will module will deploy management logging.
 # If you do not want to enable management logging, 

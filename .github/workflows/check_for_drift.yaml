@@ -21,14 +21,14 @@ jobs:
       - name: Check
         uses: azurenoops/terraform-github-actions/terraform-check@v1.34.2
         with:
-          path: src
+          path: infrastructure/terraform
           variables: |
             subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"            
             state_sa_name                     = "${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}"
             state_sa_rg                       = "${{ secrets.TFSTATE_RG }}"
             state_sa_container_name           = "${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}"
           var_file: |
-            src/tfvars/production/parameters.prod.tfvars
+            tfvars/parameters.tfvars
           backend_config: |
             storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
             container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}            

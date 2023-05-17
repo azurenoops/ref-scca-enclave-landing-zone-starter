@@ -5,19 +5,19 @@ The following will be created:
 * Azure Firewall (main.tf)
 * Required Firewall rules (main.tf)
 
-Review and if needed, comment out and modify the variables within the "04 Landing Zone Configuration" section under "Bastion/Private DNS Zones" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Bastion/Private DNS Zones" of the common variable definitons file [parameters.tfvars](./tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
 ```bash
 
-###################################
-# 04 Landing Zone Configuration  ##
-###################################
+################################
+# Landing Zone Configuration  ##
+################################
 
-###############################
-# Bastion/Private DNS Zones ###
-###############################
+###################################
+# 05c Bastion/Private DNS Zones ###
+###################################
 
 # Private DNS Zone Settings
 # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.

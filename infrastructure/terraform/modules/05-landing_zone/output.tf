@@ -29,6 +29,11 @@ output "hub_default_subnet_names" {
   value       = module.mod_hub_network.subnet_names
 }
 
+output "hub_storage_account_id" {
+  description = "The name of the default subnet"
+  value       = module.mod_hub_network.storage_account_id
+}
+
 # hub_network firewall module outputs
 output "firewall_id" {
   description = "The ID of the Azure Firewall"
@@ -74,7 +79,7 @@ output "operations_default_subnet_ids" {
 
 # operational logging module outputs
 
-output "ops_logging_resource_id" {
+output "ops_logging_log_analytics_resource_id" {
   description = "Resource ID of Managment Logging Log Analytics Workspace"
   value       = module.mod_hub_network.managmement_logging_log_analytics_id
 }
@@ -87,6 +92,16 @@ output "ops_logging_log_analytics_name" {
 output "ops_logging_storage_account_id" {
   description = "Name of Managment Logging Storage Account Id"
   value       = module.mod_hub_network.managmement_logging_storage_account_id
+}
+
+output "ops_logging_log_analytics_workspace_id" {
+  description = "Resource ID of Managment Logging Log Analytics Workspace"
+  value       = module.mod_hub_network.managmement_logging_log_analytics_workspace_id
+}
+
+output "ops_logging_log_analytics_primary_shared_key" {
+  description = "Resource ID of Managment Logging Log Analytics Workspace"
+  value       = module.mod_hub_network.managmement_logging_log_analytics_primary_shared_key
 }
 
 # svcs_network module outputs

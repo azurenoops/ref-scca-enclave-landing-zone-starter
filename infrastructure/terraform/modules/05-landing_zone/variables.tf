@@ -164,7 +164,7 @@ variable "fw_management_snet_address_prefixes" {
 
 variable "firewall_zones" {
   description = "The zones of the firewall. Valid values are 1, 2, and 3."
-  default     = [1, 2, 3]
+  default     = null
 }
 
 variable "enable_firewall" {
