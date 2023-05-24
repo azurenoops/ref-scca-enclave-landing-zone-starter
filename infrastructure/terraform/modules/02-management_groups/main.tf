@@ -27,7 +27,7 @@ resource "time_sleep" "after_azurerm_management_group" {
     module.mod_management_group,
   ]
   triggers = {
-    "azurerm_management_group" = jsonencode(keys(module.mod_management_group[0]))
+    "azurerm_management_group" = length(module.mod_management_group) > 0 ? jsonencode(keys(module.mod_management_group[0])) : null
   }
 
   create_duration  = local.create_duration_delay["after_azurerm_management_group"]
