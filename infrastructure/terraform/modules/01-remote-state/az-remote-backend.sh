@@ -4,7 +4,7 @@
 #!/bin/bash
 
 #Variables
-resourceGroupName="afmpe-tfstate-network-artifacts-rg"
+resourceGroupName="anoa-tfstate-network-artifacts-rg"
 storageAccountName="baboterraform"
 containerName="tfstate"
 location="WestEurope"
