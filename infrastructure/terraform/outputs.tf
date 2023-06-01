@@ -7,6 +7,17 @@ output "management_groups" {
 
 # management_groups budgets module outputs
 
+# roles module outputs
+output "role_definition_ids" {
+  value       = module.mod_custom_roles.role_definition_ids
+  description = "List of Role Definition IDs."
+}
+
+output "role_definition_resource_ids" {
+  value       = module.mod_custom_roles.role_definition_resource_ids
+  description = "List of Azure Resource Manager IDs for the resources."
+}
+
 # landing zone module outputs
 output "hub_resource_group_name" {
   description = "The name of the hub resource group"
