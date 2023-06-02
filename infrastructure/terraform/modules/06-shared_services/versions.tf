@@ -1,15 +1,19 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 terraform {
-  # It is recommended to use remote state instead of local. Only use this if deploying the module only, and not from the root.
-  #backend "azurerm" {
-  # resource_group_name  = ""   # Partial configuration, provided during "terraform init"
-  # storage_account_name = ""   # Partial configuration, provided during "terraform init"
-  # container_name       = ""   # Partial configuration, provided during "terraform init"
-  # key                    = "shared_services"
-  #}
-}
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 3.32.0"
+    }
 
-provider "azurerm" {
-  features {}
+  }
+
+  # Use this backend for local development/testing
+  #backend "azurerm" {
+    # resource_group_name  = ""   # Partial configuration, provided during "terraform init"
+    # storage_account_name = ""   # Partial configuration, provided during "terraform init"
+    # container_name       = ""   # Partial configuration, provided during "terraform init"
+    #key = "azure_sql"
+  #}
 }

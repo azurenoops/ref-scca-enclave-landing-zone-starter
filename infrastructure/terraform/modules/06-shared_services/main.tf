@@ -24,18 +24,21 @@ module "mod_shared_keyvault" {
   enabled_for_disk_encryption     = var.enabled_for_disk_encryption
   enabled_for_template_deployment = var.enabled_for_template_deployment
 
+  # This is to enable public access to the key vault, since we are using a private endpoint, we will disable it
+  public_network_access_enabled = false
+
   # This is to enable the network access to the key vault
   network_acls = {
     bypass         = "AzureServices"
     default_action = "Deny"
   }
 
-  # This is to enable the access policies for the key vault
+ /*  # This is to enable the access policies for the key vault
   rbac_authorization_enabled = true
   # Current user should be here to be able to create keys and secrets
   admin_objects_ids = [
     data.azuread_group.admin_group.object_id,
-  ]
+  ] */
 
   # Creating Private Endpoint requires, VNet name to create a Private Endpoint
   # By default this will create a `privatelink.vaultcore.azure.net` DNS zone. if created in commercial cloud

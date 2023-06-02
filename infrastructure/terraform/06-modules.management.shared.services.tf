@@ -7,15 +7,13 @@
 
 module "mod_shared_services" {
   source = "./modules/06-shared_services"
+  depends_on = [ module.mod_landing_zone ]
 
   # Global Configuration
   location                = var.default_location
   deploy_environment      = var.deploy_environment
   org_name                = var.org_name
   environment             = var.environment
-  state_sa_rg             = local.state_sa_rg
-  state_sa_name           = local.state_sa_name
-  state_sa_container_name = local.state_sa_container_name
 
   # Shared Services Network Configuration
   resource_group_name  = module.mod_landing_zone.svcs_resource_group_name
