@@ -63,12 +63,6 @@ module "mod_hub_network" {
   # By default, this will enable flow logs for all subnets.
   enable_traffic_analytics = var.enable_traffic_analytics
 
-  # By default, this will module will deploy management logging.
-  # If you do not want to enable management logging, 
-  # set enable_management_logging to false.
-  # All Log solutions are enabled (true) by default. To disable a solution, set the argument to `enable_<solution_name> = false`.
-  enable_management_logging = true
-
   # Firewall Settings
   # By default, Azure NoOps will create Azure Firewall in Hub VNet. 
   # If you do not want to create Azure Firewall, 
