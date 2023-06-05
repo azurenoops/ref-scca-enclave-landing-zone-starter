@@ -30,12 +30,12 @@ module "mod_workload_spoke" {
   enable_traffic_analytics = var.enable_traffic_analytics
 
   # Workload Spoke Configuration
-  wl_name                                       = var.wl_name
-  wl_vnet_address_space                         = var.wl_vnet_address_space
-  wl_subnets                                    = var.wl_subnets
-  is_wl_spoke_deployed_to_same_hub_subscription = var.is_wl_spoke_deployed_to_same_hub_subscription
-  enable_forced_tunneling_on_wl_route_table     = var.enable_forced_tunneling_on_wl_route_table
-  wl_private_dns_zones                          = var.wl_private_dns_zones
+  wl_name                                       = var.wl_web_name
+  wl_vnet_address_space                         = var.wl_web_vnet_address_space
+  wl_subnets                                    = var.wl_web_subnets
+  is_wl_spoke_deployed_to_same_hub_subscription = var.is_wl_web_spoke_deployed_to_same_hub_subscription
+  enable_forced_tunneling_on_wl_route_table     = var.enable_forced_tunneling_on_wl_web_route_table
+  wl_private_dns_zones                          = var.wl_web_private_dns_zones
 
   # Peerings Configuration
   use_source_remote_spoke_gateway = var.use_remote_spoke_gateway
