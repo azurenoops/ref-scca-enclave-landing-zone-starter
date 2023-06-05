@@ -1,10 +1,10 @@
 terraform {
   # It is recommended to use remote state instead of local
-  #backend "local" {}
+  backend "local" {}
   # If you are using Azure Storage, You can update these values in order to configure your remote state. backend.conf is not required for local backend.
-  backend "azurerm" {    
-    key                  = "anoa"
-  }
+  #backend "azurerm" {    
+  #  key                  = "anoa"
+  #}
   # If you are using Terraform Cloud, You can update these values in order to configure your remote state.
   /*  backend "remote" {
     organization = "{{ORGANIZATION_NAME}}"

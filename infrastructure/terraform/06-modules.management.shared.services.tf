@@ -18,7 +18,7 @@ module "mod_shared_services" {
   # Shared Services Network Configuration
   resource_group_name  = module.mod_landing_zone.svcs_resource_group_name
   virtual_network_name = module.mod_landing_zone.svcs_virtual_network_name
-  subnet_name          = "anoa-eus-svcs-core-dev-default-snet"
+  subnet_name          = module.mod_landing_zone.svcs_default_subnet_ids[1] # add to the vm subnet
 
   # Key Vault Configuration
   enabled_for_deployment          = var.enabled_for_deployment
