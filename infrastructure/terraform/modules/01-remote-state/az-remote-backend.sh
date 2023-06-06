@@ -4,12 +4,13 @@
 #!/bin/bash
 
 #Variables
-resourceGroupName="afmpe-tfstate-network-artifacts-rg"
-storageAccountName="baboterraform"
+resourceGroupName="anoa-tfstate-network-artifacts-rg"
+storageAccountName="anoaterraform"
 containerName="tfstate"
-location="WestEurope"
+location="EastUS"
 sku="Standard_LRS"
 subscriptionName=$(az account show --query name --output tsv)
+chmod +x
 
 # Create resource group
 echo "Checking if [$resourceGroupName] resource group actually exists in the [$subscriptionName] subscription..."
