@@ -2,8 +2,8 @@ name: Apply Mission Enclave Managment plan
 
 on:
   push:
-    branches:
-      - main
+  #  branches:
+  #    - main
 
 permissions:
   contents: read

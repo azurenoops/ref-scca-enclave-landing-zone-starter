@@ -1,8 +1,9 @@
 name: Check for infrastructure drift on Mission Enclave Management
 
 on:
-  schedule:
-    - cron: 0 8 * * *
+  workflow_dispatch:
+  #schedule:
+  # - cron: 0 8 * * *
 
 jobs:
   check_drift:
