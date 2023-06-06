@@ -24,18 +24,19 @@ module "mod_shared_keyvault" {
   enabled_for_disk_encryption     = var.enabled_for_disk_encryption
   enabled_for_template_deployment = var.enabled_for_template_deployment
 
+  # This is to enable public access to the key vault, since we are using a private endpoint, we will disable it
+  public_network_access_enabled = false
+
   # This is to enable the network access to the key vault
   network_acls = {
     bypass         = "AzureServices"
     default_action = "Deny"
   }
 
-  # This is to enable the access policies for the key vault
-  rbac_authorization_enabled = true
   # Current user should be here to be able to create keys and secrets
-  admin_objects_ids = [
+  /* admin_objects_ids = [
     data.azuread_group.admin_group.object_id,
-  ]
+  ] */
 
   # Creating Private Endpoint requires, VNet name to create a Private Endpoint
   # By default this will create a `privatelink.vaultcore.azure.net` DNS zone. if created in commercial cloud
@@ -43,7 +44,7 @@ module "mod_shared_keyvault" {
   # To use existing private DNS zone specify `existing_private_dns_zone` with valid zone name
   # Private endpoints doesn't work If not using `existing_subnet_id` to create key vault inside a specified VNet.
   enable_private_endpoint   = var.enable_private_endpoint
-  existing_subnet_id        = data.azurerm_subnet.svcs_subnet.id
+  existing_subnet_id        = data.azurerm_subnet.svcs_pe_subnet.id
   virtual_network_name      = var.virtual_network_name
   existing_private_dns_zone = data.azurerm_private_dns_zone.kv_dns_zone.name
 
@@ -71,7 +72,7 @@ module "mod_bastion_virtual_machine" {
 
   # Shared Services Network Configuration
   virtual_network_name         = var.virtual_network_name
-  subnet_name                  = var.subnet_name
+  subnet_name                  = data.azurerm_subnet.svcs_vm_subnet.name
 
   # This module support multiple Pre-Defined windows and Windows Distributions.
   # Check the README.md file for more pre-defined images for Ubuntu, Centos, RedHat.

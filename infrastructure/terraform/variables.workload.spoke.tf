@@ -5,36 +5,36 @@
 # Workload Spoke Configuration   ##
 ###################################
 
-variable "wl_name" {
-  description = "A name for the workload spoke. It defaults to wl-core."
+variable "wl_web_name" {
+  description = "A name for the workload spoke. It defaults to wl-web-core."
   type        = string
-  default     = "wl-core"
+  default     = "wl-web-core"
 }
 
-variable "wl_vnet_address_space" {
+variable "wl_web_vnet_address_space" {
   description = "The address space of the workload virtual network."
   type        = list(string)
   default     = ["10.8.6.0/26"]
 }
 
-variable "wl_subnets" {
+variable "wl_web_subnets" {
   description = "The subnets of the workload virtual network."
   default     = {}
 }
 
-variable "is_wl_spoke_deployed_to_same_hub_subscription" {
+variable "is_wl_web_spoke_deployed_to_same_hub_subscription" {
   description = "Indicates whether the workload spoke is deployed to the same hub subscription."
   type        = bool
   default     = true
 }
 
-variable "enable_forced_tunneling_on_wl_route_table" {
+variable "enable_forced_tunneling_on_wl_web_route_table" {
   description = "Enables forced tunneling on the workload route table."
   type        = bool
   default     = true
 }
 
-variable "wl_private_dns_zones" {
+variable "wl_web_private_dns_zones" {
   description = "The private DNS zones of the workload virtual network."
   type        = list(string)
   default     = []
