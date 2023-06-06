@@ -1,7 +1,8 @@
 name: Apply Mission Enclave Managment plan
 
 on:
-  push:
+  workflow_dispatch:
+ # push:
   #  branches:
   #    - main
 
