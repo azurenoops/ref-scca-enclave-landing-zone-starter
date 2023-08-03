@@ -5,31 +5,31 @@
 ### Hub/Spoke Configuations  ###
 ################################
 
-module "mod_shared_services" {
-  source = "./modules/06-shared_services"
-  depends_on = [ module.mod_landing_zone ]
+module "mod_devsecops" {
+  source     = "./modules/06-devsecops"
+  depends_on = [module.mod_landing_zone]
 
   # Global Configuration
-  location                = var.default_location
-  deploy_environment      = var.deploy_environment
-  org_name                = var.org_name
-  environment             = var.environment
+  location           = var.default_location
+  deploy_environment = var.deploy_environment
+  org_name           = var.org_name
+  environment        = var.environment
 
-  # Shared Services Network Configuration
-  resource_group_name  = module.mod_landing_zone.svcs_resource_group_name
-  virtual_network_name = module.mod_landing_zone.svcs_virtual_network_name
-  subnet_name          = module.mod_landing_zone.svcs_default_subnet_ids[1] # add to the vm subnet
+  # DevSecOps Network Configuration
+  resource_group_name  = module.mod_landing_zone.devsecops_resource_group_name
+  virtual_network_name = module.mod_landing_zone.devsecops_virtual_network_name
+  subnet_name          = module.mod_landing_zone.devsecops_default_subnet_names[1] # add to the vm subnet
 
   # Key Vault Configuration
-  enabled_for_deployment          = var.enabled_for_deployment
-  enabled_for_disk_encryption     = var.enabled_for_disk_encryption
-  enabled_for_template_deployment = var.enabled_for_template_deployment
-  admin_group_name                = var.admin_group_name
-  enable_private_endpoint         = var.enable_key_vault_private_endpoint
+  enabled_for_deployment            = var.enabled_for_deployment
+  enabled_for_disk_encryption       = var.enabled_for_disk_encryption
+  enabled_for_template_deployment   = var.enabled_for_template_deployment
+  admin_group_name                  = var.admin_group_name
+  enable_key_vault_private_endpoint = var.enable_key_vault_private_endpoint
 
   # Bastion VM Configuration 
   # This module supports multiple Pre-Defined windows and Windows Distributions.
-  # Check the README.md file for more pre-defined images for Ubuntu, Centos, RedHat.  
+  # Check the module README.md file for more pre-defined images for Ubuntu, Centos, RedHat.  
   windows_distribution_name = var.windows_distribution_name
   virtual_machine_size      = var.virtual_machine_size
   admin_username            = var.vm_admin_username
@@ -45,7 +45,7 @@ module "mod_shared_services" {
   # Network Seurity group port definitions for each Virtual Machine 
   # NSG association for all network interfaces to be added automatically.
   # Using 'existing_network_security_group_name' is supplied then the module will use the existing NSG.
-  existing_network_security_group_name = "anoa-eus-svcs-core-dev-vm-nsg"#var.existing_network_security_group_name
+  existing_network_security_group_name = "anoa-eus-devsecops-core-dev-vm-nsg" #var.existing_network_security_group_name
   nsg_inbound_rules                    = var.nsg_inbound_rules
 
   # Boot diagnostics are used to troubleshoot virtual machines by default. 

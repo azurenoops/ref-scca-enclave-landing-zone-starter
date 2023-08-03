@@ -69,8 +69,8 @@ provider "azurerm" {
 }
 
 provider "azurerm" {
-  alias           = "sharedservices"
-  subscription_id = coalesce(var.subscription_id_sharedservices, var.subscription_id_hub)
+  alias           = "devsecops"
+  subscription_id = coalesce(var.subscription_id_devsecops, var.subscription_id_hub)
 
   features {
     log_analytics_workspace {

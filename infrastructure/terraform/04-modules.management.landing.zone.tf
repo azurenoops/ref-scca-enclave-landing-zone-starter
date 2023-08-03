@@ -16,7 +16,7 @@ module "mod_landing_zone" {
   subscription_id_hub            = var.subscription_id_hub
   subscription_id_operations     = coalesce(var.subscription_id_operations, var.subscription_id_hub)
   subscription_id_identity       = coalesce(var.subscription_id_identity, var.subscription_id_hub)
-  subscription_id_sharedservices = coalesce(var.subscription_id_sharedservices, var.subscription_id_hub)
+  subscription_id_devsecops = coalesce(var.subscription_id_devsecops, var.subscription_id_hub)
 
   # Resource Lock Configuration
   enable_resource_locks = var.enable_resource_locks
@@ -31,6 +31,7 @@ module "mod_landing_zone" {
   hub_name               = var.hub_name
   hub_vnet_address_space = var.hub_vnet_address_space
   hub_subnets            = var.hub_subnets
+  create_ddos_plan       = var.create_ddos_plan
 
   #flog Logs
   enable_traffic_analytics = var.enable_traffic_analytics
@@ -47,8 +48,8 @@ module "mod_landing_zone" {
   enable_forced_tunneling             = var.enable_forced_tunneling
   gateway_vnet_address_space          = var.gateway_vnet_address_space
 
-  #dns_zones
-  
+  #Hub DNS Zones
+  hub_private_dns_zones = var.hub_private_dns_zones
 
   #bastion
   enable_bastion_host                 = var.enable_bastion_host
@@ -63,13 +64,13 @@ module "mod_landing_zone" {
   enable_forced_tunneling_on_ops_route_table     = var.enable_forced_tunneling_on_ops_route_table
   ops_private_dns_zones                          = var.ops_private_dns_zones
 
-  # Shared Services Spoke Configuration
-  svcs_name                                       = var.svcs_name
-  svcs_vnet_address_space                         = var.svcs_vnet_address_space
-  svcs_subnets                                    = var.svcs_subnets
-  is_svcs_spoke_deployed_to_same_hub_subscription = var.is_svcs_spoke_deployed_to_same_hub_subscription
-  enable_forced_tunneling_on_svcs_route_table     = var.enable_forced_tunneling_on_svcs_route_table
-  svcs_private_dns_zones                          = var.svcs_private_dns_zones
+  # DevSecOps Spoke Configuration
+  devsecops_name                                       = var.devsecops_name
+  devsecops_vnet_address_space                         = var.devsecops_vnet_address_space
+  devsecops_subnets                                    = var.devsecops_subnets
+  is_devsecops_spoke_deployed_to_same_hub_subscription = var.is_devsecops_spoke_deployed_to_same_hub_subscription
+  enable_forced_tunneling_on_devsecops_route_table     = var.enable_forced_tunneling_on_devsecops_route_table
+  devsecops_private_dns_zones                          = var.devsecops_private_dns_zones
 
   # Peerings Configuration
   use_source_remote_spoke_gateway = var.use_remote_spoke_gateway
