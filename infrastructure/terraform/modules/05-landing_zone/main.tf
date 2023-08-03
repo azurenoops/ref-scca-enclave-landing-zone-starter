@@ -34,7 +34,7 @@ AUTHOR/S: jspinella
 module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
   source    = "azurenoops/overlays-management-hub/azurerm"
-  version   = ">= 2.0.0"
+  version   = "~> 2.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -51,7 +51,8 @@ module "mod_hub_network" {
   firewall_subnet_address_prefix          = var.fw_client_snet_address_prefixes     # (Required)  Hub Firewall Subnet Parameters  
   ampls_subnet_address_prefix             = var.ampls_subnet_address_prefix         # (Required)  AMPLS Subnet Parameters
   firewall_management_snet_address_prefix = var.fw_management_snet_address_prefixes # (Optional)  Hub Firewall Management Subnet Parameters
-  gateway_subnet_address_prefix           = var.gateway_vnet_address_space          # (Optional)  Hub Gateway Subnet Parameters
+  
+  create_ddos_plan = var.create_ddos_plan # (Required)  DDoS Plan
 
   # (Required) Hub Subnets 
   # Default Subnets, Service Endpoints
@@ -116,7 +117,7 @@ module "mod_hub_network" {
 module "mod_ops_network" {
   providers = { azurerm = azurerm.operations }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = ">= 2.0.0"
+  version   = "~> 2.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -183,10 +184,10 @@ module "mod_ops_network" {
 }
 
 // Resources for the Shared Services Spoke
-module "mod_svcs_network" {  
-  providers = { azurerm = azurerm.sharedservices }
+module "mod_devsecops_network" {  
+  providers = { azurerm = azurerm.devsecops }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = ">= 2.0.0"
+  version   = "~> 2.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -196,7 +197,7 @@ module "mod_svcs_network" {
   deploy_environment    = var.deploy_environment
   org_name              = var.org_name
   environment           = var.environment
-  workload_name         = var.svcs_name
+  workload_name         = var.devsecops_name
 
   # Collect Spoke Virtual Network Parameters
   # Spoke network details to create peering and other setup
@@ -212,16 +213,16 @@ module "mod_svcs_network" {
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    
-  virtual_network_address_space = var.svcs_vnet_address_space # (Required)  Spoke Virtual Network Parameters
+  virtual_network_address_space = var.devsecops_vnet_address_space # (Required)  Spoke Virtual Network Parameters
 
   # (Required) Specify if you are deploying the spoke VNet using the same hub Azure subscription
-  is_spoke_deployed_to_same_hub_subscription = var.is_svcs_spoke_deployed_to_same_hub_subscription
+  is_spoke_deployed_to_same_hub_subscription = var.is_devsecops_spoke_deployed_to_same_hub_subscription
 
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
   # Route_table and NSG association to be added automatically for all subnets listed here.
   # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
-  spoke_subnets = var.svcs_subnets
+  spoke_subnets = var.devsecops_subnets
 
   # Enable Flow Logs
   # By default, this will enable flow logs for all subnets.
@@ -230,14 +231,14 @@ module "mod_svcs_network" {
   # By default, forced tunneling is enabled for the spoke.
   # If you do not want to enable forced tunneling on the spoke route table, 
   # set `enable_forced_tunneling = false`.
-  enable_forced_tunneling_on_route_table = var.enable_forced_tunneling_on_svcs_route_table
+  enable_forced_tunneling_on_route_table = var.enable_forced_tunneling_on_devsecops_route_table
 
   # Private DNS Zone Settings
   # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
   # If you do want to create addtional Private DNS Zones, 
   # add in the list of private_dns_zones to be created.
   # else, remove the private_dns_zones argument.
-  private_dns_zones = var.svcs_private_dns_zones
+  private_dns_zones = var.devsecops_private_dns_zones
 
   # Peering
   # By default, Azure NoOps will create peering between Hub and Spoke.

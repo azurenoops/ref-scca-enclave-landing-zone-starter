@@ -8,14 +8,14 @@
 # This module will create a budget in the workloads management group
 module "mod_mpe_mg_budgets" {
   source  = "azurenoops/overlays-cost-management/azurerm//modules/budgets/managementGroup"
-  version = ">= 1.0.0"
+  version = "~> 1.0"
   count  = var.enable_management_groups_budgets ? 1 : 0 # used in testing
 
   #####################################
   ## Budget Configuration           ###
   #####################################
 
-  budget_name       = "MPE Workloads Budget"
+  budget_name       = "ANOA Budget"
   budget_amount     = var.budget_amount
   budget_time_grain = "Monthly"
   budget_category   = "Cost"
@@ -29,7 +29,7 @@ module "mod_mpe_mg_budgets" {
       enabled        = true
       operator       = "GreaterThan"
       threshold      = 90
-      contact_emails = var.contact_emails
+      contact_emails = var.budget_contact_emails
     }
   ]
 }
