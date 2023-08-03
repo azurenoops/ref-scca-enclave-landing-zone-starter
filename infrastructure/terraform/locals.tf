@@ -1,12 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-locals {
-  state_sa_name           = var.state_sa_name
-  state_sa_rg             = var.state_sa_rg
-  state_sa_container_name = var.state_sa_container_name
-}
-
 # The following locals are used to define the management groups
 locals {
   management_groups = {
@@ -74,4 +68,13 @@ locals {
       assignable_scopes = ["${data.azurerm_client_config.current.subscription_id}"] ## This setting is optional. (If not defined current subscription ID is used).
     }
   ]
+}
+
+# The following locals are used to define base Azure
+# provider paths and resource types
+locals {
+  provider_path = {
+    management_groups = "/providers/Microsoft.Management/managementGroups/"
+    role_assignment   = "/providers/Microsoft.Authorization/roleAssignments/"
+  }
 }

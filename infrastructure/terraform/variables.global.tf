@@ -68,50 +68,9 @@ variable "subscription_id_operations" {
   sensitive   = true
 }
 
-variable "subscription_id_sharedservices" {
+variable "subscription_id_devsecops" {
   type        = string
-  description = "If specified, identifies the Platform subscription for \"Shared Services\" for resource deployment and correct placement in the Management Group hierarchy."
-  default     = null
-  sensitive   = true
-}
-
-variable "subscription_id_workload_dev" {
-  type        = string
-  description = "If specified, identifies the Partners subscription for \"Partners Dev\" for resource deployment and correct placement in the Management Group hierarchy."
-  default     = null
-  sensitive   = true
-}
-
-variable "subscription_id_workload_prod" {
-  type        = string
-  description = "If specified, identifies the Partners subscription for \"Partners Prod\" for resource deployment and correct placement in the Management Group hierarchy."
-  default     = null
-  sensitive   = true
-}
-
-#################################
-# Remote State Configuration
-#################################
-
-## This is required for retrieving state
-variable "state_sa_name" {
-  type        = string
-  description = "The name of the storage account to use for storing the Terraform state."
-  default     = null
-  sensitive   = true
-}
-
-variable "state_sa_container_name" {
-  type        = string
-  description = "The name of the container to use for storing the Terraform state."
-  default     = null
-  sensitive   = true
-}
-
-# Storage Account Resource Group
-variable "state_sa_rg" {
-  type        = string
-  description = "The name of the resource group in which the storage account is located."
+  description = "If specified, identifies the Platform subscription for \"DevSecOps\" for resource deployment and correct placement in the Management Group hierarchy."
   default     = null
   sensitive   = true
 }

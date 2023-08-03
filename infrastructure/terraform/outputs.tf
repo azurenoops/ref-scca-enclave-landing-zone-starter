@@ -93,18 +93,23 @@ output "ops_logging_storage_account_id" {
   value = module.mod_landing_zone.ops_logging_storage_account_id
 }
 
-# svcs_network module outputs
-output "svcs_resource_group_name" {
-  description = "The name of the shared services resource group"
-  value       = module.mod_landing_zone.svcs_resource_group_name
+# devsecops_network module outputs
+output "devsecops_resource_group_name" {
+  description = "The name of the DevSecOps resource group"
+  value       = module.mod_landing_zone.devsecops_resource_group_name
 }
 
-output "svcs_virtual_network_name" {
-  description = "The name of the spoke virtual network"
-  value       = module.mod_landing_zone.svcs_virtual_network_name
+output "devsecops_virtual_network_name" {
+  description = "The name of the DevSecOps spoke virtual network"
+  value       = module.mod_landing_zone.devsecops_virtual_network_name
 }
 
-output "svcs_default_subnet_ids" {
-  description = "The id of the default subnet"
-  value       = module.mod_landing_zone.svcs_default_subnet_ids
+output "devsecops_default_subnet_ids" {
+  description = "The ids of subnets in the DevSecOps default subnet"
+  value       = module.mod_landing_zone.devsecops_default_subnet_ids
+}
+
+output "devsecops_default_subnet_names" {
+  description = "The names of subnets in the DevSecOps default subnet"
+  value       = module.mod_landing_zone.devsecops_default_subnet_names
 }
