@@ -71,6 +71,12 @@ variable "hub_private_dns_zones" {
   default     = []
 }
 
+variable "create_ddos_plan" {
+  description = "Create a DDoS protection plan for the hub virtual network."
+  type        = bool
+  default     = true
+}
+
 variable "firewall_supernet_IP_address" {
   description = "The IP address of the firewall supernet."
   type        = string
@@ -188,36 +194,36 @@ variable "ops_private_dns_zones" {
 # Shared Services  ###
 ######################
 
-variable "svcs_name" {
-  description = "A name for the svcs. It defaults to svcs-core."
+variable "devsecops_name" {
+  description = "A name for the devsecops. It defaults to devsecops-core."
   type        = string
-  default     = "svcs-core"
+  default     = "devsecops-core"
 }
 
-variable "svcs_vnet_address_space" {
-  description = "The address space of the svcs virtual network."
+variable "devsecops_vnet_address_space" {
+  description = "The address space of the devsecops virtual network."
   type        = list(string)
   default     = ["10.8.7.0/26"]
 }
 
-variable "svcs_subnets" {
-  description = "The subnets of the svcs virtual network."
+variable "devsecops_subnets" {
+  description = "The subnets of the devsecops virtual network."
   default     = {}
 }
 
-variable "is_svcs_spoke_deployed_to_same_hub_subscription" {
+variable "is_devsecops_spoke_deployed_to_same_hub_subscription" {
   description = "Indicates whether the shared services spoke is deployed to the same hub subscription."
   type        = bool
   default     = true
 }
 
-variable "enable_forced_tunneling_on_svcs_route_table" {
+variable "enable_forced_tunneling_on_devsecops_route_table" {
   description = "Enables forced tunneling on the shared services spoke route table."
   type        = bool
   default     = true
 }
 
-variable "svcs_private_dns_zones" {
+variable "devsecops_private_dns_zones" {
   description = "The private DNS zones of the shared services spoke virtual network."
   type        = list(string)
   default     = []
