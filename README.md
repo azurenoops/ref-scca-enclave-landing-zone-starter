@@ -3,7 +3,7 @@
 This reference implementation shows how to create a [SCCA Compliant Mission Enclave](https://docs.microsoft.com/en-us/azure) with an web app and sql db workload using:
 
 - [Terraform](https://www.terraform.io/intro/index.html) as infrastructure as code (IaC) tool to build, change, and version the infrastructure on Azure in a safe, repeatable, and efficient way.
-- [Github Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) is a continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline.Use these pipelines to automate the deployment and undeployment of the entire infrastructure on multiple environments on the Azure platform.
+- [Github Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) is a continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline. Use these pipelines to automate the deployment and undeployment of the entire infrastructure on multiple environments on the Azure platform.
 
 In a SCCA Compliant Mission Enclave, the private network is not exposed via to the internet. Hence, to manage any managed services such as an web app, you will need to use a virtual machine that has access to the WebApp's Azure Virtual Network (VNet).
 
