@@ -60,6 +60,22 @@ output "firewall_private_ip" {
   value       = module.mod_landing_zone.firewall_private_ip
 }
 
+# id_network module outputs
+output "identity_resource_group_name" {
+  description = "The name of the identity resource group"
+  value       = module.mod_landing_zone.identity_resource_group_name
+}
+
+output "identity_virtual_network_name" {
+  description = "The name of the identity spoke virtual network"
+  value       = module.mod_landing_zone.identity_virtual_network_name
+}
+
+output "identity_default_subnet_ids" {
+  description = "The id of the identity default subnet"
+  value       = module.mod_landing_zone.identity_default_subnet_ids
+}
+
 # ops_network module outputs
 output "operations_resource_group_name" {
   description = "The name of the operations resource group"
