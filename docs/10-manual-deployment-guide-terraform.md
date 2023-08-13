@@ -8,7 +8,7 @@
 - [Deployment](#deployment)  
 - [Cleanup](#cleanup)  
 - [Development Setup](#development-setup)  
-- [See Also](#see-also) 
+- [See Also](#see-also)
 
 This guide describes how to deploy Mission Enclave Landing Zone starter using the [Terraform](https://www.terraform.io/) template at [infrastructure/terraform/](../src/terraform).
 
@@ -21,7 +21,7 @@ To get started with Terraform on Azure check out their [tutorial](https://learn.
 - An Azure Subscription(s) where you or an identity you manage has `Owner` [RBAC permissions](https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#owner)
 
 <!-- markdownlint-disable MD013 -->
-> NOTE: Azure Cloud Shell is often our preferred place to deploy from because the AZ CLI and Terraform are already installed. However, sometimes Cloud Shell has different versions of the dependencies from what we have tested and verified, and sometimes there have been bugs in the Terraform Azure RM provider or the AZ CLI that only appear in Cloud Shell. If you are deploying from Azure Cloud Shell and see something unexpected, try the [development container](../.devcontainer) or deploy from your machine using locally installed AZ CLI and Terraform. We welcome all feedback and [contributions](../CONTRIBUTING.md), so if you see something that doesn't make sense, please [create an issue](https://github.com/Azure/missionlz/issues/new/choose) or open a [discussion thread](https://github.com/Azure/missionlz/discussions).
+> NOTE: Azure Cloud Shell is often our preferred place to deploy from because the AZ CLI and Terraform are already installed. However, sometimes Cloud Shell has different versions of the dependencies from what we have tested and verified, and sometimes there have been bugs in the Terraform Azure RM provider or the AZ CLI that only appear in Cloud Shell. If you are deploying from Azure Cloud Shell and see something unexpected, try the [development container](../.devcontainer) or deploy from your machine using locally installed AZ CLI and Terraform. We welcome all feedback and [contributions](../CONTRIBUTING.md), so if you see something that doesn't make sense, please [create an issue](https://github.com/AzureNoOps/ref-scca-enclave-landing-zone-starter/issues/new/choose) or open a [discussion thread](https://github.com/AzureNoOps/ref-scca-enclave-landing-zone-starter/discussions).
 <!-- markdownlint-enable MD013 -->
 
 ## Quickstart
@@ -43,16 +43,16 @@ If you want to change the default values, you can do so by editing the [paramete
 
 ### One Subscription or Multiple
 
-MLZ can deploy to a single subscription or multiple subscriptions. A test and evaluation deployment may deploy everything to a single subscription, and a production deployment may place each tier into its own subscription.
+Mission Enclave Landing Zone starter can deploy to a single subscription or multiple subscriptions. A test and evaluation deployment may deploy everything to a single subscription, and a production deployment may place each tier into its own subscription.
 
 The optional parameters related to subscriptions are below. At least one subscription is required.
 
 Parameter name | Default Value | Description
 -------------- | ------------- | -----------
-`hub_subid` | '' | Subscription ID for the Hub deployment
-`tier0_subid` | value of hub_subid | Subscription ID for tier 0
-`tier1_subid` | value of hub_subid | Subscription ID for tier 1
-`tier2_subid` | value of hub_subid | Subscription ID for tier 2
+`subscription_id_hub` | '' | Subscription ID for the Hub deployment
+`subscription_id_identity` | value of hub_subid | Subscription ID for tier 0
+`subscription_id_operations` | value of hub_subid | Subscription ID for tier 1
+`subscription_id_devsecops` | value of hub_subid | Subscription ID for tier 2
 
 ### Mission Enclave Landing Zone Remote State Storage Account
 
@@ -242,11 +242,13 @@ If you are deploying to another cloud, such as Azure Government, set the cloud n
 
 Before provisioning any Azure resources with Terraform you must [initialize a working directory](https://www.terraform.io/docs/cli/commands/init.html/).
 
-1. Navigate to the directory in the repository that contains the MissionLZ Terraform module:
+1. Navigate to the directory in the repository that contains the Mission Enclave Landing Zone Starter Terraform module:
 
     ```bash
-    cd src/terraform/mlz
+    cd infrastructure/terraform
     ```
+
+>NOTE: Since this reference implementation is designed to use remote state, you will need to comment out the `backend "local" {}` block in the [versions.tf](./../infrastructure/terraform/versions.tf) file. This will allow you to deploy the landing zone without having to deploy the remote state storage account first.
 
 1. Execute `terraform init`
 
@@ -256,7 +258,7 @@ Before provisioning any Azure resources with Terraform you must [initialize a wo
 
 ### Terraform apply
 
-After intializing the directory, use [`terraform apply`](https://www.terraform.io/docs/cli/commands/apply.html) to provision the resources described in `mlz/main.tf` and its referenced modules at `mlz/modules/*`.
+After intializing the directory, use [`terraform apply`](https://www.terraform.io/docs/cli/commands/apply.html) to provision the resources described in `infrastructure/terraform` and its referenced modules at `infrastructure/terraform/modules/*`.
 
 When you run `terraform apply`, by default, Terraform will inspect the state of your environment to determine what resource creation, modification, or deletion needs to occur as if you invoked a [`terraform plan`](https://www.terraform.io/docs/cli/commands/plan.html) and then prompt you for your approval before taking action.
 
@@ -306,3 +308,58 @@ laws_rgname = "operations-rg"
 tier1_subid = "{the Tier 1 subscription ID}"
 ```
 
+## Cleanup
+
+If you want to delete an MLZ deployment you can use [`terraform destroy`](https://www.terraform.io/docs/cli/commands/destroy.html). If you have deployed more than one Terraform template, e.g., if you have deployed `mlz/main.tf` and then `tier3/main.tf`, run the `terraform destroy` commands in the reverse order that you applied them. For example:
+
+```bash
+# Deploy core MLZ resources
+cd infrastructure/terraform
+terraform apply
+
+# Destroy core MLZ resources
+cd infrastructure/terraform
+terraform destroy
+```
+
+Running `terraform destroy` for `infrastructure/terraform` looks like this:
+
+1. From the directory in which you executed `terraform init` and `terraform apply` execute `terraform destroy`:
+
+    ```bash
+    terraform destroy
+    ```
+
+1. You'll be prompted for a subscription ID. Supply the subscription ID you want to used previously:
+
+    ```plaintext
+    > terraform destroy
+    var.hub_subid
+    Subscription ID for the deployment
+
+    Enter a value: 
+    ```
+
+1. Terraform will then inspect the state of your Azure environment and compare it with what is described in Terraform state. Eventually, you'll be prompted for your approval to destroy resources. Supply `yes`:
+
+    ```plaintext
+    Do you want to perform these actions?
+      Terraform will perform the actions described above.
+      Only 'yes' will be accepted to approve.
+
+    Enter a value: yes
+    ```
+
+This command will attempt to remove all the resources that were created by `terraform apply` and could take up to 45 minutes.
+
+## Development Setup
+
+For development of the Mission Landing Zone Starter Terraform templates we recommend using the development container because it has the necessary dependencies already installed. To get started follow the [guidance for using the development container](../.devcontainer/README.md).
+
+## See Also
+
+[Terraform](https://www.terraform.io/)
+
+[Terraform Tutorial](https://learn.hashicorp.com/collections/terraform/azure-get-started/)
+
+[Developing in a container](https://code.visualstudio.com/docs/remote/containers) using Visual Studio Code
