@@ -2,24 +2,25 @@
 # Licensed under the MIT License.
 
 data "azurerm_subnet" "devsecops_subnet" {
-  name                 = "anoa-eus-devsecops-core-dev-default-snet"
+  name                 = "anoa-eus-devsecops-dev-default-snet"
   virtual_network_name = var.virtual_network_name
   resource_group_name  = var.resource_group_name
 }
 
 data "azurerm_subnet" "devsecops_pe_subnet" {
-  name                 = "anoa-eus-devsecops-core-dev-private-endpoints-snet"
+  name                 = "anoa-eus-devsecops-dev-private-endpoints-snet"
   virtual_network_name = var.virtual_network_name
   resource_group_name  = var.resource_group_name
 }
 
 data "azurerm_subnet" "devsecops_vm_subnet" {
-  name                 = "anoa-eus-devsecops-core-dev-vm-snet"
+  name                 = "anoa-eus-devsecops-dev-vm-snet"
   virtual_network_name = var.virtual_network_name
   resource_group_name  = var.resource_group_name
 }
 
 data "azuread_group" "admin_group" {
+  count = var.admin_group_name != null ? 1 : 0
   display_name = var.admin_group_name
 }
 

@@ -38,6 +38,52 @@ variable "log_analytics_logs_retention_in_days" {
   default     = null
 }
 
+#####################################
+# Log Solutions Configuration     ##
+#####################################
+
+variable "enable_sentinel" {
+  description = "Controls if Sentinel should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_azure_activity_log" {
+  description = "Controls if Azure Activity Log should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_vm_insights" {
+  description = "Controls if VM Insights should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_azure_security_center" {
+  description = "Controls if Azure Security Center should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_service_map" {
+  description = "Controls if Service Map should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_container_insights" {
+  description = "Controls if Container Insights should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_key_vault_analytics" {
+  description = "Controls if Key Vault Analytics should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
 ##########
 # Hub  ###
 ##########
@@ -152,13 +198,52 @@ variable "gateway_vnet_address_space" {
 }
 
 #################
+# Identity    ###
+#################
+
+variable "id_name" {
+  description = "A name for the id. It defaults to id."
+  type        = string
+  default     = "id"
+}
+
+variable "id_vnet_address_space" {
+  description = "The address space of the operations virtual network."
+  type        = list(string)
+  default     = ["10.8.5.0/26"]
+}
+
+variable "id_subnets" {
+  description = "The subnets of the operations virtual network."
+  default     = {}
+}
+
+variable "is_id_spoke_deployed_to_same_hub_subscription" {
+  description = "Indicates whether the operations spoke is deployed to the same hub subscription."
+  type        = bool
+  default     = true
+}
+
+variable "enable_forced_tunneling_on_id_route_table" {
+  description = "Enables forced tunneling on the operations route table."
+  type        = bool
+  default     = true
+}
+
+variable "id_private_dns_zones" {
+  description = "The private DNS zones of the operations virtual network."
+  type        = list(string)
+  default     = []
+}
+
+#################
 # Operations  ###
 #################
 
 variable "ops_name" {
-  description = "A name for the ops. It defaults to ops-core."
+  description = "A name for the ops. It defaults to ops."
   type        = string
-  default     = "ops-core"
+  default     = "ops"
 }
 
 variable "ops_vnet_address_space" {
@@ -195,9 +280,9 @@ variable "ops_private_dns_zones" {
 ######################
 
 variable "devsecops_name" {
-  description = "A name for the devsecops. It defaults to devsecops-core."
+  description = "A name for the devsecops. It defaults to devsecops."
   type        = string
-  default     = "devsecops-core"
+  default     = "devsecops"
 }
 
 variable "devsecops_vnet_address_space" {

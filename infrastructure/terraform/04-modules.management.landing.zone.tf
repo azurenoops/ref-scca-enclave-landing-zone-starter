@@ -9,14 +9,14 @@ module "mod_landing_zone" {
   source = "./modules/05-landing_zone"
 
   # Global Configuration
-  location                       = var.default_location
-  deploy_environment             = var.deploy_environment
-  org_name                       = var.org_name
-  environment                    = var.environment
-  subscription_id_hub            = var.subscription_id_hub
-  subscription_id_operations     = coalesce(var.subscription_id_operations, var.subscription_id_hub)
-  subscription_id_identity       = coalesce(var.subscription_id_identity, var.subscription_id_hub)
-  subscription_id_devsecops = coalesce(var.subscription_id_devsecops, var.subscription_id_hub)
+  location                   = var.default_location
+  deploy_environment         = var.deploy_environment
+  org_name                   = var.org_name
+  environment                = var.environment
+  subscription_id_hub        = var.subscription_id_hub
+  subscription_id_operations = coalesce(var.subscription_id_operations, var.subscription_id_hub)
+  subscription_id_identity   = coalesce(var.subscription_id_identity, var.subscription_id_hub)
+  subscription_id_devsecops  = coalesce(var.subscription_id_devsecops, var.subscription_id_hub)
 
   # Resource Lock Configuration
   enable_resource_locks = var.enable_resource_locks
@@ -26,6 +26,16 @@ module "mod_landing_zone" {
   ampls_subnet_address_prefix          = var.ampls_subnet_address_prefixes
   log_analytics_workspace_sku          = var.log_analytics_workspace_sku
   log_analytics_logs_retention_in_days = var.log_analytics_logs_retention_in_days
+
+  # Operations Logging Solutions
+  # All solutions are enabled (true) by default
+  enable_sentinel              = var.enable_sentinel
+  enable_azure_activity_log    = var.enable_azure_activity_log
+  enable_vm_insights           = var.enable_vm_insights
+  enable_azure_security_center = var.enable_azure_security_center
+  enable_container_insights    = var.enable_container_insights
+  enable_key_vault_analytics   = var.enable_key_vault_analytics
+  enable_service_map           = var.enable_service_map
 
   # Hub Configuration
   hub_name               = var.hub_name
@@ -55,6 +65,14 @@ module "mod_landing_zone" {
   enable_bastion_host                 = var.enable_bastion_host
   azure_bastion_host_sku              = var.azure_bastion_host_sku
   azure_bastion_subnet_address_prefix = var.azure_bastion_subnet_address_prefix
+
+  # Identity Spoke Configuration
+  id_name                                       = var.id_name
+  id_vnet_address_space                         = var.id_vnet_address_space
+  id_subnets                                    = var.id_subnets
+  is_id_spoke_deployed_to_same_hub_subscription = var.is_id_spoke_deployed_to_same_hub_subscription
+  enable_forced_tunneling_on_id_route_table     = var.enable_forced_tunneling_on_id_route_table
+  id_private_dns_zones                          = var.id_private_dns_zones
 
   # Operations Spoke Configuration
   ops_name                                       = var.ops_name
