@@ -49,23 +49,44 @@ locals {
     {
       role_definition_name = "Custom - Network Operations (NetOps)"
       description          = "Platform-wide global connectivity management: virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others."
-      scope                = "${data.azurerm_client_config.current.subscription_id}"
+      scope                = "${local.provider_path.subscriptions}${var.subscription_id_hub}"
       permissions = {
         actions = [
-          "Microsoft.Network/virtualNetworks/read",
-          "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/read",
-          "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write",
-          "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/delete",
-          "Microsoft.Network/virtualNetworks/peer/action",
-          "Microsoft.Resources/deployments/operationStatuses/read",
-          "Microsoft.Resources/deployments/write",
-          "Microsoft.Resources/deployments/read"
+          "*/read",
+          "Microsoft.Network/*",
+          "Microsoft.Resources/deployments/*",
+          "Microsoft.Support/*"
         ]
         data_actions     = []
         not_actions      = []
         not_data_actions = []
       }
-      assignable_scopes = ["${data.azurerm_client_config.current.subscription_id}"] ## This setting is optional. (If not defined current subscription ID is used).
+      assignable_scopes = ["${local.provider_path.subscriptions}${var.subscription_id_hub}"] ## This setting is optional. (If not defined current subscription ID is used).
+    },
+    {
+      role_definition_name = "Custom - Security Operations (SecOps)"
+      description          = "Platform-wide global security management: Security administrator role with a horizontal view across the entire Azure estate and the Azure Key Vault purge policy"
+      scope                = "${local.provider_path.subscriptions}${var.subscription_id_hub}"
+      permissions = {
+        actions = [
+          "*/read",
+          "*/register/action",
+          "Microsoft.KeyVault/locations/deletedVaults/purge/action",
+          "Microsoft.PolicyInsights/*",
+          "Microsoft.Authorization/policyAssignments/*",
+          "Microsoft.Authorization/policyDefinitions/*",
+          "Microsoft.Authorization/policyExemptions/*",
+          "Microsoft.Authorization/policySetDefinitions/*",
+          "Microsoft.Insights/alertRules/*",
+          "Microsoft.Resources/deployments/*",
+          "Microsoft.Security/*",
+          "Microsoft.Support/*"
+        ]
+        data_actions     = []
+        not_actions      = []
+        not_data_actions = []
+      }
+      assignable_scopes = ["${local.provider_path.subscriptions}${var.subscription_id_hub}"] ## This setting is optional. (If not defined current subscription ID is used).
     }
   ]
 }
@@ -75,6 +96,7 @@ locals {
 locals {
   provider_path = {
     management_groups = "/providers/Microsoft.Management/managementGroups/"
+    subscriptions = "/subscriptions/"
     role_assignment   = "/providers/Microsoft.Authorization/roleAssignments/"
   }
 }
