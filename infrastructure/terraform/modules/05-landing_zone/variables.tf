@@ -284,7 +284,7 @@ variable "id_name" {
 variable "id_vnet_address_space" {
   description = "The address space of the operations virtual network."
   type        = list(string)
-  default     = ["10.8.5.0/26"]
+  default     = ["10.8.9.0/26"]
 }
 
 variable "id_subnets" {

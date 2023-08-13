@@ -213,11 +213,11 @@ azure_bastion_subnet_address_prefix = ["10.8.4.192/27"]
 
 # Identity Virtual Network Parameters
 id_name               = "id"
-id_vnet_address_space = ["10.8.5.0/24"]
+id_vnet_address_space = ["10.8.9.0/24"]
 id_subnets = {
   default = {
     name                                       = "id"
-    address_prefixes                           = ["10.8.5.224/27"]
+    address_prefixes                           = ["10.8.9.224/27"]
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
     private_endpoint_service_endpoints_enabled = true
@@ -259,7 +259,7 @@ ops_subnets = {
       # [name, description, priority, direction, access, protocol, destination_port_range, source_address_prefixes, destination_address_prefix]
       # Use "" for description to use default description
       # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
-      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.5.0/24", "10.8.7.0/24", "10.8.8.0/24"], ["10.8.6.0/24"]],
+      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.9.0/24", "10.8.7.0/24", "10.8.8.0/24"], ["10.8.6.0/24"]],
     ]
   }
 }
@@ -292,7 +292,7 @@ devsecops_subnets = {
       # [name, description, priority, direction, access, protocol, destination_port_range, source_address_prefixes, destination_address_prefix]
       # Use "" for description to use default description
       # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
-      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.5.0/24", "10.8.6.0/24", "10.8.8.0/24"], ["10.8.7.0/24"]],
+      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.9.0/24", "10.8.6.0/24", "10.8.8.0/24"], ["10.8.7.0/24"]],
     ]
   },
   private-endpoints = {
