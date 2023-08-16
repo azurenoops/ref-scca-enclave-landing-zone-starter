@@ -1,4 +1,4 @@
-name: Create Mission Enclave Management terraform plan
+name: Create Mission Enclave Management Landing Zone terraform plan
 
 on:
   workflow_dispatch:
@@ -11,12 +11,12 @@ permissions:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    name: Create a plan for an Mission Enclave Management terraform configuration
+    name: Landing Zone terraform configuration
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_PROD_SUBSCRIPTION_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
     steps:
       - name: Checkout
@@ -27,10 +27,7 @@ jobs:
         with:
           path: infrastructure/terraform
           variables: |
-            subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"            
-            state_sa_name                     = "${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}"
-            state_sa_rg                       = "${{ secrets.TFSTATE_RG }}"
-            state_sa_container_name           = "${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}"
+            subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"           
           var_file: |
             tfvars/parameters.tfvars
           backend_config: |

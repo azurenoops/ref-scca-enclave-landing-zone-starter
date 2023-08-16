@@ -24,10 +24,7 @@ jobs:
         with:
           path: infrastructure/terraform
           variables: |
-            subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"            
-            state_sa_name                     = "${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}"
-            state_sa_rg                       = "${{ secrets.TFSTATE_RG }}"
-            state_sa_container_name           = "${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}"
+            subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"                    
           var_file: |
             tfvars/parameters.tfvars
           backend_config: |

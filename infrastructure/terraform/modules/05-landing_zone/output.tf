@@ -61,20 +61,46 @@ output "hub_private_dns_zone_ids" {
   value       = module.mod_hub_network.private_dns_zone_ids
 }
 
+# id_network module outputs
+output "identity_resource_group_name" {
+  description = "The name of the Identity resource group"
+  value       = module.mod_ops_network.resource_group_name
+}
+
+output "identity_virtual_network_name" {
+  description = "The name of the Identity spoke virtual network"
+  value       = module.mod_ops_network.virtual_network_name
+}
+
+output "identity_default_subnet_ids" {
+  description = "The ids of the Identity default subnet"
+  value       = module.mod_ops_network.subnet_ids
+}
+
+output "identity_default_subnet_names" {
+  description = "The names of the Identity default subnet"
+  value       = module.mod_ops_network.subnet_ids_names
+}
+
 # ops_network module outputs
 output "operations_resource_group_name" {
-  description = "The name of the operations resource group"
+  description = "The name of the Operations resource group"
   value       = module.mod_ops_network.resource_group_name
 }
 
 output "operations_virtual_network_name" {
-  description = "The name of the spoke virtual network"
+  description = "The name of the Operations spoke virtual network"
   value       = module.mod_ops_network.virtual_network_name
 }
 
 output "operations_default_subnet_ids" {
-  description = "The ids of the default subnet"
+  description = "The ids of the Operations default subnet"
   value       = module.mod_ops_network.subnet_ids
+}
+
+output "operations_default_subnet_names" {
+  description = "The names of the Operations default subnet"
+  value       = module.mod_ops_network.subnet_ids_names
 }
 
 # operational logging module outputs
@@ -104,18 +130,23 @@ output "ops_logging_log_analytics_primary_shared_key" {
   value       = module.mod_hub_network.managmement_logging_log_analytics_primary_shared_key
 }
 
-# svcs_network module outputs
-output "svcs_resource_group_name" {
-  description = "The name of the shared services resource group"
-  value       = module.mod_svcs_network.resource_group_name
+# devsecops_network module outputs
+output "devsecops_resource_group_name" {
+  description = "The name of the DevSecOps resource group"
+  value       = module.mod_devsecops_network.resource_group_name
 }
 
-output "svcs_virtual_network_name" {
-  description = "The name of the spoke virtual network"
-  value       = module.mod_svcs_network.virtual_network_name
+output "devsecops_virtual_network_name" {
+  description = "The name of the DevSecOps spoke virtual network"
+  value       = module.mod_devsecops_network.virtual_network_name
 }
 
-output "svcs_default_subnet_ids" {
-  description = "The ids of the default subnet"
-  value       = module.mod_svcs_network.subnet_ids
+output "devsecops_default_subnet_ids" {
+  description = "The ids of the DevSecOps default subnet"
+  value       = module.mod_devsecops_network.subnet_ids
+}
+
+output "devsecops_default_subnet_names" {
+  description = "The names of the DevSecOps default subnet"
+  value       = module.mod_devsecops_network.subnet_ids_names
 }

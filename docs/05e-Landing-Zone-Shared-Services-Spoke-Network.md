@@ -19,11 +19,11 @@ Sample:
 # 05e Shared Services Management Spoke Virtual Network ###
 ##########################################################
 
-svcs_name                                       = "svcs-core"
-svcs_vnet_address_space                         = ["10.8.7.0/24"]
-svcs_subnets                                    = {
+devsecops_name                                       = "devsecops-core"
+devsecops_vnet_address_space                         = ["10.8.7.0/24"]
+devsecops_subnets                                    = {
   default = {
-    name                                       = "svcs-core"
+    name                                       = "devsecops-core"
     address_prefixes                           = ["10.8.7.224/27"]
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
@@ -36,9 +36,9 @@ svcs_subnets                                    = {
     ]
   }
 }
-svcs_private_dns_zones                          = []
-enable_forced_tunneling_on_svcs_route_table     = true
-is_svcs_spoke_deployed_to_same_hub_subscription = true
+devsecops_private_dns_zones                          = []
+enable_forced_tunneling_on_devsecops_route_table     = true
+is_devsecops_spoke_deployed_to_same_hub_subscription = true
 
 ```
 

@@ -64,7 +64,7 @@ variable "subscription_id_operations" {
   description = "If specified, identifies the Platform subscription for \"Operations\" for resource deployment and correct placement in the Management Group hierarchy."
 }
 
-variable "subscription_id_sharedservices" {
+variable "subscription_id_devsecops" {
   type        = string
   description = "If specified, identifies the Platform subscription for \"Shared Services\" for resource deployment and correct placement in the Management Group hierarchy."
 }
@@ -111,6 +111,53 @@ variable "log_analytics_logs_retention_in_days" {
   default     = null
 }
 
+#####################################
+# Log Solutions Configuration     ##
+#####################################
+
+variable "enable_sentinel" {
+  description = "Controls if Sentinel should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_azure_activity_log" {
+  description = "Controls if Azure Activity Log should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_vm_insights" {
+  description = "Controls if VM Insights should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_azure_security_center" {
+  description = "Controls if Azure Security Center should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_service_map" {
+  description = "Controls if Service Map should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_container_insights" {
+  description = "Controls if Container Insights should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_key_vault_analytics" {
+  description = "Controls if Key Vault Analytics should be enabled. Default is true."
+  type        = bool
+  default     = true
+}
+
+
 ##########
 # Hub  ###
 ##########
@@ -130,6 +177,12 @@ variable "hub_vnet_address_space" {
 variable "hub_subnets" {
   description = "The subnets of the hub virtual network."
   default     = {}
+}
+
+variable "create_ddos_plan" {
+  description = "Create a DDoS protection plan for the hub virtual network."
+  type        = bool
+  default     = true
 }
 
 variable "enable_traffic_analytics" {
@@ -219,6 +272,45 @@ variable "gateway_vnet_address_space" {
 }
 
 #################
+# Identity    ###
+#################
+
+variable "id_name" {
+  description = "A name for the id. It defaults to id-core."
+  type        = string
+  default     = "id-core"
+}
+
+variable "id_vnet_address_space" {
+  description = "The address space of the operations virtual network."
+  type        = list(string)
+  default     = ["10.8.9.0/26"]
+}
+
+variable "id_subnets" {
+  description = "The subnets of the operations virtual network."
+  default     = {}
+}
+
+variable "is_id_spoke_deployed_to_same_hub_subscription" {
+  description = "Indicates whether the operations spoke is deployed to the same hub subscription."
+  type        = bool
+  default     = true
+}
+
+variable "enable_forced_tunneling_on_id_route_table" {
+  description = "Enables forced tunneling on the operations route table."
+  type        = bool
+  default     = true
+}
+
+variable "id_private_dns_zones" {
+  description = "The private DNS zones of the operations virtual network."
+  type        = list(string)
+  default     = []
+}
+
+#################
 # Operations  ###
 #################
 
@@ -258,40 +350,40 @@ variable "ops_private_dns_zones" {
 }
 
 
-######################
-# Shared Services  ###
-######################
+#########################
+# DevSecOps Services  ###
+#########################
 
-variable "svcs_name" {
-  description = "A name for the svcs. It defaults to svcs-core."
+variable "devsecops_name" {
+  description = "A name for the devsecops. It defaults to devsecops-core."
   type        = string
-  default     = "svcs-core"
+  default     = "devsecops-core"
 }
 
-variable "svcs_vnet_address_space" {
-  description = "The address space of the svcs virtual network."
+variable "devsecops_vnet_address_space" {
+  description = "The address space of the devsecops virtual network."
   type        = list(string)
   default     = ["10.8.7.0/26"]
 }
 
-variable "svcs_subnets" {
-  description = "The subnets of the svcs virtual network."
+variable "devsecops_subnets" {
+  description = "The subnets of the devsecops virtual network."
   default     = {}
 }
 
-variable "is_svcs_spoke_deployed_to_same_hub_subscription" {
+variable "is_devsecops_spoke_deployed_to_same_hub_subscription" {
   description = "Indicates whether the shared services spoke is deployed to the same hub subscription."
   type        = bool
   default     = true
 }
 
-variable "enable_forced_tunneling_on_svcs_route_table" {
+variable "enable_forced_tunneling_on_devsecops_route_table" {
   description = "Enables forced tunneling on the shared services spoke route table."
   type        = bool
   default     = true
 }
 
-variable "svcs_private_dns_zones" {
+variable "devsecops_private_dns_zones" {
   description = "The private DNS zones of the shared services spoke virtual network."
   type        = list(string)
   default     = []

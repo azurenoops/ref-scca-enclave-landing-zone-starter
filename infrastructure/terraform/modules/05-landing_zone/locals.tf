@@ -21,11 +21,15 @@ locals {
     var.disable_base_module_tags ? local.empty_map : local.base_module_tags,
     var.default_tags,
   )
+  identity_resources_tags = merge(
+    var.disable_base_module_tags ? local.empty_map : local.base_module_tags,
+    var.default_tags,
+  )
   operations_resources_tags = merge(
     var.disable_base_module_tags ? local.empty_map : local.base_module_tags,
     var.default_tags,
   )
-  sharedservices_resources_tags = merge(
+  devsecops_resources_tags = merge(
     var.disable_base_module_tags ? local.empty_map : local.base_module_tags,
     var.default_tags,
   )

@@ -10,9 +10,10 @@ DESCRIPTION: The following components will be options in this deployment
               * Hub Virtual Network (VNet)              
               * Bastion Host (Optional)
               * Microsoft Defender for Cloud (Optional)              
-            * Spokes              
-              * Operations (Tier 1)
-              * Shared Services (Tier 2)
+            * Spokes 
+              * Identity             
+              * Operations 
+              * DevSecOps
             * Logging
               * Azure Sentinel
               * Azure Log Analytics
@@ -34,7 +35,7 @@ AUTHOR/S: jspinella
 module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
   source    = "azurenoops/overlays-management-hub/azurerm"
-  version   = ">= 2.0.0"
+  version   = "~> 2.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -46,12 +47,28 @@ module "mod_hub_network" {
   environment           = var.environment
   workload_name         = var.hub_name
 
+  # Logging
+  # By default, Azure NoOps will create a Log Analytics Workspace in Hub VNet.
+  log_analytics_workspace_sku = var.log_analytics_workspace_sku
+  log_analytics_logs_retention_in_days = var.log_analytics_logs_retention_in_days
+
+  # Logging Solutions
+  # All solutions are enabled (true) by default
+  enable_sentinel              = var.enable_sentinel
+  enable_azure_activity_log    = var.enable_azure_activity_log
+  enable_vm_insights           = var.enable_vm_insights
+  enable_azure_security_center = var.enable_azure_security_center
+  enable_container_insights    = var.enable_container_insights
+  enable_key_vault_analytics   = var.enable_key_vault_analytics
+  enable_service_map           = var.enable_service_map
+
   # Provide valid VNet Address space and specify valid domain name for Private DNS Zone.  
   virtual_network_address_space           = var.hub_vnet_address_space              # (Required)  Hub Virtual Network Parameters  
   firewall_subnet_address_prefix          = var.fw_client_snet_address_prefixes     # (Required)  Hub Firewall Subnet Parameters  
   ampls_subnet_address_prefix             = var.ampls_subnet_address_prefix         # (Required)  AMPLS Subnet Parameters
   firewall_management_snet_address_prefix = var.fw_management_snet_address_prefixes # (Optional)  Hub Firewall Management Subnet Parameters
-  gateway_subnet_address_prefix           = var.gateway_vnet_address_space          # (Optional)  Hub Gateway Subnet Parameters
+  
+  create_ddos_plan = var.create_ddos_plan # (Required)  DDoS Plan
 
   # (Required) Hub Subnets 
   # Default Subnets, Service Endpoints
@@ -113,10 +130,80 @@ module "mod_hub_network" {
 #############################
 
 // Resources for the Operations Spoke
+module "mod_id_network" {
+  providers = { azurerm = azurerm.identity }
+  source    = "azurenoops/overlays-management-spoke/azurerm"
+  version   = "~> 2.0"
+
+  # By default, this module will create a resource group, provide the name here
+  # To use an existing resource group, specify the existing resource group name, 
+  # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
+  create_resource_group = true
+  location              = var.location
+  deploy_environment    = var.deploy_environment
+  org_name              = var.org_name
+  environment           = var.environment
+  workload_name         = var.id_name
+  
+  # Collect Spoke Virtual Network Parameters
+  # Spoke network details to create peering and other setup
+  hub_virtual_network_id          = module.mod_hub_network.virtual_network_id
+  hub_firewall_private_ip_address = module.mod_hub_network.firewall_private_ip
+  hub_storage_account_id          = module.mod_hub_network.storage_account_id
+
+  # (Required) To enable Azure Monitoring and flow logs
+  # pick the values for log analytics workspace which created by Spoke module
+  # Possible retention values range between 30 and 730
+  log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_workspace_id # this is a issue in management module, need to fix. This should not have storage_account in the name
+  log_analytics_logs_retention_in_days = 30
+
+  # Provide valid VNet Address space for spoke virtual network.    
+  virtual_network_address_space = var.id_vnet_address_space # (Required)  Spoke Virtual Network Parameters
+
+  # (Required) Specify if you are deploying the spoke VNet using the same hub Azure subscription
+  is_spoke_deployed_to_same_hub_subscription = var.is_id_spoke_deployed_to_same_hub_subscription
+
+  # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
+  # These are default subnets with required configuration, check README.md for more details
+  # Route_table and NSG association to be added automatically for all subnets listed here.
+  # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
+  spoke_subnets = var.id_subnets
+
+  # Enable Flow Logs
+  # By default, this will enable flow logs for all subnets.
+  enable_traffic_analytics = var.enable_traffic_analytics
+
+  # By default, forced tunneling is enabled for the spoke.
+  # If you do not want to enable forced tunneling on the spoke route table, 
+  # set `enable_forced_tunneling = false`.
+  enable_forced_tunneling_on_route_table = var.enable_forced_tunneling_on_id_route_table
+
+  # Private DNS Zone Settings
+  # By default, Azure Noid will create Private DNS Zones for Logging in Hub VNet.
+  # If you do want to create addtional Private DNS Zones, 
+  # add in the list of private_dns_zones to be created.
+  # else, remove the private_dns_zones argument.
+  private_dns_zones = var.id_private_dns_zones
+
+  # Peering
+  # By default, Azure NoOps will create peering between Hub and Spoke.
+  # Since is using a gateway, set the argument to `use_source_remote_spoke_gateway = true`, to enable gateway traffic.   
+  use_source_remote_spoke_gateway = var.use_source_remote_spoke_gateway
+
+  # By default, this will apply resource locks to all resources created by this module.
+  # To disable resource locks, set the argument to `enable_resource_locks = false`.
+  enable_resource_locks = var.enable_resource_locks
+
+  # Tags
+  add_tags = local.identity_resources_tags # Tags to be applied to all resources
+}
+
+// Resources for the Operations Spoke
 module "mod_ops_network" {
   providers = { azurerm = azurerm.operations }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = ">= 2.0.0"
+  version   = "~> 2.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -136,7 +223,7 @@ module "mod_ops_network" {
 
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
-  # Possible values range between 30 and 730
+  # Possible retention values range between 30 and 730
   log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
   log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_workspace_id # this is a issue in management module, need to fix. This hould not have storage_account in the name
   log_analytics_logs_retention_in_days = 30
@@ -183,10 +270,10 @@ module "mod_ops_network" {
 }
 
 // Resources for the Shared Services Spoke
-module "mod_svcs_network" {  
-  providers = { azurerm = azurerm.sharedservices }
+module "mod_devsecops_network" {  
+  providers = { azurerm = azurerm.devsecops }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = ">= 2.0.0"
+  version   = "~> 2.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -196,7 +283,7 @@ module "mod_svcs_network" {
   deploy_environment    = var.deploy_environment
   org_name              = var.org_name
   environment           = var.environment
-  workload_name         = var.svcs_name
+  workload_name         = var.devsecops_name
 
   # Collect Spoke Virtual Network Parameters
   # Spoke network details to create peering and other setup
@@ -212,16 +299,16 @@ module "mod_svcs_network" {
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    
-  virtual_network_address_space = var.svcs_vnet_address_space # (Required)  Spoke Virtual Network Parameters
+  virtual_network_address_space = var.devsecops_vnet_address_space # (Required)  Spoke Virtual Network Parameters
 
   # (Required) Specify if you are deploying the spoke VNet using the same hub Azure subscription
-  is_spoke_deployed_to_same_hub_subscription = var.is_svcs_spoke_deployed_to_same_hub_subscription
+  is_spoke_deployed_to_same_hub_subscription = var.is_devsecops_spoke_deployed_to_same_hub_subscription
 
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
   # Route_table and NSG association to be added automatically for all subnets listed here.
   # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
-  spoke_subnets = var.svcs_subnets
+  spoke_subnets = var.devsecops_subnets
 
   # Enable Flow Logs
   # By default, this will enable flow logs for all subnets.
@@ -230,14 +317,14 @@ module "mod_svcs_network" {
   # By default, forced tunneling is enabled for the spoke.
   # If you do not want to enable forced tunneling on the spoke route table, 
   # set `enable_forced_tunneling = false`.
-  enable_forced_tunneling_on_route_table = var.enable_forced_tunneling_on_svcs_route_table
+  enable_forced_tunneling_on_route_table = var.enable_forced_tunneling_on_devsecops_route_table
 
   # Private DNS Zone Settings
   # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
   # If you do want to create addtional Private DNS Zones, 
   # add in the list of private_dns_zones to be created.
   # else, remove the private_dns_zones argument.
-  private_dns_zones = var.svcs_private_dns_zones
+  private_dns_zones = var.devsecops_private_dns_zones
 
   # Peering
   # By default, Azure NoOps will create peering between Hub and Spoke.
@@ -249,7 +336,7 @@ module "mod_svcs_network" {
   enable_resource_locks = var.enable_resource_locks
 
   # Tags
-  add_tags = local.sharedservices_resources_tags # Tags to be applied to all resources
+  add_tags = local.devsecops_resources_tags # Tags to be applied to all resources
 }
 
 
