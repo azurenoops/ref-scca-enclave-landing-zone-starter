@@ -35,7 +35,7 @@ AUTHOR/S: jspinella
 module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
   source    = "azurenoops/overlays-management-hub/azurerm"
-  version   = "~> 2.0"
+  version   = "~> 3.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -133,7 +133,7 @@ module "mod_hub_network" {
 module "mod_id_network" {
   providers = { azurerm = azurerm.identity }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 2.0"
+  version   = "~> 3.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -160,9 +160,6 @@ module "mod_id_network" {
 
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.id_vnet_address_space # (Required)  Spoke Virtual Network Parameters
-
-  # (Required) Specify if you are deploying the spoke VNet using the same hub Azure subscription
-  is_spoke_deployed_to_same_hub_subscription = var.is_id_spoke_deployed_to_same_hub_subscription
 
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
@@ -203,7 +200,7 @@ module "mod_id_network" {
 module "mod_ops_network" {
   providers = { azurerm = azurerm.operations }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 2.0"
+  version   = "~> 3.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -230,9 +227,6 @@ module "mod_ops_network" {
 
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.ops_vnet_address_space # (Required)  Spoke Virtual Network Parameters
-
-  # (Required) Specify if you are deploying the spoke VNet using the same hub Azure subscription
-  is_spoke_deployed_to_same_hub_subscription = var.is_ops_spoke_deployed_to_same_hub_subscription
 
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
@@ -273,7 +267,7 @@ module "mod_ops_network" {
 module "mod_devsecops_network" {  
   providers = { azurerm = azurerm.devsecops }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 2.0"
+  version   = "~> 3.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -300,9 +294,6 @@ module "mod_devsecops_network" {
 
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.devsecops_vnet_address_space # (Required)  Spoke Virtual Network Parameters
-
-  # (Required) Specify if you are deploying the spoke VNet using the same hub Azure subscription
-  is_spoke_deployed_to_same_hub_subscription = var.is_devsecops_spoke_deployed_to_same_hub_subscription
 
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
