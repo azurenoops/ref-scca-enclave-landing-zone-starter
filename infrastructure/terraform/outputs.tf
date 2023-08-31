@@ -44,6 +44,11 @@ output "hub_default_subnet_names" {
   value       = module.mod_landing_zone.hub_default_subnet_names
 }
 
+output "hub_default_nsg_names" {
+  description = "The names of the hub default subnets"
+  value       = module.mod_landing_zone.hub_default_nsg_names
+}
+
 # mod_landing_zone firewall module outputs
 output "firewall_id" {
   description = "The ID of the Azure Firewall"
@@ -72,8 +77,18 @@ output "identity_virtual_network_name" {
 }
 
 output "identity_default_subnet_ids" {
-  description = "The id of the identity default subnet"
+  description = "The id of the identity default subnets"
   value       = module.mod_landing_zone.identity_default_subnet_ids
+}
+
+output "identity_default_subnet_names" {
+  description = "The name of the identity default subnets"
+  value       = module.mod_landing_zone.identity_default_subnet_names
+}
+
+output "identity_default_nsg_names" {
+  description = "The names of the identity default subnets"
+  value       = module.mod_landing_zone.identity_default_nsg_names
 }
 
 # ops_network module outputs
@@ -90,6 +105,16 @@ output "operations_virtual_network_name" {
 output "operations_default_subnet_ids" {
   description = "The id of the default subnet"
   value       = module.mod_landing_zone.operations_default_subnet_ids
+}
+
+output "operations_default_subnet_names" {
+  description = "The name of the operations default subnets"
+  value       = module.mod_landing_zone.operations_default_subnet_names
+}
+
+output "operations_default_nsg_names" {
+  description = "The names of the operations default subnets"
+  value       = module.mod_landing_zone.operations_default_nsg_names
 }
 
 # operational logging module outputs
@@ -128,4 +153,9 @@ output "devsecops_default_subnet_ids" {
 output "devsecops_default_subnet_names" {
   description = "The names of subnets in the DevSecOps default subnet"
   value       = module.mod_landing_zone.devsecops_default_subnet_names
+}
+
+output "devsecops_default_nsg_names" {
+  description = "The names of the devsecops default subnets"
+  value       = module.mod_landing_zone.devsecops_default_nsg_names
 }
