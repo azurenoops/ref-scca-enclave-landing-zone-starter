@@ -38,7 +38,6 @@ ops_subnets                                    = {
 }
 ops_private_dns_zones                          = []
 enable_forced_tunneling_on_ops_route_table     = true
-is_ops_spoke_deployed_to_same_hub_subscription = true
 
 ```
 
