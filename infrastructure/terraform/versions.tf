@@ -35,5 +35,6 @@ terraform {
 }
 
 provider "azurerm" {
+  skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {}
 }
