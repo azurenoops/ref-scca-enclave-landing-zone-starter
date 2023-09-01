@@ -9,6 +9,7 @@ module "mod_management_groups_budgets" {
   source = "./modules/03-budgets"
 
   enable_management_groups_budgets = var.enable_management_groups_budgets
+  environment                      = var.environment
   budget_contact_emails            = var.budget_contact_emails
   budget_amount                    = var.budget_amount
   budget_start_date                = var.budget_start_date

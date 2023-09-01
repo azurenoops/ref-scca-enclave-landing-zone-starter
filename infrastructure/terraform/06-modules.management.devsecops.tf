@@ -18,7 +18,7 @@ module "mod_devsecops" {
   # DevSecOps Network Configuration
   resource_group_name  = module.mod_landing_zone.devsecops_resource_group_name
   virtual_network_name = module.mod_landing_zone.devsecops_virtual_network_name
-  subnet_name          = module.mod_landing_zone.devsecops_default_subnet_names[1] # add to the vm subnet
+  subnet_name          = module.mod_landing_zone.devsecops_default_subnet_names["vm"].name # add to the vm subnet
 
   # Key Vault Configuration
   enabled_for_deployment            = var.enabled_for_deployment
@@ -26,6 +26,7 @@ module "mod_devsecops" {
   enabled_for_template_deployment   = var.enabled_for_template_deployment
   admin_group_name                  = var.admin_group_name
   enable_key_vault_private_endpoint = var.enable_key_vault_private_endpoint
+  existing_private_subnet_name      = module.mod_landing_zone.devsecops_default_subnet_names["private-endpoints"].name # add to the pe subnet
 
   # Bastion VM Configuration 
   # This module supports multiple Pre-Defined windows and Windows Distributions.
@@ -45,7 +46,7 @@ module "mod_devsecops" {
   # Network Seurity group port definitions for each Virtual Machine 
   # NSG association for all network interfaces to be added automatically.
   # Using 'existing_network_security_group_name' is supplied then the module will use the existing NSG.
-  existing_network_security_group_name = "anoa-eus-devsecops-dev-vm-nsg" # TODO: Change this to vm subnet nsg
+  existing_network_security_group_name = module.mod_landing_zone.devsecops_default_nsg_names["vm"].name # TODO: Change this to vm subnet nsg
   nsg_inbound_rules                    = var.nsg_inbound_rules
 
   # Boot diagnostics are used to troubleshoot virtual machines by default. 
