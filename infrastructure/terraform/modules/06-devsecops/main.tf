@@ -62,7 +62,7 @@ module "mod_shared_keyvault" {
 
 module "mod_bastion_virtual_machine" {
   source  = "azurenoops/overlays-virtual-machine/azurerm"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   # Resource Group, location, VNet and Subnet details
   existing_resource_group_name = var.resource_group_name
@@ -72,8 +72,8 @@ module "mod_bastion_virtual_machine" {
   workload_name                = "jmp"
 
   # Shared Services Network Configuration
-  virtual_network_name = var.virtual_network_name
-  subnet_name          = data.azurerm_subnet.devsecops_vm_subnet.name
+  existing_virtual_network_name = var.virtual_network_name
+  existing_subnet_name          = data.azurerm_subnet.devsecops_vm_subnet.name
 
   # This module support multiple Pre-Defined windows and Windows Distributions.
   # Check the README.md file for more pre-defined images for Ubuntu, Centos, RedHat.
