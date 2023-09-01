@@ -1,20 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-data "azurerm_subnet" "devsecops_subnet" {
-  name                 = "anoa-eus-devsecops-dev-default-snet"
-  virtual_network_name = var.virtual_network_name
-  resource_group_name  = var.resource_group_name
-}
-
 data "azurerm_subnet" "devsecops_pe_subnet" {
-  name                 = "anoa-eus-devsecops-dev-private-endpoints-snet"
+  name                 = var.existing_private_subnet_name
   virtual_network_name = var.virtual_network_name
   resource_group_name  = var.resource_group_name
 }
 
 data "azurerm_subnet" "devsecops_vm_subnet" {
-  name                 = "anoa-eus-devsecops-dev-vm-snet"
+  name                 = var.subnet_name
   virtual_network_name = var.virtual_network_name
   resource_group_name  = var.resource_group_name
 }
