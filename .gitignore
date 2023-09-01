@@ -83,3 +83,4 @@ test/go.sum
 # example: *tfplan*
 !**/*.tfvars
 infrastructure/terraform/destroy.tfplan
+infrastructure/terraform/*.plan
