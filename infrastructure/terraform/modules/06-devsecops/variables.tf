@@ -116,6 +116,12 @@ variable "enable_key_vault_private_endpoint" {
   default     = false
 } 
 
+variable "existing_private_subnet_name" {
+  description = "The name of an existing private subnet to which the Key Vault private endpoint should be deployed."
+  type        = string
+  default     = null
+}
+
 ###############################
 # Bastion VM Configuration   ##
 ###############################

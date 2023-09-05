@@ -13,10 +13,12 @@ jobs:
     name: Destroy terraform configuration plan for an Mission Enclave Management terraform configuration
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_PROD_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+      ARM_ENVIRONMENT: ${{ secrets.ARM_ENVIRONMENT }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -26,9 +28,10 @@ jobs:
         with:
           path: infrastructure/terraform
           variables: |
-            subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"            
+            subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"
+            vm_admin_password                 = "${{ env.VM_PASSWORD }}"            
           var_file: |
-            tfvars/parameters.tfvars
+            infrastructure/terraform/tfvars/parameters.tfvars
           backend_config: |
             storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
             container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}            

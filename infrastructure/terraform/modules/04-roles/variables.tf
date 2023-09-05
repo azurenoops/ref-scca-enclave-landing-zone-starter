@@ -2,6 +2,14 @@
 # Licensed under the MIT License.
 
 ##########################
+# Global Configuration  ##
+##########################
+variable "environment" {
+  description = "Name of the environment. This will be used to name the private endpoint resources deployed by this module. default is 'public'"
+  type        = string
+}
+
+##########################
 # Role Configuration    ##
 ##########################
 

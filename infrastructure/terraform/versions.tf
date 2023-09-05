@@ -31,9 +31,14 @@ terraform {
       source  = "hashicorp/time"
       version = "0.8.0"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 4.0"
+    }
   }
 }
 
 provider "azurerm" {
+  skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {}
 }

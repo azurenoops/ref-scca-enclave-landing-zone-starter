@@ -218,12 +218,6 @@ variable "id_subnets" {
   default     = {}
 }
 
-variable "is_id_spoke_deployed_to_same_hub_subscription" {
-  description = "Indicates whether the operations spoke is deployed to the same hub subscription."
-  type        = bool
-  default     = true
-}
-
 variable "enable_forced_tunneling_on_id_route_table" {
   description = "Enables forced tunneling on the operations route table."
   type        = bool
@@ -257,12 +251,6 @@ variable "ops_subnets" {
   default     = {}
 }
 
-variable "is_ops_spoke_deployed_to_same_hub_subscription" {
-  description = "Indicates whether the operations spoke is deployed to the same hub subscription."
-  type        = bool
-  default     = true
-}
-
 variable "enable_forced_tunneling_on_ops_route_table" {
   description = "Enables forced tunneling on the operations route table."
   type        = bool
@@ -294,12 +282,6 @@ variable "devsecops_vnet_address_space" {
 variable "devsecops_subnets" {
   description = "The subnets of the devsecops virtual network."
   default     = {}
-}
-
-variable "is_devsecops_spoke_deployed_to_same_hub_subscription" {
-  description = "Indicates whether the shared services spoke is deployed to the same hub subscription."
-  type        = bool
-  default     = true
 }
 
 variable "enable_forced_tunneling_on_devsecops_route_table" {

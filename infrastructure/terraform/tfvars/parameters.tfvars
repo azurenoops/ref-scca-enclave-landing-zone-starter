@@ -221,24 +221,28 @@ id_subnets = {
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
     private_endpoint_service_endpoints_enabled = true
-    nsg_subnet_inbound_rules = [
-      # [name, description, priority, direction, access, protocol, destination_port_range, source_address_prefixes, destination_address_prefix]
-      # Use "" for description to use default description
-      # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
-      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.6.0/24", "10.8.7.0/24", "10.8.8.0/24"], ["10.8.6.0/24"]],
+    nsg_subnet_rules = [
+      {
+        name                       = "Allow-Traffic-From-Spokes",
+        description                = "Allow traffic from spokes",
+        priority                   = 200,
+        direction                  = "Inbound",
+        access                     = "Allow",
+        protocol                   = "*",
+        destination_port_ranges    = ["22", "80", "443", "3389"],
+        source_address_prefixes    = ["10.8.6.0/24", "10.8.7.0/24", "10.8.8.0/24"]
+        destination_address_prefix = "10.8.9.0/24"
+      }
     ]
   }
 }
 
 # Private DNS Zones
 # Add in the list of private_dns_zones to be created.
-id_private_dns_zones                          = []
+id_private_dns_zones = []
 
 # Enable forced tunneling on the route table
-enable_forced_tunneling_on_id_route_table     = true 
-
-# If the spoke is deployed to the same hub subscription, set this to true
-is_id_spoke_deployed_to_same_hub_subscription = true
+enable_forced_tunneling_on_id_route_table = true
 
 
 ####################################################
@@ -255,24 +259,28 @@ ops_subnets = {
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
     private_endpoint_service_endpoints_enabled = true
-    nsg_subnet_inbound_rules = [
-      # [name, description, priority, direction, access, protocol, destination_port_range, source_address_prefixes, destination_address_prefix]
-      # Use "" for description to use default description
-      # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
-      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.9.0/24", "10.8.7.0/24", "10.8.8.0/24"], ["10.8.6.0/24"]],
+    nsg_subnet_rules = [
+      {
+        name                       = "Allow-Traffic-From-Spokes",
+        description                = "Allow traffic from spokes",
+        priority                   = 200,
+        direction                  = "Inbound",
+        access                     = "Allow",
+        protocol                   = "*",
+        destination_port_ranges    = ["22", "80", "443", "3389"],
+        source_address_prefixes    = ["10.8.9.0/24", "10.8.7.0/24", "10.8.8.0/24"]
+        destination_address_prefix = "10.8.6.0/24"
+      }
     ]
   }
 }
 
 # Private DNS Zones
 # Add in the list of private_dns_zones to be created.
-ops_private_dns_zones                          = []
+ops_private_dns_zones = []
 
 # Enable forced tunneling on the route table
-enable_forced_tunneling_on_ops_route_table     = true
-
-# If the spoke is deployed to the same hub subscription, set this to true
-is_ops_spoke_deployed_to_same_hub_subscription = true
+enable_forced_tunneling_on_ops_route_table = true
 
 ##########################################################
 # 05e DevSecOps Management Spoke Virtual Network       ###
@@ -288,11 +296,18 @@ devsecops_subnets = {
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
     private_endpoint_service_endpoints_enabled = true
-    nsg_subnet_inbound_rules = [
-      # [name, description, priority, direction, access, protocol, destination_port_range, source_address_prefixes, destination_address_prefix]
-      # Use "" for description to use default description
-      # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
-      ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.9.0/24", "10.8.6.0/24", "10.8.8.0/24"], ["10.8.7.0/24"]],
+    nsg_subnet_rules = [
+      {
+        name                       = "Allow-Traffic-From-Spokes",
+        description                = "Allow traffic from spokes",
+        priority                   = 200,
+        direction                  = "Inbound",
+        access                     = "Allow",
+        protocol                   = "*",
+        destination_port_ranges    = ["22", "80", "443", "3389"],
+        source_address_prefixes    = ["10.8.9.0/24", "10.8.6.0/24", "10.8.8.0/24"]
+        destination_address_prefix = "10.8.7.0/24"
+      }
     ]
   },
   private-endpoints = {
@@ -313,13 +328,10 @@ devsecops_subnets = {
 
 # Private DNS Zones
 # Add in the list of private_dns_zones to be created.
-devsecops_private_dns_zones                          = ["privatelink.vaultcore.azure.net"]
+devsecops_private_dns_zones = ["privatelink.vaultcore.azure.net"]
 
 # Enable forced tunneling on the route table
-enable_forced_tunneling_on_devsecops_route_table     = true
-
-# If the spoke is deployed to the same hub subscription, set this to true
-is_devsecops_spoke_deployed_to_same_hub_subscription = true
+enable_forced_tunneling_on_devsecops_route_table = true
 
 #############################
 ## Peering Configuration  ###

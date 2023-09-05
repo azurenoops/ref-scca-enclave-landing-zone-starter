@@ -4,7 +4,6 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.32.0"
     }
 
   }
@@ -20,7 +19,7 @@ terraform {
 
 provider "azurerm" {
   subscription_id = var.subscription_id_hub
-
+  skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
       permanently_delete_on_destroy = var.provider_azurerm_features_keyvault.permanently_delete_on_destroy
@@ -37,7 +36,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "hub"
   subscription_id = var.subscription_id_hub
-
+  skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
       permanently_delete_on_destroy = var.provider_azurerm_features_keyvault.permanently_delete_on_destroy
@@ -54,7 +53,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "identity"
   subscription_id = coalesce(var.subscription_id_identity, var.subscription_id_hub)
-
+  skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
       permanently_delete_on_destroy = var.provider_azurerm_features_keyvault.permanently_delete_on_destroy
@@ -71,7 +70,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "operations"
   subscription_id = coalesce(var.subscription_id_operations, var.subscription_id_hub)
-
+  skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
       permanently_delete_on_destroy = var.provider_azurerm_features_keyvault.permanently_delete_on_destroy
@@ -88,7 +87,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "devsecops"
   subscription_id = coalesce(var.subscription_id_devsecops, var.subscription_id_hub)
-
+  skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
       permanently_delete_on_destroy = var.provider_azurerm_features_keyvault.permanently_delete_on_destroy

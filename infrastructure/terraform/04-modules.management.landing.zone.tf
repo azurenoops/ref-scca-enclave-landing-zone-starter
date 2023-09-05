@@ -70,7 +70,6 @@ module "mod_landing_zone" {
   id_name                                       = var.id_name
   id_vnet_address_space                         = var.id_vnet_address_space
   id_subnets                                    = var.id_subnets
-  is_id_spoke_deployed_to_same_hub_subscription = var.is_id_spoke_deployed_to_same_hub_subscription
   enable_forced_tunneling_on_id_route_table     = var.enable_forced_tunneling_on_id_route_table
   id_private_dns_zones                          = var.id_private_dns_zones
 
@@ -78,7 +77,6 @@ module "mod_landing_zone" {
   ops_name                                       = var.ops_name
   ops_vnet_address_space                         = var.ops_vnet_address_space
   ops_subnets                                    = var.ops_subnets
-  is_ops_spoke_deployed_to_same_hub_subscription = var.is_ops_spoke_deployed_to_same_hub_subscription
   enable_forced_tunneling_on_ops_route_table     = var.enable_forced_tunneling_on_ops_route_table
   ops_private_dns_zones                          = var.ops_private_dns_zones
 
@@ -86,7 +84,6 @@ module "mod_landing_zone" {
   devsecops_name                                       = var.devsecops_name
   devsecops_vnet_address_space                         = var.devsecops_vnet_address_space
   devsecops_subnets                                    = var.devsecops_subnets
-  is_devsecops_spoke_deployed_to_same_hub_subscription = var.is_devsecops_spoke_deployed_to_same_hub_subscription
   enable_forced_tunneling_on_devsecops_route_table     = var.enable_forced_tunneling_on_devsecops_route_table
   devsecops_private_dns_zones                          = var.devsecops_private_dns_zones
 

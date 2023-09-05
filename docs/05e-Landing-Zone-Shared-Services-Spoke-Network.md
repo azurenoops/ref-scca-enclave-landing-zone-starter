@@ -38,7 +38,6 @@ devsecops_subnets                                    = {
 }
 devsecops_private_dns_zones                          = []
 enable_forced_tunneling_on_devsecops_route_table     = true
-is_devsecops_spoke_deployed_to_same_hub_subscription = true
 
 ```
 

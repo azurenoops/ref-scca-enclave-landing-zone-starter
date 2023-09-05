@@ -9,6 +9,11 @@
 #################################
 # Global Configuration
 #################################
+variable "environment" {
+  description = "Name of the environment. This will be used to name the private endpoint resources deployed by this module. default is 'public'"
+  type        = string
+}
+
 variable "enable_management_groups" {
   description = "Enable Management Groups"
   type        = bool
