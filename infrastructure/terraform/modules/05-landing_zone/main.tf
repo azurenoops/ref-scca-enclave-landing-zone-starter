@@ -131,7 +131,7 @@ module "mod_hub_network" {
 
 // Resources for the Operations Spoke
 module "mod_id_network" {
-  providers = { azurerm = azurerm.identity }
+  providers = { azurerm = azurerm.identity, azurerm.hub_network = azurerm.hub }
   source    = "azurenoops/overlays-management-spoke/azurerm"
   version   = "~> 3.0"
 
@@ -198,7 +198,7 @@ module "mod_id_network" {
 
 // Resources for the Operations Spoke
 module "mod_ops_network" {
-  providers = { azurerm = azurerm.operations }
+  providers = { azurerm = azurerm.operations, azurerm.hub_network = azurerm.hub }
   source    = "azurenoops/overlays-management-spoke/azurerm"
   version   = "~> 3.0"
 
@@ -265,7 +265,7 @@ module "mod_ops_network" {
 
 // Resources for the Shared Services Spoke
 module "mod_devsecops_network" {
-  providers = { azurerm = azurerm.devsecops }
+  providers = { azurerm = azurerm.devsecops, azurerm.hub_network = azurerm.hub }
   source    = "azurenoops/overlays-management-spoke/azurerm"
   version   = "~> 3.0"
 
