@@ -5,16 +5,7 @@ terraform {
     azurerm = {
       source  = "hashicorp/azurerm"
     }
-
   }
-
-  # Use this backend for local development/testing
-  #backend "azurerm" {
-    # resource_group_name  = ""   # Partial configuration, provided during "terraform init"
-    # storage_account_name = ""   # Partial configuration, provided during "terraform init"
-    # container_name       = ""   # Partial configuration, provided during "terraform init"
-    #key = "azure_sql"
-  #}
 }
 
 provider "azurerm" {

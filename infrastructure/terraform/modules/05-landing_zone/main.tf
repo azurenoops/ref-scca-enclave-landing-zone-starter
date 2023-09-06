@@ -133,7 +133,7 @@ module "mod_hub_network" {
 module "mod_id_network" {
   providers = { azurerm = azurerm.identity, azurerm.hub_network = azurerm.hub }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 3.0"
+  version   = "~> 4.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -145,11 +145,11 @@ module "mod_id_network" {
   environment                 = var.environment
   workload_name               = var.id_name
 
-  # Collect Spoke Virtual Network Parameters
-  # Spoke network details to create peering and other setup
-  hub_virtual_network_id          = module.mod_hub_network.virtual_network_id
+  # Collect Hub Virtual Network Parameters
+  # Hub network details to create peering and other setup
+  hub_virtual_network_name        = module.mod_hub_network.virtual_network_name
   hub_firewall_private_ip_address = module.mod_hub_network.firewall_private_ip
-  hub_storage_account_id          = module.mod_hub_network.storage_account_id
+  hub_resource_group_name         = module.mod_hub_network.resource_group_name
 
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
@@ -200,7 +200,7 @@ module "mod_id_network" {
 module "mod_ops_network" {
   providers = { azurerm = azurerm.operations, azurerm.hub_network = azurerm.hub }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 3.0"
+  version   = "~> 4.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -212,11 +212,11 @@ module "mod_ops_network" {
   environment                 = var.environment
   workload_name               = var.ops_name
 
-  # Collect Spoke Virtual Network Parameters
-  # Spoke network details to create peering and other setup
-  hub_virtual_network_id          = module.mod_hub_network.virtual_network_id
+  # Collect Hub Virtual Network Parameters
+  # Hub network details to create peering and other setup
+  hub_virtual_network_name        = module.mod_hub_network.virtual_network_name
   hub_firewall_private_ip_address = module.mod_hub_network.firewall_private_ip
-  hub_storage_account_id          = module.mod_hub_network.storage_account_id
+  hub_resource_group_name         = module.mod_hub_network.resource_group_name
 
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
@@ -267,7 +267,7 @@ module "mod_ops_network" {
 module "mod_devsecops_network" {
   providers = { azurerm = azurerm.devsecops, azurerm.hub_network = azurerm.hub }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 3.0"
+  version   = "~> 4.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -279,11 +279,11 @@ module "mod_devsecops_network" {
   environment                 = var.environment
   workload_name               = var.devsecops_name
 
-  # Collect Spoke Virtual Network Parameters
-  # Spoke network details to create peering and other setup
-  hub_virtual_network_id          = module.mod_hub_network.virtual_network_id
+  # Collect Hub Virtual Network Parameters
+  # Hub network details to create peering and other setup
+  hub_virtual_network_name        = module.mod_hub_network.virtual_network_name
   hub_firewall_private_ip_address = module.mod_hub_network.firewall_private_ip
-  hub_storage_account_id          = module.mod_hub_network.storage_account_id
+  hub_resource_group_name         = module.mod_hub_network.resource_group_name
 
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
