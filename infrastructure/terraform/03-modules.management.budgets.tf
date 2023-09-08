@@ -1,18 +1,35 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-####################################################
-### 03 - Management Group Budgets Configuations  ###
-####################################################
+###############################
+### MG Budget Configuations ###
+###############################
 
-module "mod_management_groups_budgets" {
-  source = "./modules/03-budgets"
+# This module will create a budget in the workloads management group
+module "mod_mpe_mg_budgets" {
+  source  = "azurenoops/overlays-cost-management/azurerm//modules/budgets/managementGroup"
+  version = "~> 1.0"
+  count  = var.enable_management_groups_budgets ? 1 : 0 # used in testing
 
-  enable_management_groups_budgets = var.enable_management_groups_budgets
-  environment                      = var.environment
-  budget_contact_emails            = var.budget_contact_emails
-  budget_amount                    = var.budget_amount
-  budget_start_date                = var.budget_start_date
-  budget_end_date                  = var.budget_end_date
-  budget_scope                     = var.enable_management_groups && var.enable_management_groups_budgets ? module.mod_management_groups.management_groups["${local.provider_path.management_groups}${"workloads"}"].id : null
+  #####################################
+  ## Budget Configuration           ###
+  #####################################
+
+  budget_name       = "ANOA Budget"
+  budget_amount     = var.budget_amount
+  budget_time_grain = "Monthly"
+  budget_category   = "Cost"
+  budget_scope      = "${local.provider_path.management_groups}workloads" //module.mod_management_group.0.management_groups["workloads"].id
+  budget_time_period = {
+    start_date = var.budget_start_date
+    end_date   = var.budget_end_date
+  }
+  budget_notification = [
+    {
+      enabled        = true
+      operator       = "GreaterThan"
+      threshold      = 90
+      contact_emails = var.budget_contact_emails
+    }
+  ]
 }
