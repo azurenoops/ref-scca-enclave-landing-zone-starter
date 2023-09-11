@@ -44,6 +44,12 @@ variable "disable_base_module_tags" {
   default     = false
 }
 
+variable "disable_telemetry" {
+  type        = bool
+  description = "If set to true, will disable telemetry for all resources deployed by this module."
+  default     = false
+}
+
 variable "subscription_id_hub" {
   type        = string
   description = "If specified, identifies the Platform subscription for \"Hub\" for resource deployment and correct placement in the Management Group hierarchy."
