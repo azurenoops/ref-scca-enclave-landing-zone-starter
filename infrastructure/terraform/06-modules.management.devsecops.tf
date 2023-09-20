@@ -9,7 +9,9 @@ module "mod_shared_keyvault" {
   source  = "azurenoops/overlays-key-vault/azurerm"
   version = "~> 2.0"
 
-  count = var.enable_devsecops ? 1 : 0
+  # This module will need to be deployed after the landing zone network module.
+  # This is because the module will need to reference the landing zone network module's resource group name, virtual network name, and subnet name.
+  count = var.enable_devsecops_resources ? 1 : 0
 
   # By default, this module will create a resource group and 
   # provide a name for an existing resource group. If you wish 
@@ -37,10 +39,10 @@ module "mod_shared_keyvault" {
   }
 
   # Current user should be here to be able to create keys and secrets
-  rbac_authorization_enabled = var.rbac_authorization_enabled
-  /* admin_objects_ids = [
-    data.azuread_group.admin_group.id
-  ] */
+  //rbac_authorization_enabled = var.rbac_authorization_enabled
+  admin_objects_ids = [
+    var.admin_group_name
+  ]
 
   # Creating Private Endpoint requires, VNet name to create a Private Endpoint
   # By default this will create a `privatelink.vaultcore.azure.net` DNS zone. if created in commercial cloud
@@ -50,7 +52,7 @@ module "mod_shared_keyvault" {
   enable_private_endpoint      = var.enable_key_vault_private_endpoint
   virtual_network_name         = module.mod_devsecops_network.virtual_network_name
   existing_private_subnet_name = module.mod_devsecops_network.subnet_names["private-endpoints"].name
-  existing_private_dns_zone    = "privatelink.vaultcore.azure.net"
+  existing_private_dns_zone    = "privatelink.vaultcore.azure.net" # This was deployed by the DevSecOps network module
 
   # This is to enable resource locks for the key vault. 
   enable_resource_locks = var.enable_resource_locks
@@ -63,12 +65,14 @@ module "mod_shared_keyvault" {
 ## Bastion Jumpbox Configuration  ###
 #####################################
 
-module "mod_bastion_virtual_machine" {
+module "mod_bastion_jmp_virtual_machine" {
   depends_on = [ module.mod_devsecops_network ]
   source  = "azurenoops/overlays-virtual-machine/azurerm"
   version = "~> 2.0"
 
-  count = var.enable_devsecops ? 1 : 0
+  # This module will need to be deployed after the landing zone network module.
+  # This is because the module will need to reference the landing zone network module's resource group name, virtual network name, and subnet name.
+  count = var.enable_devsecops_resources ? 1 : 0
   
   # Resource Group, location, VNet and Subnet details
   existing_resource_group_name = module.mod_devsecops_network.resource_group_name

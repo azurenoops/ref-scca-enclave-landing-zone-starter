@@ -84,3 +84,4 @@ test/go.sum
 !**/*.tfvars
 infrastructure/terraform/destroy.tfplan
 infrastructure/terraform/*.plan
+infrastructure/terraform/03-modules.management.budgets.tf

@@ -11,97 +11,33 @@ AUTHOR/S: jrspinella
 ###  Sentinel Data Connections Configuations  ###
 ##################################################
 
-resource "azurerm_sentinel_data_connector_azure_active_directory" "dataAAD" {
-  count = var.required_license_enabled ? 1 : 0
-  name                       = "Azure_AD_Connector"
+/* module "mod_sentinel_dataAAD" {
+  source                     = "azurenoops/overlays-sentinel/azurerm//modules/sentinel_connectors/aad"
+  version                    = "~> 1.0"
   log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
 }
 
-resource "azurerm_sentinel_data_connector_azure_security_center" "dataASC" {
-  name                       = "Azure_Security_Center_Conector"
+module "mod_sentinel_dataASC" {
+  source                     = "azurenoops/overlays-sentinel/azurerm//modules/sentinel_connectors/asc"
+  version                    = "~> 1.0"
   log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
 }
 
-resource "azurerm_sentinel_data_connector_office_365" "dataO365" {
-  count = var.required_license_enabled ? 1 : 0
-  name                       = "O365_Connector"
+module "mod_sentinel_dataATP" {
+  source                     = "azurenoops/overlays-sentinel/azurerm//modules/sentinel_connectors/atp"
+  version                    = "~> 1.0"
   log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-  exchange_enabled           = true
-  teams_enabled              = true
-  sharepoint_enabled         = true
-}
-
-resource "azurerm_sentinel_data_connector_azure_advanced_threat_protection" "dataATP" {
-  name                       = "ATP_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
-
-resource "azurerm_sentinel_data_connector_dynamics_365" "dataD365" {
-  name                       = "D365_Connetor"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
-
-resource "azurerm_sentinel_data_connector_microsoft_cloud_app_security" "dataCAS" {
-  count = var.required_license_enabled ? 1 : 0
-  name                       = "CAS_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-  alerts_enabled             = true
-  discovery_logs_enabled     = true
-}
-
-resource "azurerm_sentinel_data_connector_microsoft_defender_advanced_threat_protection" "dataDATP" {
-  count = var.required_license_enabled ? 1 : 0
-  name                       = "DATP_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
-
-resource "azurerm_sentinel_data_connector_microsoft_threat_intelligence" "dataMTI" {
-  name                                         = "MSTI_Connector"
-  log_analytics_workspace_id                   = module.mod_hub_network.managmement_logging_log_analytics_id
-  microsoft_emerging_threat_feed_lookback_date = "1970-01-01T00:00:00Z"
-}
-
-resource "azurerm_sentinel_data_connector_microsoft_threat_protection" "dataMTP" {
-  name                       = "MTP_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
-
-resource "azurerm_sentinel_data_connector_office_365_project" "dataO365P" {
-  count = var.required_license_enabled ? 1 : 0
-  name                       = "O365P_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
-
-resource "azurerm_sentinel_data_connector_office_atp" "dataOATP" {
-  count = var.required_license_enabled ? 1 : 0
-  name                       = "OATP_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
-
-resource "azurerm_sentinel_data_connector_office_irm" "dataOIRM" {
-  count = var.required_license_enabled ? 1 : 0
-  name                       = "OIRM_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
-
-resource "azurerm_sentinel_data_connector_office_power_bi" "dataOPBI" {
-  count = var.required_license_enabled ? 1 : 0
-  name                       = "OPBI_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
-
-resource "azurerm_sentinel_data_connector_threat_intelligence" "dataTI" {
-  name                       = "TI_Connector"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
-}
+} */
 
 ################################
 ###  Sentinel Configuations  ###
 ################################
 
-module "mod_sentinel_rules" {
-  source  = "azurenoops/overlays-sentinel-rules/azurerm//modules/scheduled-alert-rule"
-  version = "~> 0.1"
+/* module "mod_sentinel_rules" {
+  source  = "azurenoops/overlays-sentinel/azurerm//modules/scheduled_alert_rule"
+  version = "~> 1.0"
+
+  depends_on = [module.mod_hub_network]
 
   for_each = var.enable_sentinel_rule_alerts ? var.sentinel_rule_alerts : {}
 
@@ -125,4 +61,4 @@ module "mod_sentinel_rules" {
   suppression_duration       = each.value.suppression_duration
   suppression_enabled        = each.value.suppression_enabled
   aggregation_method         = each.value.event_grouping
-}
+} */

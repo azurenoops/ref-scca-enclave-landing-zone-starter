@@ -19,7 +19,7 @@ module "mod_mpe_mg_budgets" {
   budget_amount     = var.budget_amount
   budget_time_grain = "Monthly"
   budget_category   = "Cost"
-  budget_scope      = "${local.provider_path.management_groups}workloads" //module.mod_management_group.0.management_groups["workloads"].id
+  budget_scope      = "${local.provider_path.management_groups}workloads"
   budget_time_period = {
     start_date = var.budget_start_date
     end_date   = var.budget_end_date

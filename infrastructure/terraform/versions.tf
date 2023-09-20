@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.36"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 2.0"
+    }
     null = {
       source = "hashicorp/null"
     }
@@ -40,6 +44,7 @@ terraform {
 
 provider "azurerm" {
   subscription_id = var.subscription_id_hub
+  environment     = var.environment
   skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
@@ -57,6 +62,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "hub"
   subscription_id = var.subscription_id_hub
+  environment     = var.environment
   skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
@@ -74,6 +80,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "identity"
   subscription_id = coalesce(var.subscription_id_identity, var.subscription_id_hub)
+  environment     = var.environment
   skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
@@ -91,6 +98,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "operations"
   subscription_id = coalesce(var.subscription_id_operations, var.subscription_id_hub)
+  environment     = var.environment
   skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {
@@ -108,6 +116,7 @@ provider "azurerm" {
 provider "azurerm" {
   alias           = "devsecops"
   subscription_id = coalesce(var.subscription_id_devsecops, var.subscription_id_hub)
+  environment     = var.environment
   skip_provider_registration = var.environment == "usgovernment" ? true : false
   features {
     log_analytics_workspace {

@@ -1,11 +1,15 @@
 
 # management_groups module outputs
 output "management_groups" {
-  value = length(module.mod_management_group) > 0 ? module.mod_management_group[0].management_groups : null
+  value = var.enable_management_groups ? module.mod_management_group[0].management_groups : null
   sensitive = true
 }
 
 # management_groups budgets module outputs
+/* output "management_groups_budgets" {
+  value = var.enable_management_groups ? module.mod_management_group[0].management_groups_budgets : null
+  sensitive = true
+} */
 
 # roles module outputs
 /* output "role_definition_ids" {

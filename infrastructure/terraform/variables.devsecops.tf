@@ -10,7 +10,7 @@
 # Global Configuration   ##
 ###########################
 
-variable "enable_devsecops" {
+variable "enable_devsecops_resources" {
   description = "If set to true, will deploy the DevSecOps resources. Default is false."
   type        = bool
   default     = false

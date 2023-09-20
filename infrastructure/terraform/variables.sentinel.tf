@@ -16,11 +16,6 @@ variable "enable_sentinel_rule_alerts" {
   default     = false
 }
 
-variable "required_license_enabled" {
-  description = "Enable Sentinel Data Connectors that require a license"
-  type        = bool
-  default     = false
-}
 variable "sentinel_rule_alerts" {
   description = "A map of alerts to be created."
   type = map(object({
@@ -31,8 +26,10 @@ variable "sentinel_rule_alerts" {
 
     entity_mappings = list(object({
       entity_type = string
-      field_name  = string
-      identifier  = string
+      field_mappings = list(object({
+        column_name = string
+        identifier = string
+      }))
     }))
 
     tactics    = optional(list(string))
@@ -40,17 +37,18 @@ variable "sentinel_rule_alerts" {
 
     display_name = string
     description  = string
-    enabled      = bool
 
     #Incident Configuration Block
     create_incident = bool
     # Grouping Block in incident_configuration block
-    grouping_enabled        = optional(bool)
-    lookback_duration       = optional(string)
-    reopen_closed_incidents = optional(bool)
-    entity_matching_method  = optional(string)
-    group_by_entities       = optional(list(string))
-    group_by_alert_details  = optional(list(string))
+    incident_configuration = object({
+      enabled                 = bool
+      lookback_duration       = string
+      reopen_closed_incidents = bool
+      entity_matching_method  = string
+      group_by_entities       = list(string)
+      group_by_alert_details  = list(string)
+    })
 
     suppression_duration = optional(string)
     suppression_enabled  = optional(bool)
