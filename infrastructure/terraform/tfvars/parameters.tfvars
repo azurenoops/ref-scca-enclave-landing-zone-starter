@@ -350,7 +350,7 @@ use_remote_spoke_gateway = false
 
 # DevSecOps Configuration
 # Turn on to enable DevSecOps resources
-enable_devsecops_resources = true
+enable_devsecops_resources = false
 
 # Azure Key Vault
 enabled_for_deployment            = true
