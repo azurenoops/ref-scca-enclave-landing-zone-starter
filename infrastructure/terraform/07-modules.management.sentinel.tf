@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 
 /*
-SUMMARY: Sentinel DAta Connectors & Alerts
+SUMMARY: Sentinel Data Connectors & Alerts
 DESCRIPTION: This resource generates sentinel alerts based on the alert rules input into the module
 AUTHOR/S: jrspinella
 */

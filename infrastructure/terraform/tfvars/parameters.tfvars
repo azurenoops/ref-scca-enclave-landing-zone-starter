@@ -358,7 +358,7 @@ enabled_for_disk_encryption       = true
 enabled_for_template_deployment   = true
 rbac_authorization_enabled        = false
 enable_key_vault_private_endpoint = true
-admin_group_name                  = "61bd9160-00b0-4019-8f34-d2e105b17b73"
+admin_group_name                  = null
 
 # Bastion VM Configuration
 windows_distribution_name = "windows2019dc"
