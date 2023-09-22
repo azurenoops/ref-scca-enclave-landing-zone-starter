@@ -1,36 +1,96 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-################################
-### Hub/Spoke Configuations  ###
-################################
+###############################
+## Key Vault Configuration  ###
+###############################
+module "mod_shared_keyvault" {
+  depends_on = [ module.mod_devsecops_network ]
+  source  = "azurenoops/overlays-key-vault/azurerm"
+  version = "~> 2.0"
 
-module "mod_devsecops" {
-  source     = "./modules/06-devsecops"
-  depends_on = [module.mod_landing_zone]
+  # This module will need to be deployed after the landing zone network module.
+  # This is because the module will need to reference the landing zone network module's resource group name, virtual network name, and subnet name.
+  count = var.enable_devsecops_resources ? 1 : 0
 
-  # Global Configuration
-  location           = var.default_location
-  deploy_environment = var.deploy_environment
-  org_name           = var.org_name
-  environment        = var.environment
+  # By default, this module will create a resource group and 
+  # provide a name for an existing resource group. If you wish 
+  # to use an existing resource group, change the option 
+  # to "create_key_vault_resource_group = false."   
+  existing_resource_group_name = module.mod_devsecops_network.resource_group_name
+  location                     = var.default_location
+  deploy_environment           = var.deploy_environment
+  org_name                     = var.org_name
+  environment                  = var.environment
+  workload_name                = "shared-keys"
 
-  # DevSecOps Network Configuration
-  resource_group_name  = module.mod_landing_zone.devsecops_resource_group_name
-  virtual_network_name = module.mod_landing_zone.devsecops_virtual_network_name
-  subnet_name          = module.mod_landing_zone.devsecops_default_subnet_names["vm"].name # add to the vm subnet
+  # This is to enable the features of the key vault
+  enabled_for_deployment          = var.enabled_for_deployment
+  enabled_for_disk_encryption     = var.enabled_for_disk_encryption
+  enabled_for_template_deployment = var.enabled_for_template_deployment
 
-  # Key Vault Configuration
-  enabled_for_deployment            = var.enabled_for_deployment
-  enabled_for_disk_encryption       = var.enabled_for_disk_encryption
-  enabled_for_template_deployment   = var.enabled_for_template_deployment
-  admin_group_name                  = var.admin_group_name
-  enable_key_vault_private_endpoint = var.enable_key_vault_private_endpoint
-  existing_private_subnet_name      = module.mod_landing_zone.devsecops_default_subnet_names["private-endpoints"].name # add to the pe subnet
+  # This is to enable public access to the key vault, since we are using a private network and endpoint, we will disable it
+  public_network_access_enabled = false
 
-  # Bastion VM Configuration 
-  # This module supports multiple Pre-Defined windows and Windows Distributions.
-  # Check the module README.md file for more pre-defined images for Ubuntu, Centos, RedHat.  
+  # This is to enable the network access to the key vault
+  network_acls = {
+    bypass         = "AzureServices"
+    default_action = "Deny"
+  }
+
+  # Current user should be here to be able to create keys and secrets
+  //rbac_authorization_enabled = var.rbac_authorization_enabled
+  admin_objects_ids = [
+    var.admin_group_name
+  ]
+
+  # Creating Private Endpoint requires, VNet name to create a Private Endpoint
+  # By default this will create a `privatelink.vaultcore.azure.net` DNS zone. if created in commercial cloud
+  # To use existing subnet, specify `existing_subnet_id` with valid subnet id. 
+  # To use existing private DNS zone specify `existing_private_dns_zone` with valid zone name
+  # Private endpoints doesn't work If not using `existing_subnet_id` to create key vault inside a specified VNet.
+  enable_private_endpoint      = var.enable_key_vault_private_endpoint
+  virtual_network_name         = module.mod_devsecops_network.virtual_network_name
+  existing_private_subnet_name = module.mod_devsecops_network.subnet_names["private-endpoints"].name
+  existing_private_dns_zone    = "privatelink.vaultcore.azure.net" # This was deployed by the DevSecOps network module
+
+  # This is to enable resource locks for the key vault. 
+  enable_resource_locks = var.enable_resource_locks
+
+  # Tags for Azure Resources
+  add_tags = local.devsecops_resources_tags
+}
+
+#####################################
+## Bastion Jumpbox Configuration  ###
+#####################################
+
+module "mod_bastion_jmp_virtual_machine" {
+  depends_on = [ module.mod_devsecops_network ]
+  source  = "azurenoops/overlays-virtual-machine/azurerm"
+  version = "~> 2.0"
+
+  # This module will need to be deployed after the landing zone network module.
+  # This is because the module will need to reference the landing zone network module's resource group name, virtual network name, and subnet name.
+  count = var.enable_devsecops_resources ? 1 : 0
+  
+  # Resource Group, location, VNet and Subnet details
+  existing_resource_group_name = module.mod_devsecops_network.resource_group_name
+  location                     = var.default_location
+  deploy_environment           = var.deploy_environment
+  org_name                     = var.org_name
+  workload_name                = "jmp"
+
+  # Shared Services Network Configuration
+  existing_virtual_network_name = module.mod_devsecops_network.virtual_network_name
+  existing_subnet_name          = module.mod_devsecops_network.subnet_names["vm"].name
+
+  # This module support multiple Pre-Defined windows and Windows Distributions.
+  # Check the README.md file for more pre-defined images for Ubuntu, Centos, RedHat.
+  # Please make sure to use gen2 images supported VM sizes if you use gen2 distributions
+  # Specify `disable_password_authentication = false` to create random admin password
+  # Specify a valid password with `admin_password` argument to use your own password .  
+  os_type                   = "windows"
   windows_distribution_name = var.windows_distribution_name
   virtual_machine_size      = var.virtual_machine_size
   admin_username            = var.vm_admin_username
@@ -46,7 +106,7 @@ module "mod_devsecops" {
   # Network Seurity group port definitions for each Virtual Machine 
   # NSG association for all network interfaces to be added automatically.
   # Using 'existing_network_security_group_name' is supplied then the module will use the existing NSG.
-  existing_network_security_group_name = module.mod_landing_zone.devsecops_default_nsg_names["vm"].name # TODO: Change this to vm subnet nsg
+  existing_network_security_group_name = module.mod_devsecops_network.network_security_group_names["vm"].name
   nsg_inbound_rules                    = var.nsg_inbound_rules
 
   # Boot diagnostics are used to troubleshoot virtual machines by default. 
@@ -61,11 +121,14 @@ module "mod_devsecops" {
 
   # (Optional) To activate Azure Monitoring and install log analytics agents 
   # (Optional) To save monitoring logs to storage, specify'storage_account_name'.    
-  log_analytics_resource_id = module.mod_landing_zone.ops_logging_log_analytics_resource_id
+  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
 
   # Deploy log analytics agents on a virtual machine. 
   # Customer id and primary shared key for Log Analytics workspace are required.
-  deploy_log_analytics_agent       = var.deploy_log_analytics_agent
-  log_analytics_workspace_id       = module.mod_landing_zone.ops_logging_log_analytics_workspace_id
-  log_analytics_primary_shared_key = module.mod_landing_zone.ops_logging_log_analytics_primary_shared_key
+  deploy_log_analytics_agent                 = var.deploy_log_analytics_agent
+  log_analytics_customer_id                  = module.mod_hub_network.managmement_logging_log_analytics_workspace_id
+  log_analytics_workspace_primary_shared_key = module.mod_hub_network.managmement_logging_log_analytics_primary_shared_key
+
+  # Adding additional TAG's to your Azure resources
+  add_tags = local.devsecops_resources_tags
 }

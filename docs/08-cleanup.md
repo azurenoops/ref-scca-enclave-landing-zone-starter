@@ -11,19 +11,19 @@ Ensure the following state management environment variables have been defined:
 - TFSTATE_RG         = 'xxxxx'
 
 ```bash
-# Deploy core MLZS resources
+# Deploy core MELZS resources
 $STORAGEACCOUNTNAME='xxxxx'
 $CONTAINERNAME='xxxxx'
 $TFSTATE_RG='xxxxx'
 
 terraform init --backend-config="resource_group_name=$TFSTATE_RG" --backend-config="storage_account_name=$STORAGEACCOUNTNAME" --backend-config="container_name=$CONTAINERNAME"
 
-cd ref-scca-enclave-starter/infrastructure/terraform
-terraform apply --out anoa.dev.plan --var-file ../tfvars/parameters.tfvars
-
-# Destroy core MLZ resources
 cd infrastructure/terraform
-terraform plan --destroy -out anoa.dev.plan --var-file ../tfvars/parameters.tfvars
+terraform apply --out anoa.dev.plan --var-file ../tfvars/parameters.tfvars --var "subscription_id_hub=<<subscription_id>>" --var "vm_admin_password=<<password>>"
+
+# Destroy core MELZS resources
+cd infrastructure/terraform
+terraform plan --destroy -out anoa.dev.plan --var-file ../tfvars/parameters.tfvars -var "subscription_id_hub=<<subscription_id>>" --var "vm_admin_password=<<password>>"
 terraform apply anoa.dev.plan
 ```
 

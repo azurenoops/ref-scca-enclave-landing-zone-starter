@@ -6,7 +6,7 @@
 # The following locals are used to create the bitfield data, dependent on the module configuration
 locals {
   # Bitfield bit 1 (LSB): Is deploy management LZs enabled?
-  telem_management_deploy = local.disable_telemetry ? 1 : 0
+  telem_management_deploy = var.disable_telemetry ? 1 : 0
 }
 
 # The following locals calculate the telemetry bit field by summiung the above locals and then representing as hexadecimal
@@ -25,7 +25,7 @@ locals {
     format(
       "pid-%s_%s_%s_%s",
       local.telem_management_puid,
-      local.org_name,
+      var.org_name,
       local.telem_management_bitfield_hex,
       local.telem_random_hex,
     ),
@@ -36,5 +36,5 @@ locals {
 
 # Condition to determine whether we create the management telemetry deployment
 locals {
-  telem_management_deployment_enabled = !local.disable_telemetry
+  telem_management_deployment_enabled = !var.disable_telemetry
 }

@@ -1,6 +1,22 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+###############################
+## Key Vault Configuration  ###
+###############################
+
+variable "enable_service_health_monitoring" {
+  description = "Enable Service Health Monitoring"
+  type        = bool
+  default     = false
+}
+
+variable "action_group_short_name" {
+  description = "Short name for the action group. Example: `alerting`."
+  type        = string
+  default     = "alerting"
+}
+
 variable "action_group_webhooks" {
   description = "Map of Webhooks to notify. Example: `{ PagerDuty = 'https://events.pagerduty.com/integration/abcdefgh12345azerty/enqueue' }`."
   type        = map(string)

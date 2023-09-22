@@ -51,7 +51,7 @@ The following picture shows the separation of duties for the Terraform modules a
 
 ![Separation of Duties](./docs/images/separation-of-duties.png)
 
-It is important to understand how you would set this up for a production environment. The separation of duties is important to ensure that the Terraform modules can be reused across multiple environments and aloows the right role to control changes.
+It is important to understand how you would set this up for a production environment. The separation of duties is important to ensure that the Terraform modules can be reused across multiple environments and allows the right role to control changes.
 
 ## Policy ##
 
@@ -59,7 +59,7 @@ Policy is a important piece of an Mission Enclave and required for a ATO to your
 
 If you are interested in learning more about how to apply policy to use in an Mission Enclave, you can use the following resources:
 
-- [Azure NoOps Policy Starter](https://github.com)
+- [Azure NoOps Policy Starter](https://github.com/azurenoops/ref-scca-enclave-policy-starter)
 
 However, you can use the following resources to learn more about policy in general:
 
