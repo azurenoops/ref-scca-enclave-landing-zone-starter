@@ -19,20 +19,30 @@ The following picture shows the high-level architecture created by the Terraform
 
 ![Architecture](./docs/images/normalized-architecture.png)
 
-## Deploy with GitHub ##
+## Deployment ##
 
-You can deploy Azure NoOps Mission Enclave Landing Zone using the GitHub Actions. The GitHub Actions will deploy the infrastructure to the Azure subscription you have configured in the GitHub Secrets.
+### Prerequisites ###
 
 You must have [Owner RBAC permissions](https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#owner) to the subscription(s) you deploy Azure NoOps Mission Enclave Landing Zone into.
 
-Pick the below scenario to get started on the Mission Enclave Landing Zone implementation. This implementation has a detailed README.md that will walk you through the deployment steps.
+The below scenarios to get started on the Mission Enclave Sentinel implementation.
+
+### Deploy with Terraform CLI ###
+
+This implementation has a detailed README.md that will walk you through the deployment steps.
 
 Manual Deployment Details:
 | Deployment Methodology | Manual Deployment |
 |--------------|--------------|
 |Terraform|[Published](./docs/manual-deployment-guide-terraform.md)
 
->NOTE: Using manual deployment to deploy the infrastructure using the Terraform CLI. This is a good option if you want to learn how to deploy the infrastructure using Terraform CLI.
+>NOTE: Using manual deployment to deploy the infrastructure using the Terraform CLI. This is a good option if you want to learn how to deploy the infrastructure using Terraform CLI. If you want to deploy the infrastructure using GitHub Actions, please use the E2E GitHub Deployment.
+
+### Deploy with GitHub ###
+
+You can deploy Azure NoOps Mission Enclave Landing Zone starter using the GitHub Actions. The GitHub Actions will deploy the infrastructure to the Azure subscription you have configured in the GitHub Secrets.
+
+This implementation has a detailed README.md that will walk you through the deployment steps.
 
 E2E GitHub Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
