@@ -96,7 +96,7 @@ You use the command below to obtain the value of the variable:
       az ad sp show --id e8de9221-a19c-4c81-b814-fd37c6caf9d2 --query id --output tsv
 
 * Replace the value of  TFSTATE_RG, STORAGEACCOUNTNAME and CONTAINERNAME in [deploy.yaml](../../../.github/workflows/deploy.yml) to point to your Terraform backend.
-* You can also set the deploy_firewall and destroy values in [deploy.yaml](../../../.github/workflows/deploy.yml) depending on your usecase.
+* You can also set the deploy_firewall and destroy values in [deploy.yaml](../../../.github/workflows/deploy.yml) depending on your use case.
 
 This workflow will be triggered every time a commit is pushed to the `main` branch.
 It will then run a job with the following steps:

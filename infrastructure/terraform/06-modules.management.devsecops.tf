@@ -5,9 +5,9 @@
 ## Key Vault Configuration  ###
 ###############################
 module "mod_shared_keyvault" {
-  depends_on = [ module.mod_devsecops_network ]
-  source  = "azurenoops/overlays-key-vault/azurerm"
-  version = "~> 2.0"
+  depends_on = [module.mod_devsecops_network]
+  source     = "azurenoops/overlays-key-vault/azurerm"
+  version    = "~> 2.0"
 
   # This module will need to be deployed after the landing zone network module.
   # This is because the module will need to reference the landing zone network module's resource group name, virtual network name, and subnet name.
@@ -66,14 +66,14 @@ module "mod_shared_keyvault" {
 #####################################
 
 module "mod_bastion_jmp_virtual_machine" {
-  depends_on = [ module.mod_devsecops_network ]
-  source  = "azurenoops/overlays-virtual-machine/azurerm"
-  version = "~> 2.0"
+  depends_on = [module.mod_devsecops_network]
+  source     = "azurenoops/overlays-virtual-machine/azurerm"
+  version    = "~> 2.0"
 
   # This module will need to be deployed after the landing zone network module.
   # This is because the module will need to reference the landing zone network module's resource group name, virtual network name, and subnet name.
   count = var.enable_devsecops_resources ? 1 : 0
-  
+
   # Resource Group, location, VNet and Subnet details
   existing_resource_group_name = module.mod_devsecops_network.resource_group_name
   location                     = var.default_location
@@ -103,7 +103,7 @@ module "mod_bastion_jmp_virtual_machine" {
   enable_vm_availability_set       = var.enable_vm_availability_set
   enable_public_ip_address         = var.enable_public_ip_address
 
-  # Network Seurity group port definitions for each Virtual Machine 
+  # Network Security group port definitions for each Virtual Machine 
   # NSG association for all network interfaces to be added automatically.
   # Using 'existing_network_security_group_name' is supplied then the module will use the existing NSG.
   existing_network_security_group_name = module.mod_devsecops_network.network_security_group_names["vm"].name
@@ -116,18 +116,18 @@ module "mod_bastion_jmp_virtual_machine" {
 
   # Attach a managed data disk to a Windows/windows virtual machine. 
   # Storage account types include: #'Standard_LRS', #'StandardSSD_ZRS', #'Premium_LRS', #'Premium_ZRS', #'StandardSSD_LRS', #'UltraSSD_LRS' (UltraSSD_LRS is only accessible in regions that support availability zones).
-  # Create a new data drive - connect to the VM and execute diskmanagemnet or fdisk.
+  # Create a new data drive - connect to the VM and execute diskmanagement or fdisk.
   data_disks = var.data_disks
 
   # (Optional) To activate Azure Monitoring and install log analytics agents 
   # (Optional) To save monitoring logs to storage, specify'storage_account_name'.    
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_workspace_id = module.mod_hub_network.management_logging_log_analytics_id
 
   # Deploy log analytics agents on a virtual machine. 
   # Customer id and primary shared key for Log Analytics workspace are required.
   deploy_log_analytics_agent                 = var.deploy_log_analytics_agent
-  log_analytics_customer_id                  = module.mod_hub_network.managmement_logging_log_analytics_workspace_id
-  log_analytics_workspace_primary_shared_key = module.mod_hub_network.managmement_logging_log_analytics_primary_shared_key
+  log_analytics_customer_id                  = module.mod_hub_network.management_logging_log_analytics_workspace_id
+  log_analytics_workspace_primary_shared_key = module.mod_hub_network.management_logging_log_analytics_primary_shared_key
 
   # Adding additional TAG's to your Azure resources
   add_tags = local.devsecops_resources_tags

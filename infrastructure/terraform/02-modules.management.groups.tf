@@ -5,11 +5,11 @@
 SUMMARY: Module to deploy an Azure Management Group Hierarchy for a Partner Environment
 DESCRIPTION: The following components will be options in this deployment
              * Management Group Hierarchy
-AUTHOR/S: jspinella
+AUTHOR/S: jrspinella
 */
 
 ########################################
-###  Management Group Configuations  ###
+###  Management Group Configurations  ###
 ########################################
 
 module "mod_management_group" {

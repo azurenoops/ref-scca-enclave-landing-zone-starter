@@ -1,7 +1,7 @@
 
 # management_groups module outputs
 output "management_groups" {
-  value = var.enable_management_groups ? module.mod_management_group[0].management_groups : null
+  value     = var.enable_management_groups ? module.mod_management_group[0].management_groups : null
   sensitive = true
 }
 
@@ -146,29 +146,29 @@ output "operations_default_nsg_names" {
 # operational logging module outputs
 
 output "ops_logging_log_analytics_resource_id" {
-  description = "Resource ID of Managment Logging Log Analytics Workspace"
-  value       = module.mod_hub_network.managmement_logging_log_analytics_id
+  description = "Resource ID of Management Logging Log Analytics Workspace"
+  value       = module.mod_hub_network.management_logging_log_analytics_id
 }
 
 output "ops_logging_log_analytics_name" {
-  description = "Name of Managment Logging Log Analytics Workspace"
-  value       = module.mod_hub_network.managmement_logging_log_analytics_name
+  description = "Name of Management Logging Log Analytics Workspace"
+  value       = module.mod_hub_network.management_logging_log_analytics_name
 }
 
 output "ops_logging_storage_account_id" {
-  description = "Name of Managment Logging Storage Account Id"
-  value       = module.mod_hub_network.managmement_logging_storage_account_id
+  description = "Name of Management Logging Storage Account Id"
+  value       = module.mod_hub_network.management_logging_storage_account_id
 }
 
 output "ops_logging_log_analytics_workspace_id" {
-  description = "Resource ID of Managment Logging Log Analytics Workspace"
-  value       = module.mod_hub_network.managmement_logging_log_analytics_workspace_id
+  description = "Resource ID of Management Logging Log Analytics Workspace"
+  value       = module.mod_hub_network.management_logging_log_analytics_workspace_id
 }
 
 output "ops_logging_log_analytics_primary_shared_key" {
-  description = "Resource ID of Managment Logging Log Analytics Workspace"
-  value       = module.mod_hub_network.managmement_logging_log_analytics_primary_shared_key
-  sensitive = true
+  description = "Resource ID of Management Logging Log Analytics Workspace"
+  value       = module.mod_hub_network.management_logging_log_analytics_primary_shared_key
+  sensitive   = true
 }
 
 # devsecops_network module outputs

@@ -1,15 +1,15 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-###############################
-### MG Budget Configuations ###
-###############################
+################################
+### MG Budget Configurations ###
+################################
 
 # This module will create a budget in the workloads management group
 module "mod_mpe_mg_budgets" {
   source  = "azurenoops/overlays-cost-management/azurerm//modules/budgets/managementGroup"
   version = "~> 1.0"
-  count  = var.enable_management_groups_budgets ? 1 : 0 # used in testing
+  count   = var.enable_management_groups_budgets ? 1 : 0 # used in testing
 
   #####################################
   ## Budget Configuration           ###

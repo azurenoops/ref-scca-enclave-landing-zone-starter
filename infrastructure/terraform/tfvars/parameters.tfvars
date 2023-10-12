@@ -36,8 +36,8 @@ root_management_group_display_name = "anoa" # the root management group display 
 ################################################
 
 # Budgets for management groups
-enable_management_groups_budgets = false                  # enable budgets for management groups
-budget_contact_emails            = ["anoa@microsoft.com"] # email addresses to send alerts to for this subscription
+enable_management_groups_budgets = false                # enable budgets for management groups
+budget_contact_emails            = ["anoa@contoso.com"] # email addresses to send alerts to for this subscription
 budget_amount                    = "5000"
 budget_start_date                = "2023-09-01T00:00:00Z" # RFC3339 format: YYYY-MM-DDTHH:MM:SSZ
 budget_end_date                  = "2023-12-31T00:00:00Z" # RFC3339 format: YYYY-MM-DDTHH:MM:SSZ
@@ -78,11 +78,11 @@ create_ddos_plan = true
 # First address ranges from VNet Address space reserved for Firewall Subnets. 
 # First three address ranges from VNet Address space reserved for Gateway, AMPLS And Firewall Subnets. 
 # ex.: For 10.8.4.0/23 address space, usable address range start from "10.8.4.224/27" for all subnets.
-# default subnet name will be set as per Azure NoOps naming convention by defaut.
+# default subnet name will be set as per Azure NoOps naming convention by default.
 # Multiple Subnets, Service delegation, Service Endpoints, Network security groups
 # These are default subnets with required configuration, check README.md for more details
 # NSG association to be added automatically for all subnets listed here.
-# subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
+# subnet name will be set as per Azure naming convention by default. expected value here is: <App or project name>
 hub_subnets = {
   default = {
     name                                       = "hub-core"
@@ -192,7 +192,7 @@ firewall_application_rules = [
 
 # Private DNS Zone Settings
 # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
-# If you do want to create addtional Private DNS Zones, 
+# If you do want to create additional Private DNS Zones, 
 # add in the list of private_dns_zones to be created.
 # else, remove the private_dns_zones argument.
 hub_private_dns_zones = []
@@ -370,7 +370,7 @@ virtual_machine_size      = "Standard_B1s"
 vm_admin_username = "azureuser"
 instances_count   = 1
 
-# Network Seurity group port definitions for each Virtual Machine 
+# Network Security group port definitions for each Virtual Machine 
 # NSG association for all network interfaces to be added automatically.
 nsg_inbound_rules = [
   {
@@ -387,7 +387,7 @@ nsg_inbound_rules = [
 
 # Attach a managed data disk to a Windows/windows virtual machine. 
 # Storage account types include: #'Standard_LRS', #'StandardSSD_ZRS', #'Premium_LRS', #'Premium_ZRS', #'StandardSSD_LRS', #'UltraSSD_LRS' (UltraSSD_LRS is only accessible in regions that support availability zones).
-# Create a new data drive - connect to the VM and execute diskmanagemnet or fdisk.
+# Create a new data drive - connect to the VM and execute diskmanagement or fdisk.
 data_disks = [
   {
     name                 = "disk1"

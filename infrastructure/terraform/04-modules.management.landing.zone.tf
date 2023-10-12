@@ -21,11 +21,11 @@ DESCRIPTION: The following components will be options in this deployment
               * AMPLS (Azure Monitor Private Link Scope)
             * Azure Firewall
             * Private DNS Zones - Details of all the Azure Private DNS zones can be found here --> [https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-dns#azure-services-dns-zone-configuration](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-dns#azure-services-dns-zone-configuration)
-AUTHOR/S: jspinella
+AUTHOR/S: jrspinella
 */
 
 ################################
-### Hub/Spoke Configuations  ###
+### Hub/Spoke Configurations  ###
 ################################
 
 #######################################
@@ -65,7 +65,7 @@ module "mod_hub_network" {
   # Provide valid VNet Address space and specify valid domain name for Private DNS Zone.  
   virtual_network_address_space           = var.hub_vnet_address_space              # (Required)  Hub Virtual Network Parameters  
   firewall_subnet_address_prefix          = var.fw_client_snet_address_prefixes     # (Required)  Hub Firewall Subnet Parameters  
-  ampls_subnet_address_prefix             = var.ampls_subnet_address_prefixes        # (Required)  AMPLS Subnet Parameters
+  ampls_subnet_address_prefix             = var.ampls_subnet_address_prefixes       # (Required)  AMPLS Subnet Parameters
   firewall_management_snet_address_prefix = var.fw_management_snet_address_prefixes # (Optional)  Hub Firewall Management Subnet Parameters
 
   create_ddos_plan = var.create_ddos_plan # (Required)  DDoS Plan
@@ -73,7 +73,7 @@ module "mod_hub_network" {
   # (Required) Hub Subnets 
   # Default Subnets, Service Endpoints
   # This is the default subnet with required configuration, check README.md for more details
-  # subnet name will be set as per Azure NoOps naming convention by defaut. expected value here is: <App or project name>
+  # subnet name will be set as per Azure NoOps naming convention by default. expected value here is: <App or project name>
   hub_subnets = var.hub_subnets
 
   # Enable Flow Logs
@@ -106,7 +106,7 @@ module "mod_hub_network" {
 
   # Private DNS Zone Settings
   # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
-  # If you do want to create addtional Private DNS Zones, 
+  # If you do want to create additional Private DNS Zones, 
   # add in the list of private_dns_zones to be created.
   # else, remove the private_dns_zones argument.
   private_dns_zones = var.hub_private_dns_zones
@@ -131,10 +131,10 @@ module "mod_hub_network" {
 
 // Resources for the Operations Spoke
 module "mod_id_network" {
-  providers = { azurerm = azurerm.identity, azurerm.hub_network = azurerm.hub }
-  depends_on = [ module.mod_hub_network ]
-  source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 4.0"
+  providers  = { azurerm = azurerm.identity, azurerm.hub_network = azurerm.hub }
+  depends_on = [module.mod_hub_network]
+  source     = "azurenoops/overlays-management-spoke/azurerm"
+  version    = "~> 4.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -155,8 +155,8 @@ module "mod_id_network" {
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
   # Possible retention values range between 30 and 730
-  log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
-  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_workspace_id # this is a issue in management module, need to fix. This should not have storage_account in the name
+  log_analytics_workspace_id           = module.mod_hub_network.management_logging_log_analytics_id
+  log_analytics_customer_id            = module.mod_hub_network.management_logging_log_analytics_workspace_id # this is a issue in management module, need to fix. This should not have storage_account in the name
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    
@@ -165,7 +165,7 @@ module "mod_id_network" {
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
   # Route_table and NSG association to be added automatically for all subnets listed here.
-  # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
+  # subnet name will be set as per Azure naming convention by default. expected value here is: <App or project name>
   spoke_subnets = var.id_subnets
 
   # Enable Flow Logs
@@ -178,8 +178,8 @@ module "mod_id_network" {
   enable_forced_tunneling_on_route_table = var.enable_forced_tunneling_on_id_route_table
 
   # Private DNS Zone Settings
-  # By default, Azure Noid will create Private DNS Zones for Logging in Hub VNet.
-  # If you do want to create addtional Private DNS Zones, 
+  # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
+  # If you do want to create additional Private DNS Zones, 
   # add in the list of private_dns_zones to be created.
   # else, remove the private_dns_zones argument.
   private_dns_zones = var.id_private_dns_zones
@@ -199,10 +199,10 @@ module "mod_id_network" {
 
 // Resources for the Operations Spoke
 module "mod_ops_network" {
-  providers = { azurerm = azurerm.operations, azurerm.hub_network = azurerm.hub }
-  depends_on = [ module.mod_hub_network ]
-  source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 4.0"
+  providers  = { azurerm = azurerm.operations, azurerm.hub_network = azurerm.hub }
+  depends_on = [module.mod_hub_network]
+  source     = "azurenoops/overlays-management-spoke/azurerm"
+  version    = "~> 4.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -223,8 +223,8 @@ module "mod_ops_network" {
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
   # Possible retention values range between 30 and 730
-  log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
-  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_workspace_id # this is a issue in management module, need to fix. This hould not have storage_account in the name
+  log_analytics_workspace_id           = module.mod_hub_network.management_logging_log_analytics_id
+  log_analytics_customer_id            = module.mod_hub_network.management_logging_log_analytics_workspace_id # this is a issue in management module, need to fix. This should not have storage_account in the name
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    
@@ -233,7 +233,7 @@ module "mod_ops_network" {
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
   # Route_table and NSG association to be added automatically for all subnets listed here.
-  # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
+  # subnet name will be set as per Azure naming convention by default. expected value here is: <App or project name>
   spoke_subnets = var.ops_subnets
 
   # Enable Flow Logs
@@ -247,7 +247,7 @@ module "mod_ops_network" {
 
   # Private DNS Zone Settings
   # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
-  # If you do want to create addtional Private DNS Zones, 
+  # If you do want to create additional Private DNS Zones, 
   # add in the list of private_dns_zones to be created.
   # else, remove the private_dns_zones argument.
   private_dns_zones = var.ops_private_dns_zones
@@ -267,10 +267,10 @@ module "mod_ops_network" {
 
 // Resources for the Shared Services Spoke
 module "mod_devsecops_network" {
-  providers = { azurerm = azurerm.devsecops, azurerm.hub_network = azurerm.hub }
-  depends_on = [ module.mod_hub_network ]
-  source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "~> 4.0"
+  providers  = { azurerm = azurerm.devsecops, azurerm.hub_network = azurerm.hub }
+  depends_on = [module.mod_hub_network]
+  source     = "azurenoops/overlays-management-spoke/azurerm"
+  version    = "~> 4.0"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
@@ -291,8 +291,8 @@ module "mod_devsecops_network" {
   # (Required) To enable Azure Monitoring and flow logs
   # pick the values for log analytics workspace which created by Spoke module
   # Possible values range between 30 and 730
-  log_analytics_workspace_id           = module.mod_hub_network.managmement_logging_log_analytics_id
-  log_analytics_customer_id            = module.mod_hub_network.managmement_logging_log_analytics_workspace_id # this is a issue in management module, need to fix
+  log_analytics_workspace_id           = module.mod_hub_network.management_logging_log_analytics_id
+  log_analytics_customer_id            = module.mod_hub_network.management_logging_log_analytics_workspace_id # this is a issue in management module, need to fix
   log_analytics_logs_retention_in_days = 30
 
   # Provide valid VNet Address space for spoke virtual network.    
@@ -301,7 +301,7 @@ module "mod_devsecops_network" {
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
   # Route_table and NSG association to be added automatically for all subnets listed here.
-  # subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
+  # subnet name will be set as per Azure naming convention by default. expected value here is: <App or project name>
   spoke_subnets = var.devsecops_subnets
 
   # Enable Flow Logs
@@ -315,7 +315,7 @@ module "mod_devsecops_network" {
 
   # Private DNS Zone Settings
   # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
-  # If you do want to create addtional Private DNS Zones, 
+  # If you do want to create additional Private DNS Zones, 
   # add in the list of private_dns_zones to be created.
   # else, remove the private_dns_zones argument.
   private_dns_zones = var.devsecops_private_dns_zones
