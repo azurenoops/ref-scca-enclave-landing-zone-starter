@@ -9,16 +9,16 @@ locals {
   telem_management_deploy = var.disable_telemetry ? 1 : 0
 }
 
-# The following locals calculate the telemetry bit field by summiung the above locals and then representing as hexadecimal
+# The following locals calculate the telemetry bit field by summing the above locals and then representing as hexadecimal
 # Hex number is represented as four digits wide and is zero padded
 locals {
-  telem_management_bitfield_denery = (
-    local.telem_management_deploy 
+  telem_management_bitfield_telemetry = (
+    local.telem_management_deploy
   )
-  telem_management_bitfield_hex = format("%04x", local.telem_management_bitfield_denery)
+  telem_management_bitfield_hex = format("%04x", local.telem_management_bitfield_telemetry)
 }
 
-# This construicts the ARM deployment name that is used for the telemetry.
+# This constructs the ARM deployment name that is used for the telemetry.
 # We shouldn't ever hit the 64 character limit but use substr just in case
 locals {
   telem_management_arm_deployment_name = substr(

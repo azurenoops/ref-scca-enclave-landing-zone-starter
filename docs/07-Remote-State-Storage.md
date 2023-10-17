@@ -1,4 +1,4 @@
-# Use the Azure CLI to create a storage account to store the Terraform state files for Mission Encalve Landing Zone Starter
+# Use the Azure CLI to create a storage account to store the Terraform state files for Mission Enclave Landing Zone Starter
 
 This storage account will be used to store the state of each deployment step and will be accessed by Terraform to reference values stored in the various deployment state files.
 
@@ -112,7 +112,7 @@ terraform apply -auto-approve
 
 ## Configure Variables for state management
 
-Modify the variables within the "01 Remote Storage State configuration" section of the variable definitons file [parameters.tfvars](./parameters.tfvars).
+Modify the variables within the "01 Remote Storage State configuration" section of the variable definitions file [parameters.tfvars](./parameters.tfvars).
 
 Sample: 
 
@@ -125,7 +125,7 @@ Sample:
 # Deployment state storage information
     state_sa_name  = "xxxx-enter-the-storage-account-name-xxxx"
     state_sa_rg    = "xxxx-enter-the-resource-group-here-xxxx"
-    state_sa_container_name = "ampestatesa"
+    state_sa_container_name = "anoastatesa"
 
 
 ```

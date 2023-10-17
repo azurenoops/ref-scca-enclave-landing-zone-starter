@@ -8,29 +8,29 @@ AUTHOR/S: jrspinella
 */
 
 ##################################################
-###  Sentinel Data Connections Configuations  ###
+###  Sentinel Data Connections Configurations  ###
 ##################################################
 
 /* module "mod_sentinel_dataAAD" {
   source                     = "azurenoops/overlays-sentinel/azurerm//modules/sentinel_connectors/aad"
   version                    = "~> 1.0"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_workspace_id = module.mod_hub_network.management_logging_log_analytics_id
 }
 
 module "mod_sentinel_dataASC" {
   source                     = "azurenoops/overlays-sentinel/azurerm//modules/sentinel_connectors/asc"
   version                    = "~> 1.0"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_workspace_id = module.mod_hub_network.management_logging_log_analytics_id
 }
 
 module "mod_sentinel_dataATP" {
   source                     = "azurenoops/overlays-sentinel/azurerm//modules/sentinel_connectors/atp"
   version                    = "~> 1.0"
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_workspace_id = module.mod_hub_network.management_logging_log_analytics_id
 } */
 
 ################################
-###  Sentinel Configuations  ###
+###  Sentinel Configurations  ###
 ################################
 
 /* module "mod_sentinel_rules" {
@@ -42,7 +42,7 @@ module "mod_sentinel_dataATP" {
   for_each = var.enable_sentinel_rule_alerts ? var.sentinel_rule_alerts : {}
 
   display_name               = each.key
-  log_analytics_workspace_id = module.mod_hub_network.managmement_logging_log_analytics_id
+  log_analytics_workspace_id = module.mod_hub_network.management_logging_log_analytics_id
   description                = each.value.description
   query_frequency            = each.value.query_frequency
   query_period               = each.value.query_period

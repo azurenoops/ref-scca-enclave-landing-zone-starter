@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 
 ###########################
-### Roles Configuations ###
+### Roles Configurations ###
 ###########################
 
 module "mod_custom_roles" {

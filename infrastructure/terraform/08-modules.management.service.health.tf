@@ -5,11 +5,11 @@
 SUMMARY: Module to deploy Monitoring Service Alerts for Azure Service Health in Partner Environments
 DESCRIPTION: The following components will be options in this deployment
              * Monitoring Service Alerts              
-AUTHOR/S: jspinella
+AUTHOR/S: jrspinella
 */
 
 ##############################################
-### Monitoring Service Alert Configuations ###
+### Monitoring Service Alert Configurations ###
 ##############################################
 
 # This module will create a monitoring service alerts on MPE resources

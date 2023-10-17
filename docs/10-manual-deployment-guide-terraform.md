@@ -62,7 +62,7 @@ To find out more about remote state, see the [Remote State documentation](./07-R
 
 ### Mission Enclave Landing Zone Global Configuration
 
-Review and if needed, comment out and modify the variables within the "01 Global Configuration" section of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "01 Global Configuration" section of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample Configuration:
 
@@ -91,7 +91,7 @@ enable_traffic_analytics = true
 
 ### Mission Enclave Management Groups
 
-Review and if needed, comment out and modify the variables within the "02 Management Groups Configuration" section of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "02 Management Groups Configuration" section of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -110,7 +110,7 @@ root_management_group_display_name = "anoa" # the root management group display 
 
 ```
 
-Main managment group structure is located in locals.tf at the root (terraform) folder. It uses the 'root_management_group_id' for the top level groups. Modify the following to meet your needs.
+Main management group structure is located in locals.tf at the root (terraform) folder. It uses the 'root_management_group_id' for the top level groups. Modify the following to meet your needs.
 
 ```terraform
 # The following locals are used to define the management groups
@@ -159,7 +159,7 @@ locals {
 
 ### Mission Enclave Management Budgets
 
-Review and if needed, comment out and modify the variables within the "02 Management Groups Budgets Configuration" section of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "02 Management Groups Budgets Configuration" section of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -171,13 +171,13 @@ Sample:
 
 # Budgets for management groups
 enable_management_groups_budgets = false                  # enable budgets for management groups
-budget_contact_emails            = ["anoa@microsoft.com"] # email addresses to send alerts to for this subscription
+budget_contact_emails            = ["anoa@contoso.com"] # email addresses to send alerts to for this subscription
 
 ```
 
 ### Mission Enclave Management Roles
 
-Review and if needed, comment out and modify the variables within the "04 Management Groups Roles Configuration" section of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "04 Management Groups Roles Configuration" section of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -229,7 +229,7 @@ The following will be created:
 - Management Hub Network (main.tf)
 - Management Hub Subnets (main.tf)
 
-Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Management Hub Virtual Network" of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Management Hub Virtual Network" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -258,7 +258,7 @@ gateway_vnet_address_space          = ["10.8.4.0/27"]   # (Optional)  Hub Gatewa
 # First three address ranges from VNet Address space reserved for Gateway, AMPLS And Firewall Subnets. 
 # These are default subnets with required configuration, check README.md for more details
 # NSG association to be added automatically for all subnets listed here.
-# subnet name will be set as per Azure naming convention by defaut. expected value here is: <App or project name>
+# subnet name will be set as per Azure naming convention by default. expected value here is: <App or project name>
 hub_subnets = {
   default = {
     name                                       = "hub-core"
@@ -293,14 +293,14 @@ hub_subnets = {
 
 ```
 
-### Mission Enclave - Management Hub Operationl Logging
+### Mission Enclave - Management Hub Operational Logging
 
 The following will be created:
 
 - Log Analytics (main.tf)
 - Log Solutions (main.tf)
 
-Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Operationl Logging" of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Operational Logging" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -337,7 +337,7 @@ The following will be created:
 - Azure Firewall (main.tf)
 - Required Firewall rules (main.tf)
 
-Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Management Hub Firewall" of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Management Hub Firewall" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -431,7 +431,7 @@ The following will be created:
 - Azure Bastion (main.tf)
 - Private DNS Zones (main.tf)
 
-Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Bastion/Private DNS Zones" of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Bastion/Private DNS Zones" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -447,7 +447,7 @@ Sample:
 
 # Private DNS Zone Settings
 # By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
-# If you do want to create addtional Private DNS Zones, 
+# If you do want to create additional Private DNS Zones, 
 # add in the list of private_dns_zones to be created.
 # else, remove the private_dns_zones argument.
 hub_private_dns_zones = ["privatelink.file.core.windows.net"]
@@ -460,14 +460,14 @@ azure_bastion_subnet_address_prefix = ["10.8.4.192/27"]
 
 ```
 
-### Mission Enclave - Identity Managmement Spoke Virtual Network
+### Mission Enclave - Identity Management Spoke Virtual Network
 
 The following will be created:
 
 - Resource Groups for Identity Spoke Networking
 - Spoke Networks (Identity)
 
-Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Identity Management Spoke Virtual Network" of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Identity Management Spoke Virtual Network" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -521,14 +521,14 @@ enable_forced_tunneling_on_id_route_table = true
 
 ```
 
-### Mission Enclave - Operations Managmement Spoke Virtual Network
+### Mission Enclave - Operations Management Spoke Virtual Network
 
 The following will be created:
 
 - Resource Groups for Operations Spoke Networking
 - Spoke Networks (Operations)
 
-Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Operations Management Spoke Virtual Network" of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Operations Management Spoke Virtual Network" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -582,14 +582,14 @@ enable_forced_tunneling_on_ops_route_table = true
 
 ```
 
-### Mission Enclave - DevSecOps Managmement Spoke Virtual Network
+### Mission Enclave - DevSecOps Management Spoke Virtual Network
 
 The following will be created:
 
 - Resource Groups for DevSecOps Spoke Networking
 - Spoke Networks (DevSecOps)
 
-Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "DevSecOps Management Spoke Virtual Network" of the common variable definitons file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "DevSecOps Management Spoke Virtual Network" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
 Sample:
 
@@ -708,7 +708,7 @@ Before provisioning any Azure resources with Terraform you must [initialize a wo
 
 ### Terraform Plan
 
-After intializing the directory, use [`terraform plan`](https://www.terraform.io/docs/cli/commands/plan.html) to provision the resources plan described in `infrastructure/terraform`.
+After initializing the directory, use [`terraform plan`](https://www.terraform.io/docs/cli/commands/plan.html) to provision the resources plan described in `infrastructure/terraform`.
 
 1. From the directory in which you executed `terraform init` execute `terraform plan` with the `--var-file` parameter to specify the path to the `parameters.tfvars` file:
 

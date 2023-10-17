@@ -11,7 +11,7 @@ Goals of Azure NoOps Mission Enclave Landing Zone starter:
 - Deployable in Azure commercial, Azure Government, Azure Government Secret, and Azure Government Top Secret clouds
 - Written as [Terraform](./infrastructure/terraform/) templates
 - Ability to consume workloads addons such as TAK Server, web apps, Azure SQL Database, and Azure Kubernetes Service (AKS)
-- Use E2E [Github Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) as part of  pipelines to automate the deployment and undeployment of the entire infrastructure on multiple environments on the Azure platform.
+- Use E2E [Github Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) as part of  pipelines to automate the deployment and removal of the entire infrastructure on multiple environments on the Azure platform.
 
 ## Architecture ##
 
@@ -41,7 +41,7 @@ E2E GitHub Deployment Details:
 
 ## Importance of Separation of Duties (Azure NoOps Shared Responsibility Model) ##
 
-In this is a reference implementation, the repo is self contained and contains all the Terraform modules and configuration files to deploy the infrastructure on Azure. This does not take into account of roles. Azure NoOps Shared Responsibility Model pushes the need to seperate roles. In a production environment, you will need to separate the Terraform modules and configuration files into different repositories. For example, you can have the following repositories:
+In this is a reference implementation, the repo is self contained and contains all the Terraform modules and configuration files to deploy the infrastructure on Azure. This does not take into account of roles. Azure NoOps Shared Responsibility Model pushes the need to separate roles. In a production environment, you will need to separate the Terraform modules and configuration files into different repositories. For example, you can have the following repositories:
 
 - A repository for the Management Layer Terraform modules (includes management groups, management service such as budgets, landing zones, and shared services)
 - A repository for the Management Policy Terraform modules
