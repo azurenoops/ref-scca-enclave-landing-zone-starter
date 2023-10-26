@@ -2,7 +2,7 @@ name: Check for infrastructure drift on Mission Enclave Management
 
 on:
   workflow_dispatch:
-  #schedule:
+  #schedule: - change this when using in production
   # - cron: 0 8 * * *
 
 jobs:

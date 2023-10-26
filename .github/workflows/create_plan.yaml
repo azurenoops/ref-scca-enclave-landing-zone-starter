@@ -2,7 +2,7 @@ name: Create Mission Enclave Management Landing Zone terraform plan
 
 on:
   workflow_dispatch:
-#  - pull_request
+#  - pull_request - change this when using in production
 
 permissions:
   contents: read
