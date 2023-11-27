@@ -19,13 +19,13 @@ The following picture shows the high-level architecture created by the Terraform
 
 ![Architecture](./docs/images/normalized-architecture.png)
 
-## Deploy with GitHub ##
+## Deploy Manually with Terraform ##
 
-You can deploy Azure NoOps Mission Enclave Landing Zone using the GitHub Actions. The GitHub Actions will deploy the infrastructure to the Azure subscription you have configured in the GitHub Secrets.
+You can deploy Azure NoOps Mission Enclave Landing Zone using the Terraform CLI. The Terraform CLI will deploy the infrastructure to the Azure subscription you have configured in the Terraform CLI.
 
 You must have [Owner RBAC permissions](https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#owner) to the subscription(s) you deploy Azure NoOps Mission Enclave Landing Zone into.
 
-Pick the below scenario to get started on the Mission Enclave Landing Zone implementation. This implementation has a detailed README.md that will walk you through the deployment steps.
+The below scenario to get started on the Mission Enclave Landing Zone implementation manually. This implementation has a detailed README.md that will walk you through the deployment steps.
 
 Manual Deployment Details:
 | Deployment Methodology | Manual Deployment |
@@ -33,6 +33,14 @@ Manual Deployment Details:
 |Terraform|[Published](./docs/10-manual-deployment-guide-terraform.md)
 
 >NOTE: Using manual deployment to deploy the infrastructure using the Terraform CLI. This is a good option if you want to learn how to deploy the infrastructure using Terraform CLI.
+
+## Deploy with GitHub Actions ##
+
+You can deploy Azure NoOps Mission Enclave Landing Zone using the GitHub Actions. The GitHub Actions will deploy the infrastructure to the Azure subscription you have configured in the GitHub Secrets.
+
+You must have [Owner RBAC permissions](https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#owner) to the subscription(s) you deploy Azure NoOps Mission Enclave Landing Zone into.
+
+The below scenario to get started on the Mission Enclave Landing Zone implementation with GitHub Actions. This implementation has a detailed README.md that will walk you through the deployment steps.
 
 E2E GitHub Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
