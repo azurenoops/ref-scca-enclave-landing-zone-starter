@@ -28,7 +28,7 @@ To get started with Terraform on Azure check out their [tutorial](https://learn.
 
 Below is an example of a Terraform deployment that uses all the defaults in the [TFVARS folder](./../infrastructure/terraform/tfvars/parameters.tfvars) to deploy the landing zone to one subscription.
 
->NOTE: Since this reference implementation is designed to use remote state, you will need to comment out the `backend "local" {}` block in the [versions.tf](./../infrastructure/terraform/versions.tf) file. This will allow you to deploy the landing zone without having to deploy the remote state storage account first.
+>NOTE: Since this reference implementation is designed to use remote state, you will need to comment out the [`backend "local" {}` block in the versions.tf](./../infrastructure/terraform/versions.tf) file. This will allow you to deploy the landing zone without having to deploy the remote state storage account first.
 
 ```bash
 cd infrastructure/terraform
@@ -50,176 +50,70 @@ The optional parameters related to subscriptions are below. At least one subscri
 Parameter name | Default Value | Description
 -------------- | ------------- | -----------
 `subscription_id_hub` | '' | Subscription ID for the Hub deployment
-`subscription_id_identity` | value of hub_subid | Subscription ID for tier 0
-`subscription_id_operations` | value of hub_subid | Subscription ID for tier 1
-`subscription_id_devsecops` | value of hub_subid | Subscription ID for tier 2
+`subscription_id_identity` | value of hub_subid | Subscription ID for identity tier
+`subscription_id_operations` | value of hub_subid | Subscription ID for operations tier
+`subscription_id_devsecops` | value of hub_subid | Subscription ID for devsecops tier
 
 ### Mission Enclave Landing Zone Remote State Storage Account
 
-The remote state storage account is used to store the Terraform state files. The state files contain the current state of the infrastructure that has been deployed. The state files are used by Terraform to determine what changes need to be made to the infrastructure when a deployment is run. The remote state storage account is also used to store the Terraform state lock files. The lock files are used to prevent multiple deployments from running at the same time. The remote state storage account is created in the hub subscription.
+The remote state storage account is used to store the Terraform state files. The state files contain the current state of the infrastructure that has been deployed. The state files are used by Terraform to determine what changes need to be made to the infrastructure when a deployment is run.
 
 To find out more about remote state, see the [Remote State documentation](./07-Remote-State-Storage.md).
 
 ### Mission Enclave Landing Zone Global Configuration
 
-Review and if needed, comment out and modify the variables within the "01 Global Configuration" section of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+The following parameters affect the "01 Global Configuration". To override the defaults edit the variables file at [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars).
 
-Sample Configuration:
+Example Configuration:
 
-```bash
-
-##############################
-## 01 Global Configuration  ##
-##############################
-
-# The prefixes to use for all resources in this deployment
-org_name           = "anoa"   # This Prefix will be used on most deployed resources.  10 Characters max.
-deploy_environment = "dev"    # dev | test | prod
-environment        = "public" # public | usgovernment
-
-# The default region to deploy to
-default_location = "eastus"
-
-# Enable locks on resources
-enable_resource_locks = false # true | false
-
-# Enable NSG Flow Logs
-# By default, this will enable flow logs traffic analytics for all subnets.
-enable_traffic_analytics = true
-
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`org_name`       | anoa          | This Prefix will be used on most deployed resources.  10 Characters max.
+`deploy_environment` | dev | This Prefix will be used on most deployed resources.  10 Characters max.
+`environment` | public | The environment to deploy to.
+`default_location` | eastus | The default region to deploy to.
+`enable_resource_locks` | false | Enable locks on resources.  true | false
+`enable_traffic_analytics` | true | Enable NSG Flow Logs.  true | false
 
 ### Mission Enclave Management Groups
 
-Review and if needed, comment out and modify the variables within the "02 Management Groups Configuration" section of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+The following parameters affect the "02 Management Groups Configuration" To override the defaults edit the variables file at [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars).
 
-Sample:
+Example Configuration:
 
-```bash
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`enable_management_groups` | true | Enable management groups for this subscription
+`root_management_group_id` | anoa | The root management group id for this subscription
+`root_management_group_display_name` | anoa | The root management group display name for this subscription
 
-########################################
-# 02 Management Groups Configuration  ##
-########################################
-
-enable_management_groups           = true   # enable management groups for this subscription
-root_management_group_id           = "anoa" # the root management group id for this subscription
-root_management_group_display_name = "anoa" # the root management group display name for this subscription
-
-# Management groups to create
-# The management group structure is created in the locals.tf file
-
-```
-
-Main management group structure is located in locals.tf at the root (terraform) folder. It uses the 'root_management_group_id' for the top level groups. Modify the following to meet your needs.
-
-```terraform
-# The following locals are used to define the management groups
-locals {
-  management_groups = {
-    platforms = {
-      display_name               = "platforms"
-      management_group_name      = "platforms"
-      parent_management_group_id = "anoa"
-      subscription_ids           = []
-    },
-    workloads = {
-      display_name               = "workloads"
-      management_group_name      = "workloads"
-      parent_management_group_id = "anoa"
-      subscription_ids           = []
-    },
-    sandbox = {
-      display_name               = "sandbox"
-      management_group_name      = "sandbox"
-      parent_management_group_id = "anoa"
-      subscription_ids           = []
-    },
-    transport = {
-      display_name               = "transport"
-      management_group_name      = "transport"
-      parent_management_group_id = "platforms"
-      subscription_ids           = []
-    },
-    internal = {
-      display_name               = "internal"
-      management_group_name      = "internal"
-      parent_management_group_id = "workloads"
-      subscription_ids           = []
-    }
-    partners = {
-      display_name               = "partners"
-      management_group_name      = "partners"
-      parent_management_group_id = "workloads"
-      subscription_ids           = []
-    }
-  }
-}
-
-```
+To modify the management group structure, go to the [locals.tf](../infrastructure/terraform/locals.tf) file and modify the 'management_groups' section. The 'root_management_group_id' is used for the top level groups.
 
 ### Mission Enclave Management Budgets
 
-Review and if needed, comment out and modify the variables within the "02 Management Groups Budgets Configuration" section of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+The following parameter effects budgets. Do not modify if you plan to use the default values.
 
-Sample:
+Example Configuration:
 
-```bash
-
-################################################
-# 03 Management Groups Budgets Configuration  ##
-################################################
-
-# Budgets for management groups
-enable_management_groups_budgets = false                  # enable budgets for management groups
-budget_contact_emails            = ["anoa@contoso.com"] # email addresses to send alerts to for this subscription
-
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`enable_management_groups_budgets` | false | enable budgets for management groups
+`budget_contact_emails` | ["anoa@contoso.com"] | email addresses to send alerts to for this subscription
+`budget_amount` | 100 | budget amount
+`budget_start_date`  | 2023-09-01T00:00:00Z | budget start date. format: YYYY-MM-DDTHH:MM:SSZ
+`budget_end_date` | 2023-09-01T00:00:00Z | budget end date. format: YYYY-MM-DDTHH:MM:SSZ
 
 ### Mission Enclave Management Roles
 
-Review and if needed, comment out and modify the variables within the "04 Management Groups Roles Configuration" section of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+The following parameter effects custom roles. Do not modify if you plan to use the default values.
 
-Sample:
+Example Configuration:
 
-```bash
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`deploy_custom_roles` | true | deploy custom roles
 
-################################################
-# 04 Management Groups Roles Configuration  ##
-################################################
-
-deploy_custom_roles = true # true | false
-
-```
-
-Main roles structure is located in locals.tf at the root (terraform) folder. It uses the 'data.azurerm_client_config.current.subscription_id' for the scope of the roles. Modify the following to meet your needs.
-
-```terraform
-
-custom_role_definitions = [
-  {
-    role_definition_name = "Custom - Network Operations (NetOps)"
-    scope                = "${data.azurerm_client_config.current.subscription_id}" ## This setting is optional. (If not defined current subscription ID is used).
-    description          = "Platform-wide global connectivity management: virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others."
-    permissions = {
-      actions = [
-        "Microsoft.Network/virtualNetworks/read",
-        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/read",
-        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write",
-        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/delete",
-        "Microsoft.Network/virtualNetworks/peer/action",
-        "Microsoft.Resources/deployments/operationStatuses/read",
-        "Microsoft.Resources/deployments/write",
-        "Microsoft.Resources/deployments/read"
-      ]
-      data_actions     = []
-      not_actions      = []
-      not_data_actions = []
-    }
-    assignable_scopes = [["${module.mod_management_group.0.management_groups["/providers/Microsoft.Management/managementGroups/platforms"].id}"]] ## This setting is optional. (If not defined current subscription ID is used).
-  }
-]
-
-```
+To modify the roles structure, go to the [locals.tf](../infrastructure/terraform/locals.tf) file and modify the 'custom_role_definitions' section.
 
 ### Mission Enclave - Management Hub Virtual Network
 
@@ -231,67 +125,18 @@ The following will be created:
 
 Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Management Hub Virtual Network" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
-Sample:
+>NOTE: IP address ranges are in CIDR notation. For more information, see [Understanding IP Addressing](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm#understanding-ip-addressing-in-your-virtual-network).
 
-```bash
+Example Configuration:
 
-################################
-# Landing Zone Configuration  ##
-################################
-
-#######################################
-# 05 Management Hub Virtual Network  ##
-#######################################
-
-# (Required)  Hub Virtual Network Parameters   
-# Provide valid VNet Address space and specify valid domain name for Private DNS Zone.  
-hub_vnet_address_space              = ["10.8.4.0/23"]   # (Required)  Hub Virtual Network Parameters  
-fw_client_snet_address_prefixes     = ["10.8.4.64/26"]  # (Required)  Hub Firewall Subnet Parameters  
-ampls_subnet_address_prefixes       = ["10.8.5.160/27"]   # (Required)  AMPLS Subnet Parameter
-fw_management_snet_address_prefixes = ["10.8.4.128/26"] # (Optional)  Hub Firewall Management Subnet Parameters. If not provided, force_tunneling is not needed.
-gateway_vnet_address_space          = ["10.8.4.0/27"]   # (Optional)  Hub Gateway Subnet Parameters
-
-# (Required) Hub Subnets 
-# Default Subnets, Service Endpoints
-# This is the default subnet with required configuration, check README.md for more details
-# First address ranges from VNet Address space reserved for Firewall Subnets. 
-# First three address ranges from VNet Address space reserved for Gateway, AMPLS And Firewall Subnets. 
-# These are default subnets with required configuration, check README.md for more details
-# NSG association to be added automatically for all subnets listed here.
-# subnet name will be set as per Azure naming convention by default. expected value here is: <App or project name>
-hub_subnets = {
-  default = {
-    name                                       = "hub-core"
-    address_prefixes                           = ["10.8.4.224/27"]
-    service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
-    private_endpoint_service_endpoints_enabled = true
-  }
-
-  dmz = {
-    name                                       = "app-gateway"
-    address_prefixes                           = ["10.8.5.64/27"]
-    service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
-    private_endpoint_service_endpoints_enabled = true
-    nsg_subnet_inbound_rules = [
-      # [name, priority, direction, access, protocol, destination_port_range, source_address_prefix, destination_address_prefix]
-      # To use defaults, use "" without adding any value and to use this subnet as a source or destination prefix.
-      # 65200-65335 port to be opened if you planning to create application gateway
-      ["http", "100", "Inbound", "Allow", "Tcp", "80", "*", ["0.0.0.0/0"]],
-      ["https", "200", "Inbound", "Allow", "Tcp", "443", "*", [""]],
-      ["appgwports", "300", "Inbound", "Allow", "Tcp", "65200-65335", "*", [""]],
-
-    ]
-    nsg_subnet_outbound_rules = [
-      # [name, priority, direction, access, protocol, destination_port_range, source_address_prefix, destination_address_prefix]
-      # To use defaults, use "" without adding any value and to use this subnet as a source or destination prefix.
-      ["ntp_out", "400", "Outbound", "Allow", "Udp", "123", "", ["0.0.0.0/0"]],
-    ]
-  }
-}
-
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`hub_vnet_address_space` | ["10.8.4.0/23"] | The CIDR Virtual Network Address Prefix for the Hub Virtual Network.
+`fw_client_snet_address_prefixes` | ["10.8.4.64/26"] | The CIDR Subnet Address Prefix for the Azure Firewall Subnet. It must be in the Hub Virtual Network space. It must be /26.
+`ampls_subnet_address_prefixes` | ["10.8.5.160/27"] |  The CIDR Subnet Address Prefix for the Azure Monitor Private Link Subnet. It must be in the Hub Virtual Network space. It must be /27.
+`fw_management_snet_address_prefixes` | ["10.8.4.128/26"] |  The CIDR Subnet Address Prefix for the Azure Firewall Management Subnet. It must be in the Hub Virtual Network space. It must be /26.
+`gateway_vnet_address_space` | ["10.8.4.0/27"] |  The CIDR Subnet Address Prefix for the Gateway Subnet. It must be in the Hub Virtual Network space. It must be /27. This is the subnet that will be used for the VPN Gateway. Optional, if you do not want to deploy a VPN Gateway, remove this subnet from the list.
+`hub_subnets` | array | The subnets to create in the hub virtual network.
 
 ### Mission Enclave - Management Hub Operational Logging
 
@@ -300,35 +145,21 @@ The following will be created:
 - Log Analytics (main.tf)
 - Log Solutions (main.tf)
 
-Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Operational Logging" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Management Operational Logging" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
-Sample:
+Example Configuration:
 
-```bash
-
-################################
-# Landing Zone Configuration  ##
-################################
-
-########################################
-# 05a Management OperationL Logging  ###
-########################################
-
-# Log Analytics Workspace Settings
-log_analytics_workspace_sku          = "PerGB2018"
-log_analytics_logs_retention_in_days = 30
-
-# Azure Monitor Settings
-# All solutions are enabled (true) by default
-enable_sentinel              = true
-enable_azure_activity_log    = true
-enable_vm_insights           = true
-enable_azure_security_center = true
-enable_container_insights    = true
-enable_key_vault_analytics   = true
-enable_service_map           = true
-
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`log_analytics_workspace_sku` | "PerGB2018" | The SKU for the Log Analytics Workspace.  PerGB2018 | Standalone | PerNode | Free | CapacityReservation
+`log_analytics_logs_retention_in_days` | 30 | The number of days to retain logs in the Log Analytics Workspace.  30 | 60 | 90 | 120 | 150 | 180 | 365 | 730 | 1827 | 3653
+`enable_sentinel` | true | Enable Azure Sentinel.  true | false
+`enable_azure_activity_log` | true | Enable Azure Activity Log.  true | false
+`enable_vm_insights` | true | Enable Azure Monitor for VMs.  true | false
+`enable_azure_security_center` | true | Enable Azure Security Center.  true | false
+`enable_container_insights` | true | Enable Azure Monitor for Containers.  true | false
+`enable_key_vault_analytics` | true | Enable Azure Monitor for Key Vault.  true | false
+`enable_service_map` | true | Enable Azure Monitor for Service Map.  true | false
 
 ### Mission Enclave - Azure Firewall Resource
 
@@ -339,90 +170,16 @@ The following will be created:
 
 Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Management Hub Firewall" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
-Sample:
+Example Configuration:
 
-```bash
-
-################################
-# Landing Zone Configuration  ##
-################################
-
-#################################
-# 05b Management Hub Firewall ###
-#################################
-
-# Firewall Settings
-# By default, Azure NoOps will create Azure Firewall in Hub VNet. 
-# If you do not want to create Azure Firewall, 
-# set enable_firewall to false. This will allow different firewall products to be used (Example: F5).  
-enable_firewall = true
-
-# By default, forced tunneling is enabled for Azure Firewall.
-# If you do not want to enable forced tunneling, 
-# set enable_forced_tunneling to false.
-enable_forced_tunneling = true
-
-
-# (Optional) To enable the availability zones for firewall. 
-# Availability Zones can only be configured during deployment 
-# You can't modify an existing firewall to include Availability Zones
-firewall_zones = []
-
-# # (Optional) specify the Network rules for Azure Firewall l
-# This is default values, do not need this if keeping default values
-firewall_network_rules = [
-  {
-    name     = "AllowAzureCloud"
-    priority = "100"
-    action   = "Allow"
-    rules = [
-      {
-        name                  = "AzureCloud"
-        protocols             = ["Any"]
-        source_addresses      = ["*"]
-        destination_addresses = ["AzureCloud"]
-        destination_ports     = ["*"]
-      }
-    ]
-  },
-  {
-    name     = "AllowTrafficBetweenSpokes"
-    priority = "200"
-    action   = "Allow"
-    rules = [
-      {
-        name                  = "AllSpokeTraffic"
-        protocols             = ["Any"]
-        source_addresses      = ["10.96.0.0/19"]
-        destination_addresses = ["*"]
-        destination_ports     = ["*"]
-      }
-    ]
-  }
-]
-
-# (Optional) specify the application rules for Azure Firewall
-# This is default values, do not need this if keeping default values
-firewall_application_rules = [
-  {
-    name     = "AzureAuth"
-    priority = "110"
-    action   = "Allow"
-    rules = [
-      {
-        name              = "msftauth"
-        source_addresses  = ["*"]
-        destination_fqdns = ["aadcdn.msftauth.net", "aadcdn.msauth.net"]
-        protocols = {
-          type = "Https"
-          port = 443
-        }
-      }
-    ]
-  }
-]
-
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`enable_firewall` | true | Enable Azure Firewall.  true | false
+`enable_forced_tunneling` | true | Enable forced tunneling.  true | false
+`firewall_zones` | array | The availability zones to deploy the firewall to.  1 | 2 | 3
+`firewall_network_rules` | array | The network rules to create in the firewall.
+`firewall_application_rules` | array | The application rules to create in the firewall.
+`firewall_nat_rules` | array | The NAT rules to create in the firewall.
 
 ### Mission Enclave - Bastion/Private DNS Zones
 
@@ -433,32 +190,14 @@ The following will be created:
 
 Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Bastion/Private DNS Zones" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
-Sample:
+Example Configuration:
 
-```bash
-
-################################
-# Landing Zone Configuration  ##
-################################
-
-###################################
-# 05c Bastion/Private DNS Zones ###
-###################################
-
-# Private DNS Zone Settings
-# By default, Azure NoOps will create Private DNS Zones for Logging in Hub VNet.
-# If you do want to create additional Private DNS Zones, 
-# add in the list of private_dns_zones to be created.
-# else, remove the private_dns_zones argument.
-hub_private_dns_zones = ["privatelink.file.core.windows.net"]
-
-# By default, this module will create a bastion host, 
-# and set the argument to `enable_bastion_host = false`, to disable the bastion host.
-enable_bastion_host                 = true
-azure_bastion_host_sku              = "Standard"
-azure_bastion_subnet_address_prefix = ["10.8.4.192/27"]
-
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`enable_bastion_host` | true | Enable Azure Bastion.  true | false
+`azure_bastion_host_sku` | "Standard" | The SKU for the Azure Bastion Host.  Standard | Premium
+`azure_bastion_subnet_address_prefix` | ["10.8.4.192/27"] | The CIDR Subnet Address Prefix for the Azure Bastion Subnet. It must be in the Hub Virtual Network space. It must be /27. This is the subnet that will be used for the Azure Bastion Host. Optional, if you do not want to deploy Azure Bastion, remove this subnet from the list.
+`hub_private_dns_zones` | array | The private DNS zones to create in the hub virtual network.
 
 ### Mission Enclave - Identity Management Spoke Virtual Network
 
@@ -469,57 +208,14 @@ The following will be created:
 
 Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Identity Management Spoke Virtual Network" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
-Sample:
+Example Configuration:
 
-```bash
-
-################################
-# Landing Zone Configuration  ##
-################################
-
-####################################################
-# 5d Identity Management Spoke Virtual Network   ###
-####################################################
-
-# Enable Identity Management Spoke Virtual Network
-# If you do not want to create Identity Management Spoke Virtual Network,
-# remove this section from the configuration file.
-
-# Identity Virtual Network Parameters
-id_name               = "id"
-id_vnet_address_space = ["10.8.9.0/24"]
-id_subnets = {
-  default = {
-    name                                       = "id"
-    address_prefixes                           = ["10.8.9.224/27"]
-    service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
-    private_endpoint_service_endpoints_enabled = true
-    nsg_subnet_rules = [
-      {
-        name                       = "Allow-Traffic-From-Spokes",
-        description                = "Allow traffic from spokes",
-        priority                   = 200,
-        direction                  = "Inbound",
-        access                     = "Allow",
-        protocol                   = "*",
-        source_port_range          = "*",
-        destination_port_ranges    = ["22", "80", "443", "3389"],
-        source_address_prefixes    = ["10.8.6.0/24", "10.8.7.0/24", "10.8.8.0/24"]
-        destination_address_prefix = "10.8.9.0/24"
-      }
-    ]
-  }
-}
-
-# Private DNS Zones
-# Add in the list of private_dns_zones to be created.
-id_private_dns_zones = []
-
-# Enable forced tunneling on the route table
-enable_forced_tunneling_on_id_route_table = true
-
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`id_vnet_address_space` | ["10.8.9.0/24"] | The CIDR Virtual Network Address Prefix for the Identity Virtual Network.
+`id_subnets` | array | The subnets to create in the identity virtual network.
+`id_private_dns_zones` | array | The private DNS zones to create in the identity virtual network.
+`enable_forced_tunneling_on_id_route_table` | true | Enable forced tunneling on the route table.  true | false
 
 ### Mission Enclave - Operations Management Spoke Virtual Network
 
@@ -530,57 +226,14 @@ The following will be created:
 
 Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Operations Management Spoke Virtual Network" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
-Sample:
+Example Configuration:
 
-```bash
-
-################################
-# Landing Zone Configuration  ##
-################################
-
-####################################################
-# 5d Operations Management Spoke Virtual Network ###
-####################################################
-
-# Enable Operations Management Spoke Virtual Network
-# If you do not want to create Operations Management Spoke Virtual Network,
-# remove this section from the configuration file.
-
-# Operations Virtual Network Parameters
-ops_name               = "ops"
-ops_vnet_address_space = ["10.8.6.0/24"]
-ops_subnets = {
-  default = {
-    name                                       = "ops"
-    address_prefixes                           = ["10.8.6.224/27"]
-    service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
-    private_endpoint_service_endpoints_enabled = true
-    nsg_subnet_rules = [
-      {
-        name                       = "Allow-Traffic-From-Spokes",
-        description                = "Allow traffic from spokes",
-        priority                   = 200,
-        direction                  = "Inbound",
-        access                     = "Allow",
-        protocol                   = "*",
-        source_port_range          = "*",
-        destination_port_ranges    = ["22", "80", "443", "3389"],
-        source_address_prefixes    = ["10.8.9.0/24", "10.8.7.0/24", "10.8.8.0/24"]
-        destination_address_prefix = "10.8.6.0/24"
-      }
-    ]
-  }
-}
-
-# Private DNS Zones
-# Add in the list of private_dns_zones to be created.
-ops_private_dns_zones = []
-
-# Enable forced tunneling on the route table
-enable_forced_tunneling_on_ops_route_table = true
-
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`ops_vnet_address_space` | ["10.8.6.0/24"] | The CIDR Virtual Network Address Prefix for the Operations Virtual Network.
+`ops_subnets` | array | The subnets to create in the operations virtual network.
+`ops_private_dns_zones` | array | The private DNS zones to create in the operations virtual network.
+`enable_forced_tunneling_on_ops_route_table` | true | Enable forced tunneling on the route table.  true | false
 
 ### Mission Enclave - DevSecOps Management Spoke Virtual Network
 
@@ -591,71 +244,71 @@ The following will be created:
 
 Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "DevSecOps Management Spoke Virtual Network" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
-Sample:
+Example Configuration:
 
-```bash
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`devsecops_vnet_address_space` | ["10.8.7.0/24"] | The CIDR Virtual Network Address Prefix for the DevSecOps Virtual Network.
+`devsecops_subnets` | array | The subnets to create in the devsecops virtual network.
+`devsecops_private_dns_zones` | array | The private DNS zones to create in the devsecops virtual network.
+`enable_forced_tunneling_on_devsecops_route_table` | true | Enable forced tunneling on the route table.  true | false
+`use_remote_spoke_gateway` | false | Use a remote spoke gateway.  true | false
 
-################################
-# Landing Zone Configuration  ##
-################################
+### Mission Enclave - DevSecOps Management Spoke Components
 
-####################################################
-# 5d DevSecOps Management Spoke Virtual Network ###
-####################################################
+The following will be created:
 
-# Enable DevSecOps Management Spoke Virtual Network
-# If you do not want to create DevSecOps Management Spoke Virtual Network,
-# remove this section from the configuration file.
+- Resource Groups for DevSecOps Spoke Components
+- Spoke Components (DevSecOps)
 
-# DevSecOps Virtual Network Parameters
-devsecops_name               = "devsecops"
-devsecops_vnet_address_space = ["10.8.7.0/24"]
-devsecops_subnets = {
-  default = {
-    name                                       = "devsecops"
-    address_prefixes                           = ["10.8.7.224/27"]
-    service_endpoints                          = ["Microsoft.Storage", "Microsoft.KeyVault"]
-    private_endpoint_network_policies_enabled  = false
-    private_endpoint_service_endpoints_enabled = true
-    nsg_subnet_rules = [
-      {
-        name                       = "Allow-Traffic-From-Spokes",
-        description                = "Allow traffic from spokes",
-        priority                   = 200,
-        direction                  = "Inbound",
-        access                     = "Allow",
-        protocol                   = "*",
-        source_port_range          = "*",
-        destination_port_ranges    = ["22", "80", "443", "3389"],
-        source_address_prefixes    = ["10.8.9.0/24", "10.8.6.0/24", "10.8.8.0/24"]
-        destination_address_prefix = "10.8.7.0/24"
-      }
-    ]
-  },
-  private-endpoints = {
-    name                                       = "pe"
-    address_prefixes                           = ["10.8.7.96/27"]
-    service_endpoints                          = ["Microsoft.Storage", "Microsoft.KeyVault"]
-    private_endpoint_network_policies_enabled  = false
-    private_endpoint_service_endpoints_enabled = true
-  },
-  vm = {
-    name                                       = "vm"
-    address_prefixes                           = ["10.8.7.64/27"]
-    service_endpoints                          = ["Microsoft.Storage", "Microsoft.KeyVault"]
-    private_endpoint_network_policies_enabled  = false
-    private_endpoint_service_endpoints_enabled = true
-  }
-}
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "DevSecOps Management Spoke Components" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
 
-# Private DNS Zones
-# Add in the list of private_dns_zones to be created.
-devsecops_private_dns_zones = ["privatelink.vaultcore.azure.net"]
+>NOTE: Key Vault and Bastion Jumpbox are not deployed by default. To deploy them, set the `enable_devsecops_resources` variable to `true`.
 
-# Enable forced tunneling on the route table
-enable_forced_tunneling_on_devsecops_route_table = true
+Example Configuration:
 
-```
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`enable_devsecops_resources` | true | Enable DevSecOps resources.  true | false
+
+Example Key Vault Configuration:
+
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`enabled_for_deployment` | true | Enable DevSecOps resources for deployment.  true | false
+`enabled_for_disk_encryption` | true | Enable DevSecOps resources for disk encryption.  true | false
+`enabled_for_template_deployment` | true | Enable DevSecOps resources for template deployment.  true | false
+`rbac_authorization_enabled` | true | Enable RBAC authorization.  true | false
+`enable_key_vault_private_endpoint` | true | Enable Key Vault private endpoint.  true | false
+`admin_group_name` | "DevSecOps Admins" | The name of the DevSecOps Admins group for use with Key Vault.
+
+Example Bastion JumpBox Configuration:
+
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`windows_distribution_name` | "windows2019dc" | The Windows distribution name. View Reference: <https://docs.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage>
+`virtual_machine_size` | "Standard_D2s_v3" | The size of the virtual machine. View Reference: <https://docs.microsoft.com/en-us/azure/virtual-machines/sizes>
+`vm_admin_username` | "anoaadmin" | The username for the administrator account for the Bastion VM.
+`vm_admin_password` | "Password1234!" | The password for the administrator account for the Bastion VM. This is a secret and used with GitHub Actions. If used for testing, it should be changed after testing.
+`nsg_inbound_rules` | array | The inbound rules to create in the NSG for the Bastion VM.
+`data_disks` | array | The data disks to create for the Bastion VM.
+`deploy_log_analytics_agent` | true | Deploy the Log Analytics agent for the Bastion VM.  true | false
+
+### Mission Enclave - Azure Service Health Configuration
+
+The following will be created:
+
+- Resource Groups for Service Health Configuration
+- Service Health Configuration
+
+Review and if needed, comment out and modify the variables within the "Landing Zone Configuration" section under "Azure Service Health Configuration" of the common variable definitions file [parameters.tfvars](../infrastructure/terraform/tfvars/parameters.tfvars). Do not modify if you plan to use the default values.
+
+Example Configuration:
+
+Parameter name | Default Value | Description
+-------------- | ------------- | -----------
+`enable_service_health_monitoring` | true | Enable Service Health Configuration.  true | false
+`action_group_short_name` | "anoa" | The short name for the action group.  1-12 characters
 
 ## Deployment
 
