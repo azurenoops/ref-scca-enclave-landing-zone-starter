@@ -49,7 +49,7 @@ In this is a reference implementation, the repo is self contained and contains a
 
 The following picture shows the separation of duties for the Terraform modules and configuration files:
 
-![Separation of Duties](./docs/images/separation-of-duties.png)
+![Separation of Duties](./docs/images/shared-responsibility-model.png)
 
 It is important to understand how you would set this up for a production environment. The separation of duties is important to ensure that the Terraform modules can be reused across multiple environments and allows the right role to control changes.
 
