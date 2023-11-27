@@ -94,7 +94,7 @@ hub_subnets = {
 }
 
 ########################################
-# 05a Management OperationL Logging  ###
+# 05a Management Operational Logging ###
 ########################################
 
 # Log Analytics Workspace Settings
@@ -344,11 +344,10 @@ enable_forced_tunneling_on_devsecops_route_table = true
 # By default, Azure NoOps will create peering between hub and spoke vnets.
 use_remote_spoke_gateway = false
 
-################################
-# 06 DevSecOps Configuration  ##
-################################
+###############################################
+# 06 DevSecOps Management Spoke Components  ###
+###############################################
 
-# DevSecOps Configuration
 # Turn on to enable DevSecOps resources
 enable_devsecops_resources = false
 
