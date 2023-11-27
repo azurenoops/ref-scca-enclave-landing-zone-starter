@@ -45,7 +45,7 @@ The below scenario is how to get started on the Mission Enclave Landing Zone imp
 E2E GitHub Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
 |--------------|--------------|--------------|
-|Terraform|[Published](./docs/09-e2e-deployment-guide-githubaction.md)| Coming soon |
+|Terraform|[In Progress](./docs/09-e2e-deployment-guide-githubaction.md)| Coming soon |
 
 ## Importance of Separation of Duties (Azure NoOps Shared Responsibility Model) ##
 
