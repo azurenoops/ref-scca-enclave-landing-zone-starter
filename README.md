@@ -30,14 +30,14 @@ Pick the below scenario to get started on the Mission Enclave Landing Zone imple
 Manual Deployment Details:
 | Deployment Methodology | Manual Deployment |
 |--------------|--------------|
-|Terraform|[Published](./docs/manual-deployment-guide-terraform.md)
+|Terraform|[Published](./docs/10-manual-deployment-guide-terraform.md)
 
 >NOTE: Using manual deployment to deploy the infrastructure using the Terraform CLI. This is a good option if you want to learn how to deploy the infrastructure using Terraform CLI.
 
 E2E GitHub Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
 |--------------|--------------|--------------|
-|Terraform|[Published](./docs/11-e2e-githubaction.md)| Coming soon |
+|Terraform|[Published](./docs/09-e2e-deployment-guide-githubaction.md)| Coming soon |
 
 ## Importance of Separation of Duties (Azure NoOps Shared Responsibility Model) ##
 
