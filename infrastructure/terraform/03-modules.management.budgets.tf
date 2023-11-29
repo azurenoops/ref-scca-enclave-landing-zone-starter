@@ -9,6 +9,7 @@
 module "mod_mpe_mg_budgets" {
   source  = "azurenoops/overlays-cost-management/azurerm//modules/budgets/managementGroup"
   version = "~> 1.0"
+  depends_on = [ module.mod_management_group ]
   count   = var.enable_management_groups_budgets ? 1 : 0 # used in testing
 
   #####################################

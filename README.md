@@ -19,25 +19,33 @@ The following picture shows the high-level architecture created by the Terraform
 
 ![Architecture](./docs/images/normalized-architecture.png)
 
-## Deploy with GitHub ##
+## Deploy Manually with Terraform ##
+
+You can deploy Azure NoOps Mission Enclave Landing Zone using the Terraform CLI. The Terraform CLI will deploy the infrastructure to the Azure subscription you have configured in the Terraform CLI.
+
+You must have [Owner RBAC permissions](https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#owner) to the subscription(s) you deploy Azure NoOps Mission Enclave Landing Zone into.
+
+The below scenario is how to get started on the Mission Enclave Landing Zone implementation manually. This implementation has a detailed README.md that will walk you through the deployment steps.
+
+Manual Deployment Details:
+| Deployment Methodology | Manual Deployment |
+|--------------|--------------|
+|Terraform|[Published](./docs/10-manual-deployment-guide-terraform.md)
+
+>NOTE: Using manual deployment to deploy the infrastructure using the Terraform CLI. This is a good option if you want to learn how to deploy the infrastructure using Terraform CLI.
+
+## Deploy with GitHub Actions ##
 
 You can deploy Azure NoOps Mission Enclave Landing Zone using the GitHub Actions. The GitHub Actions will deploy the infrastructure to the Azure subscription you have configured in the GitHub Secrets.
 
 You must have [Owner RBAC permissions](https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#owner) to the subscription(s) you deploy Azure NoOps Mission Enclave Landing Zone into.
 
-Pick the below scenario to get started on the Mission Enclave Landing Zone implementation. This implementation has a detailed README.md that will walk you through the deployment steps.
-
-Manual Deployment Details:
-| Deployment Methodology | Manual Deployment |
-|--------------|--------------|
-|Terraform|[Published](./docs/manual-deployment-guide-terraform.md)
-
->NOTE: Using manual deployment to deploy the infrastructure using the Terraform CLI. This is a good option if you want to learn how to deploy the infrastructure using Terraform CLI.
+The below scenario is how to get started on the Mission Enclave Landing Zone implementation with GitHub Actions. This implementation has a detailed README.md that will walk you through the deployment steps.
 
 E2E GitHub Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
 |--------------|--------------|--------------|
-|Terraform|[Published](./docs/11-e2e-githubaction.md)| Coming soon |
+|Terraform|[In Progress](./docs/09-e2e-deployment-guide-githubaction.md)| Coming soon |
 
 ## Importance of Separation of Duties (Azure NoOps Shared Responsibility Model) ##
 
@@ -49,7 +57,7 @@ In this is a reference implementation, the repo is self contained and contains a
 
 The following picture shows the separation of duties for the Terraform modules and configuration files:
 
-![Separation of Duties](./docs/images/separation-of-duties.png)
+![Separation of Duties](./docs/images/shared-responsibility-model.png)
 
 It is important to understand how you would set this up for a production environment. The separation of duties is important to ensure that the Terraform modules can be reused across multiple environments and allows the right role to control changes.
 
