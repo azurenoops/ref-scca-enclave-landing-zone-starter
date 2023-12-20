@@ -3,7 +3,7 @@
 {
 	"name": "missionlzstater-dev",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "DOCKERFILE"
 	},
 
 	// Set *default* container specific settings.json values on container create.
