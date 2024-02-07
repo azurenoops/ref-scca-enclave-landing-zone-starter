@@ -7,6 +7,7 @@ Azure NoOps Mission Enclave Landing Zone starter addresses a narrowly scoped, sp
 Goals of Azure NoOps Mission Enclave Landing Zone starter:
 
 - Designed for US Government mission customers that have a small number of teams to operate cloud environments for their workloads
+- Follows Zero Trust principles and implements a [Zero Trust architecture](https://aka.ms/zerotrust)
 - Implements SCCA controls following Microsoft's [SACA](https://aka.ms/saca) implementation guidance
 - Deployable in Azure commercial, Azure Government, Azure Government Secret, and Azure Government Top Secret clouds
 - Written as [Terraform](./infrastructure/terraform/) templates
