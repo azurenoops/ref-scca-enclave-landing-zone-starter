@@ -1,45 +1,32 @@
-## Purpose
-<!-- Describe the intention of the changes being proposed. What problem does it solve or functionality does it add? -->
-* ...
+# Description
 
-## Does this introduce a breaking change?
-<!-- Mark one with an "x". -->
-```
-[ ] Yes
-[ ] No
-```
+>Thank you for your contribution !
 
-## Pull Request Type
-What kind of change does this Pull Request introduce?
+> Please include a summary of the change and which issue is fixed.
+> Please also include the context.
+> List any dependencies that are required for this change.
 
-<!-- Please check the one that applies to this PR using "x". -->
-```
-[ ] Bugfix
-[ ] Feature
-[ ] Code style update (formatting, local variables)
-[ ] Refactoring (no functional changes, no api changes)
-[ ] Documentation content changes
-[ ] Other... Please describe:
-```
+## Pipeline references
+> For module/pipeline changes, please create and attach the status badge of your successful run.
 
-## How to Test
-*  Get the code
+| Pipeline |
+| - |
+| |
 
-```
-git clone [repo-address]
-cd [repo-name]
-git checkout [branch-name]
-npm install
-```
+# Type of Change
 
-* Test the code
-<!-- Add steps to run the tests suite and/or manually test -->
-```
-```
+Please delete options that are not relevant.
 
-## What to Check
-Verify that the following are valid
-* ...
+- [ ] Bugfix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Update to documentation
 
-## Other Information
-<!-- Add any other helpful information that may be needed here. -->
+# Checklist
+
+- [ ] I'm sure there are no other open Pull Requests for the same update/change
+- [ ] My corresponding pipelines / checks run clean and green without any errors or warnings
+- [ ] My code follows the style guidelines of this project
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation (readme)
+- [ ] I did format my code
