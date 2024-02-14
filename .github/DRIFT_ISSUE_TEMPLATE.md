@@ -1,8 +1,7 @@
 ---
-name: Issue report
-title: ''
-labels: ''
-assignees: ''
+name: Terraform Configuration Drift Detected
+title: Terraform Configuration Drift Detected
+labels: bug
 ---
 <!--
 IF SUFFICIENT INFORMATION IS NOT PROVIDED VIA THE FOLLOWING TEMPLATE THE ISSUE MIGHT BE CLOSED WITHOUT FURTHER CONSIDERATION OR INVESTIGATION
@@ -13,25 +12,13 @@ IF SUFFICIENT INFORMATION IS NOT PROVIDED VIA THE FOLLOWING TEMPLATE THE ISSUE M
 ### This issue is for a: (mark with an `x`)
 
 ```
-- [ ] bug report -> please search issues before submitting
+- [X] bug report -> please search issues before submitting
 - [ ] feature request
 - [ ] documentation issue or request
 - [ ] regression (a behavior that used to work and stopped in a new release)
 ```
 
-### Minimal steps to reproduce
->
-
 ### Any log messages given by the failure
->
-
-### Expected/desired behavior
->
-
-### OS and Version?
-> Windows 7, 8 or 10. Linux (which distribution). macOS (Yosemite? El Capitan? Sierra?)
-
-### Versions
 >
 
 ### Mention any other details that might be useful
