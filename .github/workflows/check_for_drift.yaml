@@ -32,9 +32,9 @@ jobs:
           var_file: |
             infrastructure/terraform/tfvars/parameters.tfvars
           backend_config: |
-            storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-            container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}            
-            resource_group_name=${{ secrets.TFSTATE_RG }}
+            storage_account_name=${{ secrets.AZURE_TF_STATE_STORAGE_ACCOUNT_NAME }}
+            container_name=${{ secrets.AZURE_TF_STATE_STORAGE_CONTAINER_NAME }}            
+            resource_group_name=${{ secrets.AZURE_TF_STATE_RESOURCE_GROUP_NAME }}
 
       # If changes are detected, create a new issue
       - name: Create issue for infrastructure drift
@@ -44,6 +44,7 @@ jobs:
         with:
           assignees: octocat
           update_existing: true
+          filename: .github/ISSUE_TEMPLATE/DRIFT_ISSUE_TEMPLATE.md
 
       # If changes are detected
       - name: Changes detected
