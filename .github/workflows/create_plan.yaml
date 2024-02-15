@@ -14,10 +14,10 @@ jobs:
     name: Landing Zone terraform configuration
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
       VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
       ARM_ENVIRONMENT: ${{ secrets.ARM_ENVIRONMENT }}
     steps:
@@ -25,6 +25,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: terraform plan
+        id: plan
         uses: azurenoops/terraform-github-actions/terraform-plan@v1.34.2
         with:
           path: infrastructure/terraform
@@ -34,9 +35,16 @@ jobs:
           var_file: |
             infrastructure/terraform/tfvars/parameters.tfvars
           backend_config: |
-            storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-            container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}            
-            resource_group_name=${{ secrets.TFSTATE_RG }}
-          
+            storage_account_name=${{ secrets.AZURE_TF_STATE_STORAGE_ACCOUNT_NAME }}
+            container_name=${{ secrets.AZURE_TF_STATE_STORAGE_CONTAINER_NAME }}            
+            resource_group_name=${{ secrets.AZURE_TF_STATE_RESOURCE_GROUP_NAME }}
+      
+      - name: 'Upload Landing Zone Plan Artifact'
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.run_id }}.tfplan
+          path: ${{ steps.plan.outputs.json_plan_path }}
+          retention-days: 5
 
   

@@ -46,7 +46,7 @@ budget_end_date                  = "2023-12-31T00:00:00Z" # RFC3339 format: YYYY
 # 04 Management Groups Roles Configuration  ##
 ################################################
 
-deploy_custom_roles = true # true | false
+deploy_custom_roles = false # true | false
 
 # Management Groups Roles to create
 # The management group roles structure is created in the locals.tf file
@@ -157,7 +157,7 @@ firewall_network_rules = [
       {
         name                  = "AllSpokeTraffic"
         protocols             = ["Any"]
-        source_addresses      = ["10.96.0.0/19"]
+        source_addresses      = ["10.8.0.0/19"]
         destination_addresses = ["*"]
         destination_ports     = ["*"]
       }

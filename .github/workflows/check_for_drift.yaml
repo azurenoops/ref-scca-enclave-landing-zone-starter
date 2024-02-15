@@ -11,10 +11,10 @@ jobs:
     name: Check for drift of Mission Enclave Transport terraform configuration
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
       VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
       ARM_ENVIRONMENT: ${{ secrets.ARM_ENVIRONMENT }}
     steps:
@@ -22,6 +22,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check
+        id: check
         uses: azurenoops/terraform-github-actions/terraform-check@v1.34.2
         with:
           path: infrastructure/terraform
@@ -31,10 +32,52 @@ jobs:
           var_file: |
             infrastructure/terraform/tfvars/parameters.tfvars
           backend_config: |
-            storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-            container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}            
-            resource_group_name=${{ secrets.TFSTATE_RG }}
+            storage_account_name=${{ secrets.AZURE_TF_STATE_STORAGE_ACCOUNT_NAME }}
+            container_name=${{ secrets.AZURE_TF_STATE_STORAGE_CONTAINER_NAME }}            
+            resource_group_name=${{ secrets.AZURE_TF_STATE_RESOURCE_GROUP_NAME }}
 
+      # If changes are detected, create a new issue
+      - name: Create issue for infrastructure drift
+        id: create_issue
+        if: ${{ failure() && steps.check.outputs.failure-reason == 'changes-to-apply' }}
+        uses: azurenoops/terraform-github-issues@v1.0.0
+        with:
+          assignees: octocat
+          update_existing: true
+          filename: .github/ISSUE_TEMPLATE/DRIFT_ISSUE_TEMPLATE.md
+
+      # If changes are detected
       - name: Changes detected
         if: ${{ failure() && steps.check.outputs.failure-reason == 'changes-to-apply' }}
-        run: echo "There are outstanding terraform changes to apply"
+        run: echo "There are outstanding terraform changes to apply. Please review issue ${{ steps.create_issue.outputs.url }} and apply them as needed."
+
+      # If changes aren't detected, close any open drift issues
+      - name: Publish Drift Report
+        if: ${{ success() && steps.check.outputs.failure-reason != 'changes-to-apply' }}
+        uses: actions/github-script@v6
+        with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+              const title = 'Terraform Configuration Drift Detected';
+              const creator = 'github-actions[bot]'
+            
+              // Look to see if there is an existing drift issue
+              const issues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                creator: creator,
+                title: title
+              })
+                
+              if( issues.data.length > 0 ) {
+                const issue = issues.data[0]
+                
+                github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                })
+              } 
+ 
