@@ -29,6 +29,34 @@ It allows you to run workflows that can be triggered by any event on the GitHub 
 
 It's a great way to automate your CI/CD pipelines, and it's free for public repositories.
 
+## Configure remote state storage account
+
+Before you use Azure Storage as a backend for the state file, you must create a storage account.
+
+Run the following commands or configuration to create an Azure storage account and container:
+
+### Using Azure CLI
+
+```bash
+LOCATION="eastus"
+RESOURCE_GROUP_NAME="tfstate"
+STORAGE_ACCOUNT_NAME="<tfstate unique name>"
+CONTAINER_NAME="tfstate"
+
+# Create Resource Group
+az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
+
+# Create Storage Account
+az storage account create -n $STORAGE_ACCOUNT_NAME -g $RESOURCE_GROUP_NAME -l $LOCATION --sku Standard_LRS
+
+# Create blob container
+az storage container-rm create --storage-account $STORAGE_ACCOUNT_NAME --name $CONTAINER_NAME
+```
+
+### Using GitHub Dependencies Action
+
+Run the following action [deploy_dependencies.yml](.github/workflows/deploy_dependencies.yml) to create the storage account and container.
+
 ## Setting Up GitHub Actions for deployment
 
 To set up GitHub Actions for deployment, we'll need to use the new workflow file in our repository.
@@ -106,10 +134,6 @@ GitHub Actions pipelines are located in the [`.github/workflows`](.github/workfl
 ## [!TIP]
 
 You can also use the <https://cli.github.com[GitHub> CLI] to define your secrets, using the command `gh secret set <MY_SECRET> -b"<SECRET_VALUE>" -R <repository_url>`
-
-## Modify variables in GitHub Actions
-
-The workflow files can be found in your repository with the path [`.github/workflows`](../../../.github/workflows/)
 
 ## Running the workflow
 
