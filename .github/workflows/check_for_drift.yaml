@@ -40,7 +40,7 @@ jobs:
       - name: Create issue for infrastructure drift
         id: create_issue
         if: ${{ failure() && steps.check.outputs.failure-reason == 'changes-to-apply' }}
-        uses: azurenoops/terraform-github-issues@v1.0.0
+        uses: azurenoops/terraform-github-issues@v1.0.2
         with:
           assignees: octocat
           update_existing: true
