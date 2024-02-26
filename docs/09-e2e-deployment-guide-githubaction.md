@@ -7,7 +7,7 @@
 - [Deployment](#deployment)  
 - [Cleanup](#cleanup)  
 - [Development Setup](#development-setup)  
-- [See Also](#see-also) 
+- [See Also](#see-also)
 
 To deploy the Mission Enclave Landing Zone, we'll setup a GitHub Actions CI/CD workflow that will build and deploy our application whenever we push new commits to the main branch of our repository.
 
@@ -29,34 +29,42 @@ It allows you to run workflows that can be triggered by any event on the GitHub 
 
 It's a great way to automate your CI/CD pipelines, and it's free for public repositories.
 
+## Configure remote state storage account
+
+Before you use Azure Storage as a backend for the state file, you must create a storage account.
+
+Run the following commands or configuration to create an Azure storage account and container:
+
+### Using Azure CLI
+
+```bash
+LOCATION="eastus"
+RESOURCE_GROUP_NAME="tfstate"
+STORAGE_ACCOUNT_NAME="<tfstate unique name>"
+CONTAINER_NAME="tfstate"
+
+# Create Resource Group
+az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
+
+# Create Storage Account
+az storage account create -n $STORAGE_ACCOUNT_NAME -g $RESOURCE_GROUP_NAME -l $LOCATION --sku Standard_LRS
+
+# Create blob container
+az storage container-rm create --storage-account $STORAGE_ACCOUNT_NAME --name $CONTAINER_NAME
+```
+
+### Using GitHub Dependencies Action
+
+Run the following action [deploy_dependencies.yml](.github/workflows/deploy_dependencies.yml) to create the storage account and container.
+
 ## Setting Up GitHub Actions for deployment
 
 To set up GitHub Actions for deployment, we'll need to use the new workflow file in our repository.
 This file will contain the instructions for our CI/CD pipeline.
 
-## Setup secrets
-
-We are using different secrets in our workflow: <insert secrets>. Secrets in GitHub are encrypted and allow you to store sensitive information such as passwords or API keys, and use them in your workflows using the ${{ secrets.MY_SECRET }} syntax.
-
-In GitHub, secrets can be defined at three different levels:
-
-* Repository level: secrets defined at the repository level are available in all workflows of the repository.
-
-* Organization level: secrets defined at the organization level are available in all workflows of the GitHub organization.
-
-* Environment level: secrets defined at the environment level are available only in workflows referencing the specified environment.
-
-For this workshop, we’ll define our secrets at the repository level. To do so, go to the Settings tab of your repository, and select Secrets then Actions under it, in the left menu.
-
-Then select New repository secret and create secrets for <insert secrets>.
-
-## [!TIP]
-
-You can also use the <https://cli.github.com[GitHub> CLI] to define your secrets, using the command `gh secret set <MY_SECRET> -b"<SECRET_VALUE>" -R <repository_url>`
-
 ## Creating an Azure Service Principal
 
-In order to deploy our Mission Enclave with Web App Service workload, we'll need to create an Azure Service Principal.
+In order to deploy our Mission Enclave Landing Zone, we'll need to create an Azure Service Principal.
 This is an identity that can be used to authenticate to Azure, and that can be granted access to specific resources.
 
 To create a new Service Principal, run the following commands:
@@ -72,7 +80,7 @@ To create a new Service Principal, run the following commands:
     AZURE_CREDENTIALS=$(
       MSYS_NO_PATHCONV=1 az ad sp create-for-rbac \
         --name="sp-${PROJECT}-${UNIQUE_IDENTIFIER}" \
-        --role="Contributor" \
+        --role="owner" \
         --scopes="/subscriptions/$SUBSCRIPTION_ID" \
         --sdk-auth \
         --only-show-errors
@@ -82,61 +90,51 @@ To create a new Service Principal, run the following commands:
     echo $SUBSCRIPTION_ID     
 ```
 
-Then just like in the previous step, create a new secret in your repository named `AZURE_SUBSCRIPTION_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_TENANT_ID`. You can copy paste these values from the AZURE_CREDENTIALS value returned in the cli. Also create another secret for  `AZURE_CREDENTIALS` and paste the value of the `AZURE_CREDENTIALS` variable as the secret value (make sure to _copy the entire JSon_).
+Use this service principal to set up the following secrets in your GitHub repository:
 
-![GitHub Secrets](../../../images/github_anoa_secrets.png)
+- `AZURE_CREDENTIALS`: The JSON output of the `az ad sp create-for-rbac` command.
+- `AZURE_SUBSCRIPTION_ID`: The subscription ID of your Azure subscription.
 
-## Modify variables in GitHub Actions
+## Setup secrets
 
-The workflow files can be found in your repository with the path [`.github/workflows`](../../../.github/workflows/) :
+We are using different secrets in our workflow: Secrets in GitHub are encrypted and allow you to store sensitive information such as passwords or API keys, and use them in your workflows using the ${{ secrets.MY_SECRET }} syntax.
 
-* Replace the value of the `SRINGAPPS_SPN_OBJECT_ID` environment variable in the [deploy.yaml](../../../.github/workflows/deploy.yml) file with the value of the the Object ID for the "Azure Spring Apps Resource Provider" service principal in your Azure AD Tenant.
-You use the command below to obtain the value of the variable:
+In GitHub, secrets can be defined at three different levels:
 
-      az ad sp show --id e8de9221-a19c-4c81-b814-fd37c6caf9d2 --query id --output tsv
+- Repository level: secrets defined at the repository level are available in all workflows of the repository.
 
-* Replace the value of  TFSTATE_RG, STORAGEACCOUNTNAME and CONTAINERNAME in [deploy.yaml](../../../.github/workflows/deploy.yml) to point to your Terraform backend.
-* You can also set the deploy_firewall and destroy values in [deploy.yaml](../../../.github/workflows/deploy.yml) depending on your use case.
+- Organization level: secrets defined at the organization level are available in all workflows of the GitHub organization.
 
-This workflow will be triggered every time a commit is pushed to the `main` branch.
-It will then run a job with the following steps:
+- Environment level: secrets defined at the environment level are available only in workflows referencing the specified environment.
 
-* Deploy 02 Hub Network
-* Deploy 03 LZ Network
-* Deploy 04 LZ Shared Resources
-* Deploy 05 Hub Firewall
-* Deploy 06 LZ Spring Apps Standard
-* Deploy Pet Clinic Infrastructure
+For this refernence implementation, we’ll define our secrets at the repository level. To do so, go to the Settings tab of your repository, and select Secrets then Actions under it, in the left menu.
 
-After the above steps are successful, you will have a functioning landing zone and the Azure Spring App instance available. After the above, the workflow also runs the below build step to build and deploy the petclinic microservices in the Azure Spring Apps instance.
+> **Note**  
+  The GitHub Actions pipelines are currently configured to deploy the Terraform `Mission Enclave Landing Zone` deployments located in the [infrastructure/terraform](../infrastructure/terraform/).
 
-* Build and Deploy Pet Clinic Microservices
+GitHub Actions pipelines are located in the [`.github/workflows`](.github/workflows/) directory of the repository.
 
-Make sure to keep the correct indentation for the steps if you make changes to the deploy.yaml file directly.
-YAML is very sensitive to indentation.
+1. Configure your GitHub Actions Secrets
+    - In your forked repository, navigate to `Settings > Secrets and variables > Actions`.
+    - Create the following secrets:
+      | Secret Name | Description | Example Value |
+      |-------------|-------------|---------------|
+      | `AZURE_AD_CLIENT_ID` | GUID value for the Client ID of the service principal to authenticate with | `00000000-0000-0000-0000-000000000000` |
+      | `AZURE_SUBSCRIPTION_ID` | GUID value for the Subscription ID to deploy resources to | `00000000-0000-0000-0000-000000000000` |
+      | `AZURE_AD_TENANT_ID` | GUID value for the Tenant ID of the service principal to authenticate with | `00000000-0000-0000-0000-000000000000` |
+      | `AZURE_AD_CLIENT_SECRET` | Secret value for the Service Principal to authenticate with | `asdf1234567` |
+      | `AZURE_TF_STATE_RESOURCE_GROUP_NAME` | [**Optional**] For Terraform only: override value to configure the remote state resource group name | `rg-terraform-state` |
+      | `AZURE_TF_STATE_STORAGE_ACCOUNT_NAME` | [**Optional**] For Terraform only: override value to configure the remote state storage account name | `tfstate` |
+      | `AZURE_TF_STATE_STORAGE_CONTAINER_NAME` | [**Optional**] For Terraform only: override value to configure the remote state storage container name | `tfstate` |
+      | `VM_PASSWORD` | Password for the VM | `P@ssw0rd!` |
+      | `ARM_ENVIRONMENT` | The Azure environment to deploy to | `public` or `usgovernment` |
+
+---
 
 ## [!TIP]
 
-* If you do not want to provision the firewall or destroy the E2E infra once the pipeline run in complete, make sure to set those values to false in the deploy.yaml
-* If a particular step errors out you can run only that step from the pipeline directly.Most errors should be transient errors.
+You can also use the <https://cli.github.com[GitHub> CLI] to define your secrets, using the command `gh secret set <MY_SECRET> -b"<SECRET_VALUE>" -R <repository_url>`
 
 ## Running the workflow
 
-Now that we've defined our workflow and prepared everything, we can run it to deploy our landing zone and the petclinic application to Azure Spring Apps.
-Commit and push your changes to your repository, and go to the `Actions` tab of your repository to see the workflow running.
-It should take a few minutes to complete.
-A successful run using github actions should look like below:
-
-![successful e2e run](../../../images/github_asa_successful_run.png)
-
-## Testing the deployed application
-
-Once your workflow is completed, let's make a quick test on our deployed apps.
-First we need to get the ingress URL by running the following command:
-
-```bash
-    az spring app show -g rg-springlza-APPS -s spring-springlza-dev-o7o6 \
-    --name api-gateway --query "properties.url" --output tsv    
-```
-
-Then we can use `curl` to test our applications using the above endpoint. This assumes that there's no Application Gateway and you would access your spring app using the spring apps ingress url for the api-gateway app instance. Since the applications are deployed in an internal only environment you would need to do the curl from a jumpbox or bastion host.
+Once you have set up your secrets and modified the workflow files, you can now push your changes to the main branch of your repository. This will trigger the workflow and start the deployment process.

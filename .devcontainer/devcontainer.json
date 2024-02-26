@@ -5,7 +5,6 @@
 	"build": {
 		"dockerfile": "DOCKERFILE"
 	},
-
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		"terminal.integrated.profiles.linux": {
@@ -15,28 +14,32 @@
 		},
 		"terminal.integrated.defaultProfile.linux": "bash"
 	},
-
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"hashicorp.terraform",
 		"ms-vscode-remote.vscode-remote-extensionpack",
 		"davidanson.vscode-markdownlint",
-		"github.vscode-pull-request-github",
-		"timonwong.shellcheck",
+		"ms-vscode.azurecli",
+		"ms-dotnettools.vscode-dotnet-runtime",
 		"ms-azuretools.vscode-bicep",
-		"bierner.markdown-preview-github-styles",
-		"ms-azure-devops.azure-pipelines"
+		"ms-azuretools.azure-dev",
+		"ms-azuretools.vscode-docker",
+		"esbenp.prettier-vscode",
+		"eg2.vscode-npm-script",
+		"dbaeumer.vscode-eslint",
+		"github.vscode-github-actions"
 	],
-
 	// Additional args to pass to the 'docker run' command
-	"runArgs": ["--name", "missionlzstater-dev", "--hostname", "missionlzstater-dev"],
-
+	"runArgs": [
+		"--name",
+		"missionlzstater-dev",
+		"--hostname",
+		"missionlzstater-dev"
+	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",
-
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
 }
