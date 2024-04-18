@@ -56,7 +56,12 @@ output "hub_default_subnet_names" {
 
 output "hub_storage_account_id" {
   description = "The ids of the default subnets"
-  value       = module.mod_hub_network.storage_account_id
+  value       = module.mod_hub_network.hub_storage_account_id
+}
+
+output "hub_storage_account_name" {
+  description = "The ids of the default subnets"
+  value       = module.mod_hub_network.hub_storage_account_name
 }
 
 output "hub_default_nsg_names" {
@@ -147,27 +152,55 @@ output "operations_default_nsg_names" {
 
 output "ops_logging_log_analytics_resource_id" {
   description = "Resource ID of Management Logging Log Analytics Workspace"
-  value       = module.mod_hub_network.management_logging_log_analytics_id
+  value       = module.mod_logging.laws_resource_id
 }
 
 output "ops_logging_log_analytics_name" {
   description = "Name of Management Logging Log Analytics Workspace"
-  value       = module.mod_hub_network.management_logging_log_analytics_name
+  value       = module.mod_logging.laws_name
 }
 
 output "ops_logging_storage_account_id" {
   description = "Name of Management Logging Storage Account Id"
-  value       = module.mod_hub_network.management_logging_storage_account_id
+  value       = module.mod_logging.laws_storage_account_id
 }
 
 output "ops_logging_log_analytics_workspace_id" {
   description = "Resource ID of Management Logging Log Analytics Workspace"
-  value       = module.mod_hub_network.management_logging_log_analytics_workspace_id
+  value       = module.mod_logging.laws_workspace_id
 }
 
 output "ops_logging_log_analytics_primary_shared_key" {
   description = "Resource ID of Management Logging Log Analytics Workspace"
-  value       = module.mod_hub_network.management_logging_log_analytics_primary_shared_key
+  value       = module.mod_logging.laws_primary_shared_key
+  sensitive   = true
+}
+
+# security logging module outputs
+
+output "security_logging_log_analytics_resource_id" {
+  description = "Resource ID of Management Logging Log Analytics Workspace"
+  value       = module.mod_security_logging.laws_resource_id
+}
+
+output "security_logging_log_analytics_name" {
+  description = "Name of Management Logging Log Analytics Workspace"
+  value       = module.mod_security_logging.laws_name
+}
+
+output "security_logging_storage_account_id" {
+  description = "Name of Management Logging Storage Account Id"
+  value       = module.mod_security_logging.laws_storage_account_id
+}
+
+output "security_logging_log_analytics_workspace_id" {
+  description = "Resource ID of Management Logging Log Analytics Workspace"
+  value       = module.mod_security_logging.laws_workspace_id
+}
+
+output "security_logging_log_analytics_primary_shared_key" {
+  description = "Resource ID of Management Logging Log Analytics Workspace"
+  value       = module.mod_security_logging.laws_primary_shared_key
   sensitive   = true
 }
 
@@ -193,6 +226,32 @@ output "devsecops_default_subnet_names" {
 }
 
 output "devsecops_default_nsg_names" {
-  description = "The names of each DevSecOps network security groups"
+  description = "The names of each Security network security groups"
   value       = module.mod_devsecops_network.network_security_group_names
+}
+
+# security_network module outputs
+output "security_resource_group_name" {
+  description = "The name of the Security resource group"
+  value       = module.mod_security_network.resource_group_name
+}
+
+output "security_virtual_network_name" {
+  description = "The name of the Security spoke virtual network"
+  value       = module.mod_security_network.virtual_network_name
+}
+
+output "security_default_subnet_ids" {
+  description = "The ids of the Security default subnets"
+  value       = module.mod_security_network.subnet_ids
+}
+
+output "security_default_subnet_names" {
+  description = "The names of the Security default subnets"
+  value       = module.mod_security_network.subnet_names
+}
+
+output "security_default_nsg_names" {
+  description = "The names of each Security network security groups"
+  value       = module.mod_security_network.network_security_group_names
 }
