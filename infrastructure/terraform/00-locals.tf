@@ -134,7 +134,7 @@ locals {
 locals {
   provider_path = {
     management_groups = "/providers/Microsoft.Management/managementGroups/"
-    subscriptions = "/subscriptions/"
+    subscriptions     = "/subscriptions/"
     role_assignment   = "/providers/Microsoft.Authorization/roleAssignments/"
   }
 }
