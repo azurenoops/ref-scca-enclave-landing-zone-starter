@@ -20,12 +20,6 @@ variable "deploy_identity_spoke" {
   default     = true  
 }
 
-variable "id_name" {
-  description = "A name for the id. It defaults to id."
-  type        = string
-  default     = "id"
-}
-
 variable "id_vnet_address_space" {
   description = "The address space of the identity virtual network."
   type        = list(string)
@@ -41,4 +35,10 @@ variable "enable_forced_tunneling_on_id_route_table" {
   description = "Enables forced tunneling on the identity route table."
   type        = bool
   default     = true
+}
+
+variable "id_storage_bypass_ip_cidrs" {
+  description = "The IP addresses to bypass for the Identity storage account."
+  type        = list(string)
+  default    = []  
 }

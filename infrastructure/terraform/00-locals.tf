@@ -9,6 +9,26 @@ locals {
   empty_string = ""
 }
 
+# The following locals are used to define the service endpoints
+locals {
+  fw_service_endpoints = var.environment == "public" ? [
+    "Microsoft.ActiveDirectory",
+    "Microsoft.AzureCosmosDB",
+    "Microsoft.EventHub",
+    "Microsoft.KeyVault",
+    "Microsoft.ServiceBus",
+    "Microsoft.Sql",
+    "Microsoft.Storage",
+  ] : [
+    "Microsoft.AzureCosmosDB",
+    "Microsoft.EventHub",
+    "Microsoft.KeyVault",
+    "Microsoft.ServiceBus",
+    "Microsoft.Sql",
+    "Microsoft.Storage",
+  ]
+}
+
 # The following locals are used to define a set of module
 # tags applied to all resources unless disabled by the
 # input variable "disable_module_tags" and prepare the
@@ -135,8 +155,20 @@ locals {
   provider_path = {
     management_groups = "/providers/Microsoft.Management/managementGroups/"
     subscriptions     = "/subscriptions/"
+    resource_groups     = "/resourceGroups/"
     role_assignment   = "/providers/Microsoft.Authorization/roleAssignments/"
+    private_dns_zones  = "/providers/Microsoft.Network/privateDnsZones/"
   }
+}
+
+# The following locals are Private DNS resource ids
+locals {
+  blob_pdns_id = "${local.provider_path.subscriptions}${var.subscription_id_hub}${local.provider_path.resource_groups}${module.mod_hub_network.private_dns_zone_resource_group_name}${local.provider_path.private_dns_zones}${var.environment == "public" ? "privatelink.blob.core.windows.net" : "privatelink.blob.core.usgovcloudapi.net"}"
+  vault_pdns_id = "${local.provider_path.subscriptions}${var.subscription_id_hub}${local.provider_path.resource_groups}${module.mod_hub_network.private_dns_zone_resource_group_name}${local.provider_path.private_dns_zones}${var.environment == "public" ? "privatelink.vaultcore.azure.net" : "privatelink.vaultcore.usgovcloudapi.net"}"
+  ampls_agentsvc_id = "${local.provider_path.subscriptions}${var.subscription_id_hub}${local.provider_path.resource_groups}${module.mod_hub_network.private_dns_zone_resource_group_name}${local.provider_path.private_dns_zones}${var.environment == "public" ? "privatelink.agentsvc.azure-automation.net" : "privatelink.agentsvc.azure-automation.us"}"
+  ampls_monitor_id = "${local.provider_path.subscriptions}${var.subscription_id_hub}${local.provider_path.resource_groups}${module.mod_hub_network.private_dns_zone_resource_group_name}${local.provider_path.private_dns_zones}${var.environment == "public" ? "privatelink.monitor.azure.com" : "privatelink.monitor.azure.us"}"
+  ampls_ods_id = "${local.provider_path.subscriptions}${var.subscription_id_hub}${local.provider_path.resource_groups}${module.mod_hub_network.private_dns_zone_resource_group_name}${local.provider_path.private_dns_zones}${var.environment == "public" ? "privatelink.ods.opinsights.azure.com" : "privatelink.ods.opinsights.azure.us"}"
+  ampls_oms_id = "${local.provider_path.subscriptions}${var.subscription_id_hub}${local.provider_path.resource_groups}${module.mod_hub_network.private_dns_zone_resource_group_name}${local.provider_path.private_dns_zones}${ var.environment == "public" ? "privatelink.oms.opinsights.azure.com" : "privatelink.oms.opinsights.azure.us"}"
 }
 
 # The following locals are used to control time_sleep

@@ -6,7 +6,7 @@
 ###########################
 
 # The prefixes to use for all resources in this deployment
-org_name           = "ano"    # This Prefix will be used on most deployed resources.  10 Characters max.
+org_name           = "an3"    # This Prefix will be used on most deployed resources.  10 Characters max.
 deploy_environment = "dev"    # dev | test | prod
 environment        = "public" # public | usgovernment
 
@@ -20,7 +20,7 @@ enable_resource_locks = false # true | false
 # 01 Management Groups Configuration  ##
 ########################################
 
-enable_management_groups           = false   # enable management groups for this subscription
+enable_management_groups           = true  # enable management groups for this subscription
 root_management_group_id           = "anoa" # the root management group id for this subscription
 root_management_group_display_name = "anoa" # the root management group display name for this subscription
 
@@ -135,8 +135,7 @@ enable_service_map           = true
 
 # (Optional) To enable Azure Monitoring Private Link Scope
 # Enable Azure Monitor Private Link Scope
-enable_ampls                  = false
-ampls_subnet_address_prefixes = ["10.0.134.0/27"] # (Required) AMPLS Subnet Parameter
+enable_ampls = true
 
 #################################
 # 03b Management Hub Firewall ###
@@ -168,7 +167,7 @@ enable_dns_proxy = true
 dns_servers = ["168.63.129.16"]
 
 # CIDRs for Hub Azure Storage Account to bypass Azure Firewall
-hub_storage_bypass_ip_cidr =[]
+hub_storage_bypass_ip_cidrs = []
 
 # # (Optional) specify the Network rules for Azure Firewall l
 # This is default values, do not need this if keeping default values
@@ -215,12 +214,12 @@ firewall_application_rules = [
         name              = "msftauth"
         source_addresses  = ["*"]
         destination_fqdns = ["aadcdn.msftauth.net", "aadcdn.msauth.net"]
-      }
-    ]
-    protocols = [
-      {
-        type = "Https"
-        port = 443
+        protocols = [
+          {
+            type = "Https"
+            port = 443
+          }
+        ]
       }
     ]
   }
@@ -253,7 +252,6 @@ enable_hybrid_use_benefit           = false # This is only used for windows mach
 # remove this section from the configuration file.
 
 # Identity Virtual Network Parameters
-id_name               = "id"
 id_vnet_address_space = ["10.0.130.0/24"]
 id_subnets = {
   default = {
@@ -283,19 +281,18 @@ id_subnets = {
 enable_forced_tunneling_on_id_route_table = true
 
 # CIDRs for Identity Spkoke Azure Storage Account to bypass Azure Firewall
-identity_storage_bypass_ip_cidr = []
+id_storage_bypass_ip_cidrs = []
 
 ####################################################
 # 03d Operations Management Spoke Virtual Network ###
 ####################################################
 
 # Operations Virtual Network Parameters
-ops_name               = "ops"
 ops_vnet_address_space = ["10.0.131.0/24"]
 ops_subnets = {
   default = {
     name                                       = "ops"
-    address_prefixes                           = ["10.0.131.0/24"]
+    address_prefixes                           = ["10.0.131.32/27"]
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
     private_endpoint_service_endpoints_enabled = true
@@ -309,10 +306,18 @@ ops_subnets = {
         protocol                   = "*",
         source_port_range          = "*",
         destination_port_ranges    = ["22", "80", "443", "3389"],
-        source_address_prefixes    = ["10.0.132.0/24", "10.0.133.0/24"]
+        source_address_prefixes    = ["10.0.130.0/24", "10.0.132.0/24", "10.0.133.0/24"]
         destination_address_prefix = "10.0.131.0/24"
       }
     ]
+  },
+  ampls = {
+    name                                       = "ampls"
+    address_prefixes                           = ["10.0.131.64/27"]
+    service_endpoints                          = []
+    private_endpoint_network_policies_enabled  = false
+    private_endpoint_service_endpoints_enabled = true
+    nsg_subnet_rules                           = []
   }
 }
 
@@ -320,14 +325,13 @@ ops_subnets = {
 enable_forced_tunneling_on_ops_route_table = true
 
 # CIDRs for Operations Spkoke Azure Storage Account to bypass Azure Firewall
-operations_storage_bypass_ip_cidr = []
+ops_storage_bypass_ip_cidrs = []
 
 ##########################################################
 # 03e DevSecOps Management Spoke Virtual Network       ###
 ##########################################################
 
 # DevSecOps Virtual Network Parameters
-devsecops_name               = "devsecops"
 devsecops_vnet_address_space = ["10.0.132.0/24"]
 devsecops_subnets = {
   default = {
@@ -346,7 +350,7 @@ devsecops_subnets = {
         protocol                   = "*",
         source_port_range          = "*",
         destination_port_ranges    = ["22", "80", "443", "3389"],
-        source_address_prefixes    = ["10.0.131.0/24", "10.0.133.0/24"]
+        source_address_prefixes    = ["10.0.131.0/24", "10.0.133.0/24", "10.0.130.0/24"]
         destination_address_prefix = "10.0.132.0/24"
       }
     ]
@@ -357,7 +361,7 @@ devsecops_subnets = {
 enable_forced_tunneling_on_devsecops_route_table = true
 
 # CIDRs for DevSecOps Spkoke Azure Storage Account to bypass Azure Firewall
-devsecops_storage_bypass_ip_cidr = []
+devsecops_storage_bypass_ip_cidrs = []
 
 ####################################################
 # 03e Security Management Spoke Virtual Network  ###
@@ -383,7 +387,7 @@ security_subnets = {
         protocol                   = "*",
         source_port_range          = "*",
         destination_port_ranges    = ["22", "80", "443", "3389"],
-        source_address_prefixes    = ["10.0.131.0/24", "10.0.132.0/24"]
+        source_address_prefixes    = ["10.0.131.0/24", "10.0.132.0/24", "10.0.130.0/24"]
         destination_address_prefix = "10.0.133.0/24"
       }
     ]
@@ -394,7 +398,7 @@ security_subnets = {
 enable_forced_tunneling_on_security_route_table = true
 
 # CIDRs for Security Spkoke Azure Storage Account to bypass Azure Firewall
-security_storage_bypass_ip_cidr = []
+security_storage_bypass_ip_cidrs = []
 
 #############################
 ## Peering Configuration  ###
@@ -411,7 +415,7 @@ use_remote_spoke_gateway = false
 # Azure Key Vault
 keyvault_name                            = "sh-keys"
 keyvault_sku                             = "standard" # The SKU of the keyvault.
-keyvault_public_network_access_enabled   = false      # Enable public network access for the keyvault.
+keyvault_public_network_access_enabled   = true       # Enable public network access for the keyvault.
 keyvault_soft_delete_retention_days      = 7          # The soft delete retention days for the keyvault.
 keyvault_enabled_for_purge_protection    = true       # Enable purge protection for the keyvault.
 keyvault_enabled_for_deployment          = true       # Enable deployment for the keyvault.
@@ -430,30 +434,20 @@ win_source_image_reference = {
 }
 
 # Bastion Linux VM Configuration
-win_source_image_reference = {
-  publisher = "MicrosoftWindowsServer"
-  offer     = "WindowsServer"
-  sku       = "2019-Datacenter"
+# Uncomment the below lines to use a custom image for the linux bastion host
+/* linux_source_image_reference = {
+  publisher = "Canonical"
+  offer     = "UbuntuServe"
+  sku       = "18.04-LTS"
   version   = "latest"
-}
+} */
 
-# Check the README.md file for more pre-defined images for Windows, Ubuntu, Centos, RedHat.
-# Please make sure to use gen2 images supported VM sizes if you use gen2 distributions
-# Specify a valid password with `admin_password` argument to use your own password .  
+# Specify the admin user name of the bastion VM
 vm_admin_username = "azureuser"
 
-# Attach a managed data disk to a Windows/windows virtual machine. 
-# Storage account types include: #'Standard_LRS', #'StandardSSD_ZRS', #'Premium_LRS', #'Premium_ZRS', #'StandardSSD_LRS', #'UltraSSD_LRS' (UltraSSD_LRS is only accessible in regions that support availability zones).
-# Create a new data drive - connect to the VM and execute diskmanagement or fdisk.
-data_disks = {
-  disk1 = {
-    name                 = "vm-dsk-lun0"
-    storage_account_type = "StandardSSD_LRS"
-    lun                  = 0
-    caching              = "ReadWrite"
-    disk_size_gb         = 32
-  }
-}
+# Encryption at host
+# Only Use this if you are using IL4/IL5 environments
+enable_encryption_at_host = false
 
 ########################################### 
 # 04 Azure Service Health Configuration  ##
@@ -467,9 +461,9 @@ action_group_short_name          = "anoaalerting"
 # 05  Defender for Cloud Configuration  ##
 ##########################################
 
-enable_defender_for_cloud           = false # Enable Defender for Cloud
+enable_defender_for_cloud           = true # Enable Defender for Cloud
 security_center_contact_email       = "admin@contoso.com"
-security_center_contact_phone       = "xxx-xxx-xxxx"
+security_center_contact_phone       = "555-555-5555"
 security_center_alert_notifications = true
 security_center_alerts_to_admins    = true
 

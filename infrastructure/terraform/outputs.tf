@@ -91,11 +91,11 @@ output "hub_ddos_protection_plan_id" {
   value       = module.mod_hub_network.ddos_protection_plan_id
 }
 
-output "hub_private_dns_zone_ids" {
+/* output "hub_private_dns_zone_ids" {
   description = "The name of the hub resource group"
-  value       = module.mod_hub_network.private_dns_zone_ids
+  value       = module.mod_hub_network.private_dns_zone_resource_ids
 }
-
+ */
 # id_network module outputs
 output "identity_resource_group_name" {
   description = "The name of the Identity resource group"

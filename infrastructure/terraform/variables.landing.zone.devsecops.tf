@@ -14,12 +14,6 @@
 # DevSecOps   ###
 #################
 
-variable "devsecops_name" {
-  description = "A name for the devsecops. It defaults to devsecops."
-  type        = string
-  default     = "devsecops"
-}
-
 variable "devsecops_vnet_address_space" {
   description = "The address space of the devsecops virtual network."
   type        = list(string)
@@ -35,6 +29,12 @@ variable "enable_forced_tunneling_on_devsecops_route_table" {
   description = "Enables forced tunneling on the devsecops route table."
   type        = bool
   default     = true
+}
+
+variable "devsecops_storage_bypass_ip_cidrs" {
+  description = "The IP addresses to bypass for the devsecops storage account."
+  type        = list(string)
+  default    = []  
 }
 
 ##########################
@@ -151,6 +151,12 @@ variable "vm_admin_password" {
   sensitive   = true
 }
 
+variable "vm_sku_size" {
+  description = "The size of the Bastion VM. Commerical SKUs are looked up based on the region."
+  type        = string
+  default     = "Standard_D2s_v3"
+}
+
 variable "enable_boot_diagnostics" {
   description = "If set to true, will enable boot diagnostics for the Bastion VM. Default is false."
   type        = bool
@@ -167,5 +173,11 @@ variable "enable_hybrid_use_benefit" {
   description = "Enables the hybrid use benefit provides a discount on virtual machines when a customer has an on-premises Windows Server license with Software Assurance."
   type        = bool
   default     = false
+}
+
+variable "enable_encryption_at_host" {
+  description = "Enables encryption at host for the Bastion VM."
+  type        = bool
+  default     = false  
 }
 

@@ -90,7 +90,7 @@ variable "dns_servers" {
   default     = ["168.63.129.16"]
 }
 
-variable "hub_storage_bypass_ip_cidr" {
+variable "hub_storage_bypass_ip_cidrs" {
   description = "The CIDRs for Azure Storage Account. This will allow the specified CIDRs to bypass the Azure Firewall for Azure Storage Account."
   type        = list(string)
   default     = []
@@ -100,6 +100,12 @@ variable "enable_firewall" {
   description = "Enables an Azure Firewall"
   type        = bool
   default     = true
+}
+
+variable "firewall_snet_service_endpoints" {
+  description = "The service endpoints to add to the firewall client subnet."
+  type        = list(string)
+  default     = []
 }
 
 variable "firewall_application_rules" {
@@ -157,5 +163,5 @@ variable "gateway_vnet_address_space" {
 variable "use_remote_spoke_gateway" {
   description = "Option use_remote_gateway for the spoke vnet to peer. Controls if remote gateways can be used on the local virtual network. https://www.terraform.io/docs/providers/azurerm/r/virtual_network_peering.html#use_remote_gateways"
   type        = bool
-  default     = null
+  default     = false
 }

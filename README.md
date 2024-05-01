@@ -65,7 +65,7 @@ The below scenario is how to get started on the Mission Enclave Landing Zone imp
 Manual Deployment Details:
 | Deployment Methodology | Manual Deployment |
 |--------------|--------------|
-|Terraform|[Published](./docs/10-manual-deployment-guide-terraform.md)
+|Terraform|[Published](https://azurenoops.github.io/terraform-overlays-baseline/deployment/landing-zone-manual)
 
 >NOTE: Using manual deployment to deploy the infrastructure using the Terraform CLI. This is a good option if you want to learn how to deploy the infrastructure using Terraform CLI.
 
@@ -80,11 +80,13 @@ The below scenario is how to get started on the Mission Enclave Landing Zone imp
 E2E GitHub Deployment Details:
 | Deployment Methodology | GitHub Actions | Azure DevOps |
 |--------------|--------------|--------------|
-|Terraform|[In Progress](./docs/09-e2e-deployment-guide-githubaction.md)| Coming soon |
+|Terraform|[In Progress](https://azurenoops.github.io/terraform-overlays-baseline/deployment/landing-zone-github)| Coming soon |
 
 ## Importance of Separation of Duties (Azure NoOps Shared Responsibility Model) ##
 
-In this is a reference implementation, the repo is self contained and contains all the Terraform modules and configuration files to deploy the infrastructure on Azure. This does not take into account of roles. Azure NoOps Shared Responsibility Model pushes the need to separate roles. In a production environment, you will need to separate the Terraform modules and configuration files into different repositories. For example, you can have the following repositories:
+In this is a reference implementation, the repo is self contained and contains all the Terraform modules and configuration files to deploy the infrastructure on Azure. This does not take into account of roles. Azure NoOps Shared Responsibility Model pushes the need to separate roles. 
+
+In a production environment, you will need to separate the Terraform modules and configuration files into different repositories. For example, you can have the following repositories:
 
 - A repository for the Management Layer Terraform modules (includes management groups, management service such as budgets, landing zones, and shared services)
 - A repository for the Management Policy Terraform modules
@@ -116,7 +118,9 @@ Please leverage issues if you have any feedback or request on how we can improve
 
 ## Data Collection ##
 
-The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services. You may turn off the telemetry as described in the repository. There are also some features in the software that may enable you and Microsoft to collect data from users of your applications. If you use these features, you must comply with applicable law, including providing appropriate notices to users of your applications together with a copy of Microsoft's privacy statement. Our privacy statement is located at <https://go.microsoft.com/fwlink/?LinkId=521839>. You can learn more about data collection and use in the help documentation and our privacy statement. Your use of the software operates as your consent to these practices.
+The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services. You may turn off the telemetry as described in the repository. There are also some features in the software that may enable you and Microsoft to collect data from users of your applications.
+
+If you use these features, you must comply with applicable law, including providing appropriate notices to users of your applications together with a copy of Microsoft's privacy statement. Our privacy statement is located at <https://go.microsoft.com/fwlink/?LinkId=521839>. You can learn more about data collection and use in the help documentation and our privacy statement. Your use of the software operates as your consent to these practices.
 
 ## Contributing ##
 

@@ -17,16 +17,20 @@ module "mod_azregions_lookup" {
   azure_region = var.default_location
 }
 
-# Azure Regions Data
+# Azure Commerical Regions Data
 module "az_regions" {
-  source  = "Azure/regions/azurerm"
-  version = "0.6.0"
+  count             = var.environment == "public" ? 1 : 0
+  source          = "Azure/regions/azurerm"
+  version         = "0.6.0"
+  use_cached_data = false
 }
 
-# Get SKU for VMs
+# Get SKU for Commerical VMs
 module "get_valid_sku_for_deployment_region" {
+  count             = var.environment == "public" ? 1 : 0
   source            = "./modules/vm_sku_selector"
   deployment_region = var.default_location
+  environment       = var.environment
 }
 
 # Get current IP address for use in KV firewall rules
@@ -39,55 +43,7 @@ data "http" "ip" {
   }
 }
 
-# DNS Data Source Lookups
-data "azurerm_private_dns_zone" "vault" {
-  depends_on          = [module.mod_hub_network]
-  provider            = azurerm.hub
-  name                = var.environment == "public" ? "privatelink.vaultcore.azure.net" : "privatelink.vaultcore.azure.us"
-  resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
-}
-
-data "azurerm_private_dns_zone" "blob" {
-  depends_on          = [module.mod_hub_network]
-  provider            = azurerm.hub
-  name                = var.environment == "public" ? "privatelink.blob.core.windows.net" : "privatelink.blob.core.usgovcloudapi.net"
-  resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
-}
-
-# AMPLS Data Source Lookups
-data "azurerm_private_dns_zone" "agentsvc" {
-  count               = var.enable_ampls ? 1 : 0
-  depends_on          = [module.mod_hub_network]
-  provider            = azurerm.hub
-  name                = var.environment == "public" ? "privatelink.agentsvc.azure-automation.net" : "privatelink.agentsvc.azure-automation.us"
-  resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
-}
-
-data "azurerm_private_dns_zone" "monitor" {
-  count               = var.enable_ampls ? 1 : 0
-  depends_on          = [module.mod_hub_network]
-  provider            = azurerm.hub
-  name                = var.environment == "public" ? "privatelink.monitor.azure.com" : "privatelink.monitor.azure.us"
-  resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
-}
-
-data "azurerm_private_dns_zone" "ods" {
-  count               = var.enable_ampls ? 1 : 0
-  depends_on          = [module.mod_hub_network]
-  provider            = azurerm.hub
-  name                = var.environment == "public" ? "privatelink.ods.opinsights.azure.com" : "privatelink.ods.opinsights.azure.us"
-  resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
-}
-
-data "azurerm_private_dns_zone" "oms" {
-  count               = var.enable_ampls ? 1 : 0
-  depends_on          = [module.mod_hub_network]
-  provider            = azurerm.hub
-  name                = var.environment == "public" ? "privatelink.oms.opinsights.azure.com" : "privatelink.oms.opinsights.azure.us"
-  resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
-}
-
-# Hub Data Lookups
+# Hub Data Source Lookups
 data "azurerm_virtual_network" "hub-vnet" {
   depends_on          = [module.mod_hub_network]
   provider            = azurerm.hub
@@ -109,7 +65,7 @@ data "azurerm_log_analytics_workspace" "log_analytics" {
   resource_group_name = module.mod_logging.laws_rgname
 }
 
-# Identity Data Lookups
+# Identity Data Source Lookups
 data "azurerm_virtual_network" "id-vnet" {
   depends_on          = [module.mod_id_network]
   provider            = azurerm.identity
@@ -117,7 +73,7 @@ data "azurerm_virtual_network" "id-vnet" {
   resource_group_name = module.mod_id_network.resource_group_name
 }
 
-# Operations Data Lookups
+# Operations Data Source Lookups
 data "azurerm_virtual_network" "ops-vnet" {
   depends_on          = [module.mod_ops_network]
   provider            = azurerm.operations
@@ -133,7 +89,7 @@ data "azurerm_subnet" "ops-ampls-snet" {
   resource_group_name  = module.mod_ops_network.resource_group_name
 }
 
-# Security Data Lookups
+# Security Data Source Lookups
 data "azurerm_virtual_network" "sec-vnet" {
   depends_on          = [module.mod_security_network]
   provider            = azurerm.security
@@ -148,7 +104,7 @@ data "azurerm_log_analytics_workspace" "sec_log_analytics" {
   resource_group_name = module.mod_security_logging.laws_rgname
 }
 
-# DevSecOps Data Lookups
+# DevSecOps Data Source Lookups
 data "azurerm_virtual_network" "devsecops-vnet" {
   depends_on          = [module.mod_devsecops_network]
   provider            = azurerm.devsecops

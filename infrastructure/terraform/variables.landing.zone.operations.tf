@@ -14,12 +14,6 @@
 # Operations  ###
 #################
 
-variable "ops_name" {
-  description = "A name for the ops. It defaults to ops."
-  type        = string
-  default     = "ops"
-}
-
 variable "ops_vnet_address_space" {
   description = "The address space of the operations virtual network."
   type        = list(string)
@@ -35,4 +29,10 @@ variable "enable_forced_tunneling_on_ops_route_table" {
   description = "Enables forced tunneling on the operations route table."
   type        = bool
   default     = true
+}
+
+variable "ops_storage_bypass_ip_cidrs" {
+  description = "The IP addresses to bypass for the Operations storage account."
+  type        = list(string)
+  default    = []  
 }
