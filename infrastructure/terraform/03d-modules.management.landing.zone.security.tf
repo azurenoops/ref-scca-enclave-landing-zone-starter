@@ -20,7 +20,7 @@ AUTHOR/S: jrspinella
 module "mod_security_network" {
   providers = { azurerm = azurerm.security }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "v7.0.0-beta1"
+  version   = "7.0.0-beta1"
 
   depends_on = [ module.mod_security_scaffold_rg ]
 

@@ -17,7 +17,7 @@ AUTHOR/S: jrspinella
 module "mod_id_network" {
   providers = { azurerm = azurerm.identity }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "v7.0.0-beta1"
+  version   = "7.0.0-beta1"
 
   depends_on = [ module.mod_id_scaffold_rg ]
 

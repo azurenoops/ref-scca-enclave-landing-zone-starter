@@ -19,7 +19,7 @@ AUTHOR/S: jrspinella
 module "mod_devsecops_network" {
   providers = { azurerm = azurerm.devsecops }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "v7.0.0-beta1"
+  version   = "7.0.0-beta1"
 
   depends_on = [module.mod_devsecops_scaffold_rg]
 

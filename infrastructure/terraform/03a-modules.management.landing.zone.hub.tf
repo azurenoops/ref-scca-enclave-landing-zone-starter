@@ -21,7 +21,7 @@ AUTHOR/S: jrspinella
 module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
   source    = "azurenoops/overlays-management-hub/azurerm"
-  version   = "v8.0.0-beta1"
+  version   = "8.0.0-beta1"
 
   depends_on = [module.mod_hub_scaffold_rg]
 
