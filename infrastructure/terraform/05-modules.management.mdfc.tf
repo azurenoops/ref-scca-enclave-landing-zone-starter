@@ -34,19 +34,19 @@ module "mod_microsoft_defender_for_cloud" {
       scope_id     = var.subscription_id_hub
       workspace_id = module.mod_logging.laws_resource_id
     },
-    var.subscription_id_operations != "" ? {
+    var.subscription_id_operations != null ? {
       scope_id     = var.subscription_id_operations
       workspace_id = module.mod_logging.laws_resource_id
     } : null,
-    var.subscription_id_identity != "" ? {
+    var.subscription_id_identity != null ? {
       scope_id     = var.subscription_id_identity
       workspace_id = module.mod_logging.laws_resource_id
     } : null,
-    var.subscription_id_security != "" ? {
+    var.subscription_id_security != null ? {
       scope_id     = var.subscription_id_security
       workspace_id = module.mod_logging.laws_resource_id
     } : null,
-    var.subscription_id_devsecops != "" ? {
+    var.subscription_id_devsecops != null ? {
       scope_id     = var.subscription_id_devsecops
       workspace_id = module.mod_logging.laws_resource_id
     } : null,

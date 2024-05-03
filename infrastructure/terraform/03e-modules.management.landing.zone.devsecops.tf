@@ -19,7 +19,7 @@ AUTHOR/S: jrspinella
 module "mod_devsecops_network" {
   providers = { azurerm = azurerm.devsecops }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "6.0.2"
+  version   = "v7.0.0-beta1"
 
   depends_on = [module.mod_devsecops_scaffold_rg]
 
@@ -40,9 +40,6 @@ module "mod_devsecops_network" {
   # Diagnostic settings for Vnet and Flow Logs
   existing_log_analytics_workspace_resource_id = data.azurerm_log_analytics_workspace.log_analytics.id
   existing_log_analytics_workspace_id          = data.azurerm_log_analytics_workspace.log_analytics.workspace_id
-
-  # Blob Private DNS Id for Storage Account
-  existing_private_dns_zone_blob_id = local.blob_pdns_id
 
   # (Optional) Enable Customer Managed Key for Azure Storage Account
   enable_customer_managed_key = var.enable_customer_managed_keys

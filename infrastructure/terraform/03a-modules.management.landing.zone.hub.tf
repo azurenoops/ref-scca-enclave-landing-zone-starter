@@ -21,7 +21,7 @@ AUTHOR/S: jrspinella
 module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
   source    = "azurenoops/overlays-management-hub/azurerm"
-  version   = "7.6.0"
+  version   = "v8.0.0-beta1"
 
   depends_on = [module.mod_hub_scaffold_rg]
 
@@ -44,10 +44,6 @@ module "mod_hub_network" {
   # (Required) Log Analytics Workspace for Network Diagnostic Settings & Traffic Analytics
   log_analytics_workspace_resource_id = data.azurerm_log_analytics_workspace.log_analytics.id
   log_analytics_workspace_id          = data.azurerm_log_analytics_workspace.log_analytics.workspace_id
-
-  # Blob Private DNS Id for Hub Storage Account
-  # Change to meet environment requirements
-  existing_private_dns_zone_blob_id = local.blob_pdns_id
 
   # (Optional) Enable DDos Protection Plan
   create_ddos_plan = var.create_ddos_plan

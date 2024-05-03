@@ -5,6 +5,7 @@
 # Resource Group Creation
 #----------------------------------------------------------
 module "mod_hub_scaffold_rg" {
+  providers = { azurerm = azurerm.hub }
   source  = "azurenoops/overlays-resource-group/azurerm"
   version = "1.0.1"
 
@@ -19,6 +20,7 @@ module "mod_hub_scaffold_rg" {
 }
 
 module "mod_id_scaffold_rg" {
+  providers = { azurerm = azurerm.identity }
   source  = "azurenoops/overlays-resource-group/azurerm"
   version = "1.0.1"
 
@@ -33,6 +35,7 @@ module "mod_id_scaffold_rg" {
 }
 
 module "mod_ops_scaffold_rg" {
+  providers = { azurerm = azurerm.operations }
   source  = "azurenoops/overlays-resource-group/azurerm"
   version = "1.0.1"
 
@@ -47,6 +50,7 @@ module "mod_ops_scaffold_rg" {
 }
 
 module "mod_security_scaffold_rg" {
+  providers = { azurerm = azurerm.security }
   source  = "azurenoops/overlays-resource-group/azurerm"
   version = "1.0.1"
 
@@ -61,6 +65,7 @@ module "mod_security_scaffold_rg" {
 }
 
 module "mod_devsecops_scaffold_rg" {
+  providers = { azurerm = azurerm.devsecops }
   source  = "azurenoops/overlays-resource-group/azurerm"
   version = "1.0.1"
 

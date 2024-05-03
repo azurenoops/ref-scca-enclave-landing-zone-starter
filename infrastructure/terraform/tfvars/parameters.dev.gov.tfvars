@@ -6,7 +6,7 @@
 ###########################
 
 # The prefixes to use for all resources in this deployment
-org_name           = "an4"    # This Prefix will be used on most deployed resources.  10 Characters max.
+org_name           = "an5"    # This Prefix will be used on most deployed resources.  10 Characters max.
 deploy_environment = "dev"    # dev | test | prod
 environment        = "usgovernment" # public | usgovernment
 
@@ -474,4 +474,4 @@ security_center_alerts_to_admins    = true
 
 # Defender Configuration
 security_center_pricing_tier           = "Standard" # Free | Standard
-security_center_pricing_resource_types = ["Dns", "StorageAccounts", "VirtualMachines"]
+security_center_pricing_resource_types = ["StorageAccounts", "VirtualMachines"]
