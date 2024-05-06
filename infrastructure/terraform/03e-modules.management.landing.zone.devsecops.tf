@@ -284,7 +284,7 @@ module "mod_shared_keyvault" {
 check "dns" {
   data "azurerm_private_dns_a_record" "assertion" {
     name                = module.mod_shared_keyvault.resource.name
-    zone_name           = "privatelink.vaultcore.azure.net"
+    zone_name           = var.environment == "public" ? "privatelink.vaultcore.azure.net" : "privatelink.vaultcore.usgovcloudapi.net"
     resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
   }
   assert {
