@@ -30,5 +30,5 @@
               VALIDATE_MARKDOWN: true
               VALIDATE_YAML: true
               DEFAULT_BRANCH: main
-              FILTER_REGEX_EXCLUDE: ".github/dependabot.yml"
+              FILTER_REGEX_EXCLUDE: ".github/dependabot.yml, deploy_dependencies.yml"
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
