@@ -74,11 +74,24 @@ variable "subscription_id_operations" {
   sensitive   = true
 }
 
+variable "subscription_id_security" {
+  type        = string
+  description = "If specified, identifies the Platform subscription for \"Security\" for resource deployment and correct placement in the Management Group hierarchy."
+  default     = null
+  sensitive   = true
+}
+
 variable "subscription_id_devsecops" {
   type        = string
   description = "If specified, identifies the Platform subscription for \"DevSecOps\" for resource deployment and correct placement in the Management Group hierarchy."
   default     = null
   sensitive   = true
+}
+
+variable "enable_customer_managed_keys" {
+  description = "Enable customer managed keys for the keyvault."
+  type        = bool
+  default     = false  
 }
 
 #################################

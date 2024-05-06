@@ -4,15 +4,16 @@ title: ''
 labels: ''
 assignees: ''
 ---
+
 <!--
 IF SUFFICIENT INFORMATION IS NOT PROVIDED VIA THE FOLLOWING TEMPLATE THE ISSUE MIGHT BE CLOSED WITHOUT FURTHER CONSIDERATION OR INVESTIGATION
--->
 > Please provide us with the following information
 > ---------------------------------------------------------------
+-->
 
 ### This issue is for a: (mark with an `x`)
 
-```
+```bash
 - [ ] bug report -> please search issues before submitting
 - [ ] feature request
 - [ ] documentation issue or request
@@ -29,6 +30,7 @@ IF SUFFICIENT INFORMATION IS NOT PROVIDED VIA THE FOLLOWING TEMPLATE THE ISSUE M
 >
 
 ### OS and Version?
+
 > Windows 7, 8 or 10. Linux (which distribution). macOS (Yosemite? El Capitan? Sierra?)
 
 ### Versions

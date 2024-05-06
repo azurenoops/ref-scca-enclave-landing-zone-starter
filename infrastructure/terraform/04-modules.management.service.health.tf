@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 
 /*
-SUMMARY: Module to deploy Monitoring Service Alerts for Azure Service Health in Partner Environments
+SUMMARY: Module to deploy Monitoring Service Alerts for Azure Service Health in the Hub
 DESCRIPTION: The following components will be options in this deployment
              * Monitoring Service Alerts              
 AUTHOR/S: jrspinella
@@ -14,8 +14,9 @@ AUTHOR/S: jrspinella
 
 # This module will create a monitoring service alerts on MPE resources
 module "mod_service_health_monitoring" {
-  source  = "azurenoops/overlays-monitoring-service-alerts/azurerm"
-  version = "~> 0.1"
+  providers = { azurerm = azurerm.hub }
+  source    = "azurenoops/overlays-monitoring-service-alerts/azurerm"
+  version   = "0.1.0"
 
   count = var.enable_service_health_monitoring ? 1 : 0
 
