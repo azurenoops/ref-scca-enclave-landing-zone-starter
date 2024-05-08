@@ -22,17 +22,17 @@ module "mod_security_network" {
   source    = "azurenoops/overlays-management-spoke/azurerm"
   version   = "7.0.0-beta1"
 
-  depends_on = [ module.mod_security_scaffold_rg ]
+  depends_on = [module.mod_security_scaffold_rg]
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing_resource_group_name argument to the existing resource group, 
   # and set the argument to `create_spoke_resource_group = false`. Location will be same as existing RG.
- existing_resource_group_name = module.mod_security_scaffold_rg.resource_group_name
-  location                    = var.default_location
-  deploy_environment          = var.deploy_environment
-  org_name                    = var.org_name
-  environment                 = var.environment
-  workload_name               = local.security_short_name
+  existing_resource_group_name = module.mod_security_scaffold_rg.resource_group_name
+  location                     = var.default_location
+  deploy_environment           = var.deploy_environment
+  org_name                     = var.org_name
+  environment                  = var.environment
+  workload_name                = local.security_short_name
 
   # (Required) Collect Hub Firewall Parameters
   # Hub Firewall details
@@ -100,13 +100,13 @@ module "mod_hub_to_security_vnet_peering" {
   # Vnet Peerings details
   enable_different_subscription_peering           = true
   resource_group_src_name                         = module.mod_security_scaffold_rg.resource_group_name
-  different_subscription_dest_resource_group_name = data.azurerm_virtual_network.hub-vnet.resource_group_name
+  different_subscription_dest_resource_group_name = module.mod_hub_scaffold_rg.resource_group_name //data.azurerm_virtual_network.hub-vnet.resource_group_name
 
   alias_subscription_id                                = var.subscription_id_hub
-  vnet_src_name                                        = data.azurerm_virtual_network.sec-vnet.name
-  vnet_src_id                                          = data.azurerm_virtual_network.sec-vnet.id
-  different_subscription_dest_vnet_name                = data.azurerm_virtual_network.hub-vnet.name
-  different_subscription_dest_vnet_id                  = data.azurerm_virtual_network.hub-vnet.id
+  vnet_src_name                                        = module.mod_security_network.virtual_network_name //data.azurerm_virtual_network.sec-vnet.name
+  vnet_src_id                                          = module.mod_security_network.virtual_network_id   //data.azurerm_virtual_network.sec-vnet.id
+  different_subscription_dest_vnet_name                = module.mod_hub_network.virtual_network_name      //data.azurerm_virtual_network.hub-vnet.name
+  different_subscription_dest_vnet_id                  = module.mod_hub_network.virtual_network_id        //data.azurerm_virtual_network.hub-vnet.id
   use_remote_gateways_dest_vnet_different_subscription = var.use_remote_spoke_gateway
 }
 

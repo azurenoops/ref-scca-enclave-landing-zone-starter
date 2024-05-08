@@ -19,7 +19,7 @@ module "mod_id_network" {
   source    = "azurenoops/overlays-management-spoke/azurerm"
   version   = "7.0.0-beta1"
 
-  depends_on = [ module.mod_id_scaffold_rg ]
+  depends_on = [module.mod_id_scaffold_rg]
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing_resource_group_name argument to the existing resource group, 
@@ -97,12 +97,12 @@ module "mod_hub_to_id_vnet_peering" {
   # Vnet Peerings details
   enable_different_subscription_peering           = true
   resource_group_src_name                         = module.mod_id_scaffold_rg.resource_group_name
-  different_subscription_dest_resource_group_name = data.azurerm_virtual_network.hub-vnet.resource_group_name
+  different_subscription_dest_resource_group_name = module.mod_hub_scaffold_rg.resource_group_name //data.azurerm_virtual_network.hub-vnet.resource_group_name
 
   alias_subscription_id                                = var.subscription_id_hub
-  vnet_src_name                                        = data.azurerm_virtual_network.id-vnet.name
-  vnet_src_id                                          = data.azurerm_virtual_network.id-vnet.id
-  different_subscription_dest_vnet_name                = data.azurerm_virtual_network.hub-vnet.name
-  different_subscription_dest_vnet_id                  = data.azurerm_virtual_network.hub-vnet.id
+  vnet_src_name                                        = module.mod_id_network.virtual_network_name  //data.azurerm_virtual_network.id-vnet.name
+  vnet_src_id                                          = module.mod_id_network.virtual_network_id    //data.azurerm_virtual_network.id-vnet.id
+  different_subscription_dest_vnet_name                = module.mod_hub_network.virtual_network_name //data.azurerm_virtual_network.hub-vnet.name
+  different_subscription_dest_vnet_id                  = module.mod_hub_network.virtual_network_id   //data.azurerm_virtual_network.hub-vnet.id
   use_remote_gateways_dest_vnet_different_subscription = var.use_remote_spoke_gateway
 }

@@ -99,13 +99,13 @@ module "mod_hub_to_devsecops_vnet_peering" {
   # Vnet Peerings details
   enable_different_subscription_peering           = true
   resource_group_src_name                         = module.mod_devsecops_scaffold_rg.resource_group_name
-  different_subscription_dest_resource_group_name = data.azurerm_virtual_network.hub-vnet.resource_group_name
+  different_subscription_dest_resource_group_name = module.mod_hub_scaffold_rg.resource_group_name //data.azurerm_virtual_network.hub-vnet.resource_group_name
 
   alias_subscription_id                                = var.subscription_id_hub
-  vnet_src_name                                        = data.azurerm_virtual_network.devsecops-vnet.name
-  vnet_src_id                                          = data.azurerm_virtual_network.devsecops-vnet.id
-  different_subscription_dest_vnet_name                = data.azurerm_virtual_network.hub-vnet.name
-  different_subscription_dest_vnet_id                  = data.azurerm_virtual_network.hub-vnet.id
+  vnet_src_name                                        = module.mod_devsecops_network.virtual_network_name //data.azurerm_virtual_network.devsecops-vnet.name
+  vnet_src_id                                          = module.mod_devsecops_network.virtual_network_id   //data.azurerm_virtual_network.devsecops-vnet.id
+  different_subscription_dest_vnet_name                = module.mod_hub_network.virtual_network_name       //data.azurerm_virtual_network.hub-vnet.name
+  different_subscription_dest_vnet_id                  = module.mod_hub_network.virtual_network_id         //data.azurerm_virtual_network.hub-vnet.id
   use_remote_gateways_dest_vnet_different_subscription = var.use_remote_spoke_gateway
 }
 
@@ -225,7 +225,7 @@ module "mod_shared_keyvault" {
       private_dns_zone_resource_ids = [local.vault_pdns_id]
       # these are optional but illustrate making well-aligned service connection & NIC names.
       private_service_connection_name = local.pe_key_vault_psc_name
-      network_interface_name          = local.pe_key_vault_nic_name      
+      network_interface_name          = local.pe_key_vault_nic_name
     }
   }
 
@@ -297,10 +297,10 @@ check "dns" {
 ## Bastion Jumpbox Configuration  ###
 #####################################
 
-resource "random_integer" "zone_index" {  
+resource "random_integer" "zone_index" {
   count = var.environment == "public" ? 1 : 0
-  max = length(module.az_regions[0].regions_by_name[var.default_location].zones)
-  min = 1
+  max   = length(module.az_regions[0].regions_by_name[var.default_location].zones)
+  min   = 1
 }
 
 module "mod_bastion_windows_jmp_virtual_machine" {

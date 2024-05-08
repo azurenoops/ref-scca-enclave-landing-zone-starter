@@ -100,13 +100,14 @@ module "mod_hub_to_ops_vnet_peering" {
   # Vnet Peerings details
   enable_different_subscription_peering           = true
   resource_group_src_name                         = module.mod_ops_scaffold_rg.resource_group_name
-  different_subscription_dest_resource_group_name = data.azurerm_virtual_network.hub-vnet.resource_group_name
+  different_subscription_dest_resource_group_name = module.mod_hub_scaffold_rg.resource_group_name //data.azurerm_virtual_network.hub-vnet.resource_group_name
+
 
   alias_subscription_id                                = var.subscription_id_hub
-  vnet_src_name                                        = data.azurerm_virtual_network.ops-vnet.name
-  vnet_src_id                                          = data.azurerm_virtual_network.ops-vnet.id
-  different_subscription_dest_vnet_name                = data.azurerm_virtual_network.hub-vnet.name
-  different_subscription_dest_vnet_id                  = data.azurerm_virtual_network.hub-vnet.id
+  vnet_src_name                                        = module.mod_ops_network.virtual_network_name //data.azurerm_virtual_network.ops-vnet.name
+  vnet_src_id                                          = module.mod_ops_network.virtual_network_id   //data.azurerm_virtual_network.ops-vnet.id
+  different_subscription_dest_vnet_name                = module.mod_hub_network.virtual_network_name //data.azurerm_virtual_network.hub-vnet.name
+  different_subscription_dest_vnet_id                  = module.mod_hub_network.virtual_network_id   //data.azurerm_virtual_network.hub-vnet.id
   use_remote_gateways_dest_vnet_different_subscription = var.use_remote_spoke_gateway
 }
 
@@ -184,7 +185,7 @@ module "mod_logging" {
 module "mod_ampls" {
   providers = { azurerm = azurerm.operations }
   source    = "azurenoops/overlays-azure-monitor-private-link-scope/azurerm"
-  version   = "0.2.0"
+  version   = "0.2.1"
 
   count = var.enable_ampls ? 1 : 0
 
@@ -205,13 +206,13 @@ module "mod_ampls" {
     local.ampls_ods_id,
     local.ampls_oms_id,
     local.blob_pdns_id,
-    ]
+  ]
 
   # Private Endpoint details
   # VNet and Subnet details
   # This need to be the same as the VNet and Subnet where the Private Endpoint will be deployed
-  existing_ampls_virtual_network_id        = data.azurerm_virtual_network.ops-vnet.id
-  existing_ampls_private_subnet_id         = data.azurerm_subnet.ops-ampls-snet.id # AMPLS Subnet index
+  existing_ampls_virtual_network_id = data.azurerm_virtual_network.ops-vnet.id
+  existing_ampls_private_subnet_id  = data.azurerm_subnet.ops-ampls-snet.id # AMPLS Subnet index
 
   # Depends on the Ops RG module
   depends_on = [module.mod_ops_scaffold_rg]
