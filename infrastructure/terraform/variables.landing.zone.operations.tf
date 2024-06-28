@@ -36,3 +36,21 @@ variable "ops_storage_bypass_ip_cidrs" {
   type        = list(string)
   default    = []  
 }
+
+variable "ops_storage_account_kind" {
+  description = "The kind of the operations storage account."
+  type        = string
+  default     = "StorageV2"
+}
+
+variable "ops_storage_account_tier" {
+  description = "The tier of the operations storage account."
+  type        = string
+  default     = "Standard"
+}
+
+variable "ops_storage_account_replication_type" {
+  description = "The replication of the operations storage account."
+  type        = string
+  default     = "ZRS"
+}

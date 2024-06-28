@@ -68,7 +68,10 @@ module "mod_devsecops_network" {
 
   # CIDRs for Azure Log Storage Account
   # This will allow the specified CIDRs to bypass the Azure Firewall for Azure Storage Account.
-  spoke_storage_bypass_ip_cidr = var.devsecops_storage_bypass_ip_cidrs
+  spoke_storage_bypass_ip_cidr           = var.devsecops_storage_bypass_ip_cidrs
+  spoke_storage_account_kind             = var.devsecops_storage_account_kind
+  spoke_storage_account_tier             = var.devsecops_storage_account_tier
+  spoke_storage_account_replication_type = var.devsecops_storage_account_replication_type
 
   # (Optional) By default, this will apply resource locks to all resources created by this module.
   # To disable resource locks, set the argument to `enable_resource_locks = false`.
@@ -215,6 +218,19 @@ module "mod_shared_keyvault" {
       role_definition_id_or_name = "Key Vault Secrets Officer"
       principal_id               = data.azurerm_client_config.root.object_id
     }
+    kv_admin = {
+      role_definition_id_or_name = "Key Vault Administrator"
+      principal_id               = var.keyvault_admins_group_object_id
+    }
+    kv_admin_user_certificates = {
+      role_definition_id_or_name = "Key Vault Certificates Officer"
+      principal_id               = var.keyvault_admins_group_object_id
+    }
+    kv_admin_user_secrets = {
+      role_definition_id_or_name = "Key Vault Secrets Officer"
+      principal_id               = var.keyvault_admins_group_object_id
+    }
+
   }
 
   # This is to enable the Private Endpoint for the key vault
@@ -297,11 +313,11 @@ check "dns" {
 ## Bastion Jumpbox Configuration  ###
 #####################################
 
-resource "random_integer" "zone_index" {
+/* resource "random_integer" "zone_index" {
   count = var.environment == "public" ? 1 : 0
   max   = length(module.az_regions[0].regions_by_name[var.default_location].zones)
   min   = 1
-}
+} */
 
 module "mod_bastion_windows_jmp_virtual_machine" {
   providers = { azurerm = azurerm.devsecops }
@@ -314,8 +330,8 @@ module "mod_bastion_windows_jmp_virtual_machine" {
   resource_group_name                = module.mod_devsecops_scaffold_rg.resource_group_name
   location                           = var.default_location
   name                               = local.windows_vm_name
-  virtualmachine_sku_size            = var.environment == "public" ? module.get_valid_sku_for_deployment_region[0].sku : var.vm_sku_size
-  zone                               = var.environment == "public" ? random_integer.zone_index[0].result : null
+  virtualmachine_sku_size            = var.vm_sku_size //var.environment == "public" ? module.get_valid_sku_for_deployment_region[0].sku : var.vm_sku_size
+  zone                               = null  //var.environment == "public" ? random_integer.zone_index[0].result : null
   computer_name                      = local.windows_computer_name
   generate_admin_password_or_ssh_key = false
 

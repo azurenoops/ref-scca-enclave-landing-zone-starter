@@ -34,7 +34,25 @@ variable "enable_forced_tunneling_on_devsecops_route_table" {
 variable "devsecops_storage_bypass_ip_cidrs" {
   description = "The IP addresses to bypass for the devsecops storage account."
   type        = list(string)
-  default    = []  
+  default     = []
+}
+
+variable "devsecops_storage_account_kind" {
+  description = "The kind of the devsecops storage account."
+  type        = string
+  default     = "StorageV2"
+}
+
+variable "devsecops_storage_account_tier" {
+  description = "The tier of the devsecops storage account."
+  type        = string
+  default     = "Standard"
+}
+
+variable "devsecops_storage_account_replication_type" {
+  description = "The replication type of the devsecops storage account."
+  type        = string
+  default     = "ZRS"
 }
 
 ##########################
@@ -111,6 +129,12 @@ variable "keyvault_enabled_for_purge_protection" {
   description = "Enable purge protection for the keyvault."
   type        = bool
   default     = true
+}
+
+variable "keyvault_admins_group_object_id" {
+  description = "The object ID of the admins group that will be given access to the keyvault."
+  type        = string
+  sensitive   = true
 }
 
 ###############################

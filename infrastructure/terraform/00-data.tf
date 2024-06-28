@@ -21,17 +21,17 @@ module "mod_azregions_lookup" {
 module "az_regions" {
   count             = var.environment == "public" ? 1 : 0
   source          = "Azure/regions/azurerm"
-  version         = "0.6.0"
+  version         = "0.7.0"
   use_cached_data = false
 }
 
-# Get SKU for Commerical VMs
+/* # Get SKU for Commerical VMs
 module "get_valid_sku_for_deployment_region" {
   count             = var.environment == "public" ? 1 : 0
   source            = "./modules/vm_sku_selector"
   deployment_region = var.default_location
   environment       = var.environment
-}
+} */
 
 # Get current IP address for use in KV firewall rules
 data "http" "ip" {

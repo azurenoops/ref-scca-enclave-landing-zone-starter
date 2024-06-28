@@ -69,7 +69,10 @@ module "mod_ops_network" {
 
   # CIDRs for Azure Log Storage Account
   # This will allow the specified CIDRs to bypass the Azure Firewall for Azure Storage Account.
-  spoke_storage_bypass_ip_cidr = var.ops_storage_bypass_ip_cidrs
+  spoke_storage_bypass_ip_cidr           = var.ops_storage_bypass_ip_cidrs
+  spoke_storage_account_kind             = var.ops_storage_account_kind
+  spoke_storage_account_tier             = var.ops_storage_account_tier
+  spoke_storage_account_replication_type = var.ops_storage_account_replication_type
 
   # (Optional) By default, this will apply resource locks to all resources created by this module.
   # To disable resource locks, set the argument to `enable_resource_locks = false`.
@@ -197,7 +200,7 @@ module "mod_ampls" {
   org_name                     = local.operations_short_name
 
   # Log Analytics Workspaces
-  linked_log_analytic_workspace_ids = [data.azurerm_log_analytics_workspace.log_analytics.id, data.azurerm_log_analytics_workspace.sec_log_analytics.id]
+  linked_log_analytic_workspace_ids = [data.azurerm_log_analytics_workspace.log_analytics.id, module.mod_security_logging.laws_resource_id] 
 
   # Private DNS details
   private_dns_zone_ids = [
@@ -212,7 +215,7 @@ module "mod_ampls" {
   # VNet and Subnet details
   # This need to be the same as the VNet and Subnet where the Private Endpoint will be deployed
   existing_ampls_virtual_network_id = data.azurerm_virtual_network.ops-vnet.id
-  existing_ampls_private_subnet_id  = data.azurerm_subnet.ops-ampls-snet.id # AMPLS Subnet index
+  existing_ampls_private_subnet_id  = module.mod_ops_network.subnet_ids["ampls"].id 
 
   # Depends on the Ops RG module
   depends_on = [module.mod_ops_scaffold_rg]

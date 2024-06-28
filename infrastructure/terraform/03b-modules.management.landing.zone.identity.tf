@@ -66,7 +66,10 @@ module "mod_id_network" {
 
   # CIDRs for Azure Log Storage Account
   # This will allow the specified CIDRs to bypass the Azure Firewall for Azure Storage Account.
-  spoke_storage_bypass_ip_cidr = var.id_storage_bypass_ip_cidrs
+  spoke_storage_bypass_ip_cidr           = var.id_storage_bypass_ip_cidrs
+  spoke_storage_account_kind             = var.id_storage_account_kind
+  spoke_storage_account_replication_type = var.id_storage_account_replication_type
+  spoke_storage_account_tier             = var.id_storage_account_tier
 
   # (Optional) By default, this will apply resource locks to all resources created by this module.
   # To disable resource locks, set the argument to `enable_resource_locks = false`.

@@ -12,7 +12,7 @@ locals {
 # The following locals are used to define the service endpoints
 locals {
   fw_service_endpoints = var.environment == "public" ? [
-    "Microsoft.ActiveDirectory",
+    "Microsoft.AzureActiveDirectory",
     "Microsoft.AzureCosmosDB",
     "Microsoft.EventHub",
     "Microsoft.KeyVault",
@@ -85,6 +85,30 @@ locals {
       management_group_name      = "transport"
       parent_management_group_id = "platforms"
       subscription_ids           = ["${var.subscription_id_hub}"]
+    },
+    forensic = {
+      display_name               = "forensic"
+      management_group_name      = "forensic"
+      parent_management_group_id = "platforms"
+      subscription_ids           = ["${var.subscription_id_forensic}"]
+    },
+     identity = {
+      display_name               = "identity"
+      management_group_name      = "identity"
+      parent_management_group_id = "platforms"
+      subscription_ids           = ["${var.subscription_id_identity}"]
+    },
+     security = {
+      display_name               = "security"
+      management_group_name      = "security"
+      parent_management_group_id = "platforms"
+      subscription_ids           = ["${var.subscription_id_security}"]
+    },
+     devsecops = {
+      display_name               = "devsecops"
+      management_group_name      = "devsecops"
+      parent_management_group_id = "platforms"
+      subscription_ids           = ["${var.subscription_id_devsecops}"]
     },
     internal = {
       display_name               = "internal"

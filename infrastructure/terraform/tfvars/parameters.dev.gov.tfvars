@@ -282,6 +282,8 @@ enable_forced_tunneling_on_id_route_table = true
 
 # CIDRs for Identity Spkoke Azure Storage Account to bypass Azure Firewall
 id_storage_bypass_ip_cidrs = []
+# Need to uncomment the line below if deploying to a region where Zone Redundancy isn't available (Commercial or Gov).
+#id_storage_account_replication_type = "LRS"
 
 ####################################################
 # 03d Operations Management Spoke Virtual Network ###
@@ -326,6 +328,8 @@ enable_forced_tunneling_on_ops_route_table = true
 
 # CIDRs for Operations Spkoke Azure Storage Account to bypass Azure Firewall
 ops_storage_bypass_ip_cidrs = []
+# Need to uncomment the line below if deploying to a region where Zone Redundancy isn't available (Commercial or Gov).
+#ops_storage_account_replication_type = "LRS"
 
 ##########################################################
 # 03e DevSecOps Management Spoke Virtual Network       ###
@@ -362,6 +366,8 @@ enable_forced_tunneling_on_devsecops_route_table = true
 
 # CIDRs for DevSecOps Spkoke Azure Storage Account to bypass Azure Firewall
 devsecops_storage_bypass_ip_cidrs = []
+# Need to uncomment the line below if deploying to a region where Zone Redundancy isn't available (Commercial or Gov).
+#devsecops_storage_account_replication_type = "LRS"
 
 ####################################################
 # 03e Security Management Spoke Virtual Network  ###
@@ -399,6 +405,8 @@ enable_forced_tunneling_on_security_route_table = true
 
 # CIDRs for Security Spkoke Azure Storage Account to bypass Azure Firewall
 security_storage_bypass_ip_cidrs = []
+# Need to uncomment the line below if deploying to a region where Zone Redundancy isn't available (Commercial or Gov).
+#security_storage_account_replication_type = "LRS"
 
 #############################
 ## Peering Configuration  ###
@@ -429,7 +437,7 @@ keyvault_bypass_ip_cidrs = []
 win_source_image_reference = {
   publisher = "MicrosoftWindowsServer"
   offer     = "WindowsServer"
-  sku       = "2019-Datacenter"
+  sku       = "2022-datacenter-azure-edition"
   version   = "latest"
 }
 
@@ -438,7 +446,7 @@ win_source_image_reference = {
 /* linux_source_image_reference = {
   publisher = "Canonical"
   offer     = "UbuntuServe"
-  sku       = "18.04-LTS"
+  sku       = "22.04-LTS"
   version   = "latest"
 } */
 
