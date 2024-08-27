@@ -6,12 +6,12 @@
 ###########################
 
 # The prefixes to use for all resources in this deployment
-org_name           = "an3"    # This Prefix will be used on most deployed resources.  10 Characters max.
+org_name           = "an9"    # This Prefix will be used on most deployed resources.  10 Characters max.
 deploy_environment = "dev"    # dev | test | prod
 environment        = "public" # public | usgovernment
 
 # The default region to deploy to
-default_location = "eastus"
+default_location = "eastus2"
 
 # Enable locks on resources
 enable_resource_locks = false # true | false
@@ -422,7 +422,7 @@ keyvault_enabled_for_deployment          = true       # Enable deployment for th
 keyvault_enabled_for_disk_encryption     = true       # Enable disk encryption for the keyvault.
 keyvault_enabled_for_template_deployment = true       # Enable template deployment for the keyvault.
 
-# Bypass IP CIDRs for KeyVault
+# Bypass IP CIDRs for KeyVault firewall
 keyvault_bypass_ip_cidrs = []
 
 # Bastion Windows VM Configuration
@@ -432,12 +432,13 @@ win_source_image_reference = {
   sku       = "2019-Datacenter"
   version   = "latest"
 }
+vm_sku_size = "Standard_D2s_v3"
 
 # Bastion Linux VM Configuration
 # Uncomment the below lines to use a custom image for the linux bastion host
 /* linux_source_image_reference = {
   publisher = "Canonical"
-  offer     = "UbuntuServe"
+  offer     = "UbuntuServer"
   sku       = "18.04-LTS"
   version   = "latest"
 } */
@@ -462,7 +463,7 @@ action_group_short_name          = "anoaalerting"
 ##########################################
 
 enable_defender_for_cloud           = true # Enable Defender for Cloud
-security_center_contact_email       = "admin@contoso.com"
+security_center_contact_email       = "admin9@contoso.com"
 security_center_contact_phone       = "555-555-5555"
 security_center_alert_notifications = true
 security_center_alerts_to_admins    = true

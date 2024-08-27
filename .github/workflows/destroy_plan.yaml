@@ -28,10 +28,16 @@ jobs:
         with:
           path: infrastructure/terraform
           variables: |
+            keyvault_admins_group_object_id = "${{ secrets.AZURE_ADMINS_GROUP_OBJECT_ID }}" 
             subscription_id_hub               = "${{ env.ARM_SUBSCRIPTION_ID }}"
-            vm_admin_password                 = "${{ env.VM_PASSWORD }}"            
+            subscription_id_identity          = "${{ secrets.AZURE_IDENTITY_SUBSCRIPTION_ID }}" 
+            subscription_id_operations        = "${{ secrets.AZURE_OPERATIONS_SUBSCRIPTION_ID }}"
+            subscription_id_security          = "${{ secrets.AZURE_SECURITY_SUBSCRIPTION_ID }}" 
+            subscription_id_forensic          = "${{ secrets.AZURE_FORENSIC_SUBSCRIPTION_ID }}"
+            subscription_id_devsecops         = "${{ secrets.AZURE_DEVSECOPS_SUBSCRIPTION_ID }}"
+            vm_admin_password                 = "${{ env.VM_PASSWORD }}"           
           var_file: |
-            infrastructure/terraform/tfvars/parameters.dev.tfvars
+            infrastructure/terraform/tfvars/parameters.dev.gov.tfvars
           backend_config: |
             storage_account_name=${{ secrets.AZURE_TF_STATE_STORAGE_ACCOUNT_NAME }}
             container_name=${{ secrets.AZURE_TF_STATE_STORAGE_CONTAINER_NAME }}            

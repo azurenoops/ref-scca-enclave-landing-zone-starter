@@ -42,3 +42,21 @@ variable "id_storage_bypass_ip_cidrs" {
   type        = list(string)
   default    = []  
 }
+
+variable "id_storage_account_kind" {
+  description = "The kind of the id storage account."
+  type        = string
+  default     = "StorageV2"
+}
+
+variable "id_storage_account_tier" {
+  description = "The tier of the id storage account."
+  type        = string
+  default     = "Standard"
+}
+
+variable "id_storage_account_replication_type" {
+  description = "The replication type of the id storage account."
+  type        = string
+  default     = "ZRS"
+}

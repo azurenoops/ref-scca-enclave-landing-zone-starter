@@ -42,3 +42,21 @@ variable "security_storage_bypass_ip_cidrs" {
   type        = list(string)
   default    = []  
 }
+
+variable "security_storage_account_kind" {
+  description = "The kind of the security storage account."
+  type        = string
+  default     = "StorageV2"
+}
+
+variable "security_storage_account_tier" {
+  description = "The tier of the security storage account."
+  type        = string
+  default     = "Standard"
+}
+
+variable "security_storage_account_replication_type" {
+  description = "The replication type of the security storage account."
+  type        = string
+  default     = "ZRS"
+}
