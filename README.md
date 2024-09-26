@@ -2,7 +2,7 @@
 
 Azure NoOps Mission Enclave Landing Zone starter is a highly opinionated Infrastructure-as-Code (IaC) Landing Zone which IT oversight organizations can use to create a cloud management system to deploy Azure environments for their workloads and teams.
 
-Azure NoOps Mission Enclave Landing Zone starter addresses a narrowly scoped, specific need for a Secure Cloud Computing Architecture (SCCA) compliant hub and spoke infrastructure.
+Azure NoOps Mission Enclave Landing Zone starter is built for Zero Trust and addresses a narrowly scoped, specific need for a Secure Cloud Computing Architecture (SCCA) compliant hub and spoke infrastructure.
 
 Goals of Azure NoOps Mission Enclave Landing Zone starter:
 

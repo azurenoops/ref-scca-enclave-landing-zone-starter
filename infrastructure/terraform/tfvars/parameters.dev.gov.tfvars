@@ -6,7 +6,7 @@
 ###########################
 
 # The prefixes to use for all resources in this deployment
-org_name           = "an5"    # This Prefix will be used on most deployed resources.  10 Characters max.
+org_name           = "tse"    # This Prefix will be used on most deployed resources.  10 Characters max.
 deploy_environment = "dev"    # dev | test | prod
 environment        = "usgovernment" # public | usgovernment
 
@@ -20,9 +20,9 @@ enable_resource_locks = false # true | false
 # 01 Management Groups Configuration  ##
 ########################################
 
-enable_management_groups           = false  # enable management groups for this subscription
-root_management_group_id           = "anoa" # the root management group id for this subscription
-root_management_group_display_name = "anoa" # the root management group display name for this subscription
+enable_management_groups           = true  # enable management groups for this subscription
+root_management_group_id           = "tse" # the root management group id for this subscription
+root_management_group_display_name = "tse" # the root management group display name for this subscription
 
 # Management groups to create
 # The management group structure is created in the locals.tf file
@@ -45,7 +45,7 @@ deploy_custom_roles = false # true | false
 ###########################
 
 # Use Customer Managed Keys when landing Zone is on a IL4 or IL5 environments
-enable_customer_managed_keys = false
+enable_customer_managed_keys = true
 
 #######################################
 # 03 Management Hub Virtual Network  ##
@@ -421,17 +421,17 @@ use_remote_spoke_gateway = false
 ###############################################
 
 # Azure Key Vault
-keyvault_name                            = "sh-keys"
+keyvault_name                            = "tse-keys"
 keyvault_sku                             = "standard" # The SKU of the keyvault.
 keyvault_public_network_access_enabled   = true       # Enable public network access for the keyvault.
 keyvault_soft_delete_retention_days      = 7          # The soft delete retention days for the keyvault.
-keyvault_enabled_for_purge_protection    = true       # Enable purge protection for the keyvault.
+keyvault_enabled_for_purge_protection    = false      # Enable purge protection for the keyvault.
 keyvault_enabled_for_deployment          = true       # Enable deployment for the keyvault.
 keyvault_enabled_for_disk_encryption     = true       # Enable disk encryption for the keyvault.
 keyvault_enabled_for_template_deployment = true       # Enable template deployment for the keyvault.
 
 # Bypass IP CIDRs for KeyVault
-keyvault_bypass_ip_cidrs = []
+keyvault_bypass_ip_cidrs = ["52.244.12.87"]
 
 # Bastion Windows VM Configuration
 win_source_image_reference = {
@@ -451,7 +451,7 @@ win_source_image_reference = {
 } */
 
 # Specify the admin user name of the bastion VM
-vm_admin_username = "azureuser"
+vm_admin_username = "tseuser"
 
 # Specify the SKU Size of the bastion VM
 # This is only needed if you are using Azure Government Cloud
@@ -468,18 +468,19 @@ enable_encryption_at_host = false
 
 # Azure Service Health Configuration
 enable_service_health_monitoring = true
-action_group_short_name          = "anoaalerting"
+action_group_short_name          = "tsealerting"
 
 ##########################################
 # 05  Defender for Cloud Configuration  ##
 ##########################################
 
-enable_defender_for_cloud           = true # Enable Defender for Cloud
-security_center_contact_email       = "admin@contoso.com"
-security_center_contact_phone       = "555-555-5555"
+enable_defender_for_cloud           = false # Enable Defender for Cloud
+security_center_contact_email       = "justin.p.mensch.ctr@us.navy.mil"
+security_center_contact_phone       = "7077388054"
 security_center_alert_notifications = true
 security_center_alerts_to_admins    = true
 
 # Defender Configuration
 security_center_pricing_tier           = "Standard" # Free | Standard
 security_center_pricing_resource_types = ["StorageAccounts", "VirtualMachines"]
+
