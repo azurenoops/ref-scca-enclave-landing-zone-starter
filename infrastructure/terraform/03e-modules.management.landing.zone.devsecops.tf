@@ -44,9 +44,9 @@ module "mod_devsecops_network" {
   # (Optional) Enable Customer Managed Key for Azure Storage Account
   enable_customer_managed_key = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure DevSecOps Storage Account
-  # key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
-  # user_assigned_identity_id   = var.enable_customer_managed_keys ? module.mod_managed_identity.id : null
+  key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
+  key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
+  user_assigned_identity_id   = var.enable_customer_managed_keys ? { resource_id = aazurerm_user_assigned_identity.mod_managed_identity[0].id } : null 
 
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.devsecops_vnet_address_space # (Required)  Spoke Virtual Network Parameters
@@ -189,13 +189,13 @@ module "mod_shared_keyvault" {
   } : {}
 
   # Contacts for the key vault
-  contacts = var.enable_customer_managed_keys ? {
+  /* contacts = var.enable_customer_managed_keys ? {
     key_contact = {
       email = var.keyvault_contact_email
       name  = var.keyvault_contact_name
       phone = var.keyvault_contact_phone
     }
-  } : {}
+  } : {} */
 
 
   # This is to wait for the RBAC before the key operations
@@ -229,6 +229,10 @@ module "mod_shared_keyvault" {
     kv_admin_user_secrets = {
       role_definition_id_or_name = "Key Vault Secrets Officer"
       principal_id               = var.keyvault_admins_group_object_id
+    }
+    kv_customer_managed_key = {
+      role_definition_id_or_name = "Key Vault Crypto Officer"
+      principal_id               = azurerm_user_assigned_identity.mod_managed_identity[0].principal_id
     }
 
   }
@@ -307,6 +311,19 @@ check "dns" {
     condition     = one(data.azurerm_private_dns_a_record.assertion.records) == one(module.mod_shared_keyvault.private_endpoints["vault"].private_service_connection).private_ip_address
     error_message = "The private DNS A record for the private endpoint is not correct."
   }
+}
+
+#################################
+### Managed Id Configuration  ###
+#################################
+# Create a User Assigned Identity for CMK
+resource "azurerm_user_assigned_identity" "mod_managed_identity" {
+  provider            = azurerm.devsecops
+  count               = var.enable_customer_managed_keys ? 1 : 0
+  resource_group_name = module.mod_devsecops_scaffold_rg.resource_group_name
+  location            = var.default_location
+  name                = local.cmk_user_assigned_identity_name
+  tags                = local.devsecops_resources_tags
 }
 
 #####################################

@@ -45,9 +45,9 @@ module "mod_ops_network" {
   # (Optional) Enable Customer Managed Key for Azure Storage Account
   enable_customer_managed_key = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure Operations Storage Account
-  # key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
-  # user_assigned_identity_id   = var.enable_customer_managed_keys ? module.mod_managed_identity.id : null
+  key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
+  key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
+  user_assigned_identity_id   = var.enable_customer_managed_keys ? { resource_id = aazurerm_user_assigned_identity.mod_managed_identity[0].id } : null 
 
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.ops_vnet_address_space # (Required)  Spoke Virtual Network Parameters

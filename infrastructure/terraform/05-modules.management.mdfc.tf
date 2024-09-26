@@ -32,23 +32,23 @@ module "mod_microsoft_defender_for_cloud" {
   security_center_workspaces = [
     {
       scope_id     = var.subscription_id_hub
-      workspace_id = module.mod_logging.laws_resource_id
+      workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
     },
     var.subscription_id_operations != null ? {
       scope_id     = var.subscription_id_operations
-      workspace_id = module.mod_logging.laws_resource_id
+      workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
     } : null,
     var.subscription_id_identity != null ? {
       scope_id     = var.subscription_id_identity
-      workspace_id = module.mod_logging.laws_resource_id
+      workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
     } : null,
     var.subscription_id_security != null ? {
       scope_id     = var.subscription_id_security
-      workspace_id = module.mod_logging.laws_resource_id
+      workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
     } : null,
     var.subscription_id_devsecops != null ? {
       scope_id     = var.subscription_id_devsecops
-      workspace_id = module.mod_logging.laws_resource_id
+      workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
     } : null,
   ]
 }

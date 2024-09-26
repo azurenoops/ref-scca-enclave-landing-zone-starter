@@ -81,12 +81,13 @@ variable "subscription_id_security" {
   sensitive   = true
 }
 
-variable "subscription_id_forensic" {
+/* UNCOMMENT IF YOU ARE USIMG FORENSICS SUB
+/* variable "subscription_id_forensic" {
   type        = string
   description = "If specified, identifies the Platform subscription for \"Forensicy\" for resource deployment and correct placement in the Management Group hierarchy."
   default     = null
   sensitive   = true
-}
+} */
 
 variable "subscription_id_devsecops" {
   type        = string
