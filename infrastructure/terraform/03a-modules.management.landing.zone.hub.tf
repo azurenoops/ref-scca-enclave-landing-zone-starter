@@ -53,7 +53,7 @@ module "mod_hub_network" {
   # Uncomment the following lines to enable Customer Managed Key for Azure Hub Storage Account
   key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
   key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
-  user_assigned_identity_id   = var.enable_customer_managed_keys ? { resource_id = aazurerm_user_assigned_identity.mod_managed_identity[0].id } : null 
+  user_assigned_identity_id   = var.enable_customer_managed_keys ? azurerm_user_assigned_identity.mod_managed_identity[0].id : null 
 
   # (Required) Hub Subnets 
   # Default Subnets, Service Endpoints

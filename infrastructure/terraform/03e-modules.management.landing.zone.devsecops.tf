@@ -46,7 +46,7 @@ module "mod_devsecops_network" {
   # Uncomment the following lines to enable Customer Managed Key for Azure DevSecOps Storage Account
   key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
   key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
-  user_assigned_identity_id   = var.enable_customer_managed_keys ? { resource_id = aazurerm_user_assigned_identity.mod_managed_identity[0].id } : null 
+  user_assigned_identity_id   = var.enable_customer_managed_keys ? azurerm_user_assigned_identity.mod_managed_identity[0].id : null 
 
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.devsecops_vnet_address_space # (Required)  Spoke Virtual Network Parameters
@@ -234,7 +234,6 @@ module "mod_shared_keyvault" {
       role_definition_id_or_name = "Key Vault Crypto Officer"
       principal_id               = azurerm_user_assigned_identity.mod_managed_identity[0].principal_id
     }
-
   }
 
   # This is to enable the Private Endpoint for the key vault
