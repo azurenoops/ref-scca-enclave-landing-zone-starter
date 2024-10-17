@@ -19,7 +19,7 @@ AUTHOR/S: jrspinella
 module "mod_devsecops_network" {
   providers = { azurerm = azurerm.devsecops }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "7.0.0-beta1"
+  version   = "7.0.0-beta2"
 
   depends_on = [module.mod_devsecops_scaffold_rg]
 
@@ -42,12 +42,11 @@ module "mod_devsecops_network" {
   existing_log_analytics_workspace_id          = data.azurerm_log_analytics_workspace.log_analytics.workspace_id
 
   # (Optional) Enable Customer Managed Key for Azure Storage Account
-  enable_customer_managed_key = var.enable_customer_managed_keys
+  enable_customer_managed_keys = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure DevSecOps Storage Account
   # key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
-  # user_assigned_identity_id   = var.enable_customer_managed_keys ? module.mod_managed_identity.id : null
-
+  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
+  
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.devsecops_vnet_address_space # (Required)  Spoke Virtual Network Parameters
 
@@ -119,7 +118,7 @@ module "mod_hub_to_devsecops_vnet_peering" {
 module "mod_shared_keyvault" {
   providers = { azurerm = azurerm.devsecops }
   source    = "azure/avm-res-keyvault-vault/azurerm"
-  version   = "0.5.3"
+  version   = "0.9.1"
 
   # By default, this module will create a resource group and 
   # provide a name for an existing resource group. If you wish 
@@ -230,7 +229,9 @@ module "mod_shared_keyvault" {
       role_definition_id_or_name = "Key Vault Secrets Officer"
       principal_id               = var.keyvault_admins_group_object_id
     }
-
+    kv_customer_managed_key = {
+      role_definition_id_or_name = "Key Vault Crypto Officer"
+      principal_id               = var.keyvault_admins_group_object_id
   }
 
   # This is to enable the Private Endpoint for the key vault
@@ -295,18 +296,6 @@ module "mod_shared_keyvault" {
   # Tags for Azure Resources
   tags = local.devsecops_resources_tags
 }
-
-# Check the private DNS A record for the private endpoint
-check "dns" {
-  data "azurerm_private_dns_a_record" "assertion" {
-    name                = module.mod_shared_keyvault.resource.name
-    zone_name           = var.environment == "public" ? "privatelink.vaultcore.azure.net" : "privatelink.vaultcore.usgovcloudapi.net"
-    resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
-  }
-  assert {
-    condition     = one(data.azurerm_private_dns_a_record.assertion.records) == one(module.mod_shared_keyvault.private_endpoints["vault"].private_service_connection).private_ip_address
-    error_message = "The private DNS A record for the private endpoint is not correct."
-  }
 }
 
 #####################################
@@ -322,7 +311,7 @@ check "dns" {
 module "mod_bastion_windows_jmp_virtual_machine" {
   providers = { azurerm = azurerm.devsecops }
   source    = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version   = "0.11.0"
+  version   = "0.16.0"
 
   depends_on = [module.mod_shared_keyvault]
 

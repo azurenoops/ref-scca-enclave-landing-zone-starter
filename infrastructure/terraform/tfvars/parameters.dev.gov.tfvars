@@ -83,7 +83,7 @@ hub_subnets = {
     name                                       = "hub"
     address_prefixes                           = ["10.0.128.128/26"]
     service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
   },
 }
@@ -258,7 +258,7 @@ id_subnets = {
     name                                       = "id"
     address_prefixes                           = ["10.0.130.0/24"]
     service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules = [
       {
@@ -296,7 +296,7 @@ ops_subnets = {
     name                                       = "ops"
     address_prefixes                           = ["10.0.131.32/27"]
     service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules = [
       {
@@ -342,7 +342,7 @@ devsecops_subnets = {
     name                                       = "devsecops"
     address_prefixes                           = ["10.0.132.0/24"]
     service_endpoints                          = ["Microsoft.Storage", "Microsoft.KeyVault"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules = [
       {
@@ -381,7 +381,7 @@ security_subnets = {
     name                                       = "security"
     address_prefixes                           = ["10.0.133.0/24"]
     service_endpoints                          = ["Microsoft.Storage", "Microsoft.KeyVault"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules = [
       {

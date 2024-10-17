@@ -121,7 +121,8 @@ provider "azurerm" {
   storage_use_azuread = true
 }
 
-provider "azurerm" {
+/* UNCOMMENT IF YOU ARE USIMG FORENSICS SUB (US GOVERNMENT) */
+/*provider "azurerm" {
   alias           = "forensic"
   subscription_id = coalesce(var.subscription_id_forensic, var.subscription_id_hub)
   environment     = var.environment
@@ -139,6 +140,7 @@ provider "azurerm" {
   }
   storage_use_azuread = true
 }
+*/
 
 provider "azurerm" {
   alias           = "devsecops"

@@ -21,7 +21,7 @@ AUTHOR/S: jrspinella
 module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
   source    = "azurenoops/overlays-management-hub/azurerm"
-  version   = "8.0.0-beta2"
+  version   = "8.0.0-beta4"
 
   depends_on = [module.mod_hub_scaffold_rg]
 
@@ -40,20 +40,19 @@ module "mod_hub_network" {
   virtual_network_address_space           = var.hub_vnet_address_space              # (Required)  Hub Virtual Network Parameters  
   firewall_subnet_address_prefix          = var.fw_client_snet_address_prefixes     # (Required)  Hub Firewall Subnet Parameters  
   firewall_management_snet_address_prefix = var.fw_management_snet_address_prefixes # (Optional)  Hub Firewall Management Subnet Parameters
-  
+
   # (Required) Log Analytics Workspace for Network Diagnostic Settings & Traffic Analytics
-  log_analytics_workspace_resource_id = data.azurerm_log_analytics_workspace.log_analytics.id
-  log_analytics_workspace_id          = data.azurerm_log_analytics_workspace.log_analytics.workspace_id
+  existing_log_analytics_workspace_resource_id = data.azurerm_log_analytics_workspace.log_analytics.id
+  existing_log_analytics_workspace_id          = data.azurerm_log_analytics_workspace.log_analytics.workspace_id
 
   # (Optional) Enable DDos Protection Plan
   create_ddos_plan = var.create_ddos_plan
 
   # (Optional) Enable Customer Managed Key for Azure Storage Account
-  enable_customer_managed_key = var.enable_customer_managed_keys
+  enable_customer_managed_keys = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure Hub Storage Account
   # key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
-  # user_assigned_identity_id   = var.enable_customer_managed_keys ? module.mod_managed_identity.id : null
+  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
 
   # (Required) Hub Subnets 
   # Default Subnets, Service Endpoints
