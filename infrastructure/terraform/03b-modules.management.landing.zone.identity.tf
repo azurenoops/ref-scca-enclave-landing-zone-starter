@@ -17,7 +17,7 @@ AUTHOR/S: jrspinella
 module "mod_id_network" {
   providers = { azurerm = azurerm.identity }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "7.0.0-beta1"
+  version   = "7.0.0-beta2"
 
   depends_on = [module.mod_id_scaffold_rg]
 
@@ -40,12 +40,11 @@ module "mod_id_network" {
   existing_log_analytics_workspace_id          = data.azurerm_log_analytics_workspace.log_analytics.workspace_id
 
   # (Optional) Enable Customer Managed Key for Azure Storage Account
-  enable_customer_managed_key = var.enable_customer_managed_keys
+  enable_customer_managed_keys = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure Identity Storage Account
   # key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
-  # user_assigned_identity_id   = var.enable_customer_managed_keys ? module.mod_managed_identity.id : null
-
+  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
+  
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.id_vnet_address_space # (Required)  Spoke Virtual Network Parameters
 
