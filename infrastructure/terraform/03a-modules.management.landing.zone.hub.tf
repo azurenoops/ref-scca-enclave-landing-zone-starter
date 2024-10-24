@@ -21,19 +21,17 @@ AUTHOR/S: jrspinella
 module "mod_hub_network" {
   providers = { azurerm = azurerm.hub }
   source    = "azurenoops/overlays-management-hub/azurerm"
-  version   = "8.0.0-beta4"
-
-  depends_on = [module.mod_hub_scaffold_rg]
+  version   = "8.0.0-beta6"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing_resource_group_name argument to the existing resource group, 
   # and set the argument to `create_hub_resource_group = false`. Location will be same as existing RG.
-  existing_resource_group_name = module.mod_hub_scaffold_rg.resource_group_name
-  location                     = var.default_location
-  deploy_environment           = var.deploy_environment
-  org_name                     = var.org_name
-  environment                  = var.environment
-  workload_name                = local.hub_short_name
+  create_hub_resource_group = true
+  location                  = var.default_location
+  deploy_environment        = var.deploy_environment
+  org_name                  = var.org_name
+  environment               = var.environment
+  workload_name             = local.hub_short_name
 
   # (Required) Provide valid VNet Address space for hub virtual network.
   # You can use the default values or provide your own values.  
@@ -51,8 +49,10 @@ module "mod_hub_network" {
   # (Optional) Enable Customer Managed Key for Azure Storage Account
   enable_customer_managed_keys = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure Hub Storage Account
-  # key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
+  # key_vault_resource_id               = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
+  # key_name                            = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
+  user_assigned_identity_id           = azurerm_user_assigned_identity.hub_user_assigned_identity.id
+  user_assigned_identity_principal_id = azurerm_user_assigned_identity.hub_user_assigned_identity.principal_id
 
   # (Required) Hub Subnets 
   # Default Subnets, Service Endpoints
@@ -119,4 +119,21 @@ module "mod_hub_network" {
 
   # Tags
   add_tags = local.hub_resources_tags # Tags to be applied to all resources
+}
+
+# Create a User Assigned Identity for Azure Encryption
+resource "azurerm_user_assigned_identity" "hub_user_assigned_identity" {
+  provider            = azurerm.hub
+  location            = var.default_location
+  resource_group_name = module.mod_hub_network.resource_group_name
+  name                = local.kv_cmk_hub_user_assigned_identity_name
+}
+
+resource "azurerm_role_assignment" "hub_user_assigned_identity_role_assignment" {
+  provider             = azurerm.hub
+  depends_on           = [azurerm_user_assigned_identity.hub_user_assigned_identity]
+  count                = var.enable_customer_managed_keys ? 1 : 0
+  scope                = module.mod_shared_keyvault.resource_id
+  role_definition_name = "Key Vault Crypto Officer"
+  principal_id         = azurerm_user_assigned_identity.hub_user_assigned_identity.principal_id
 }

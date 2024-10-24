@@ -20,19 +20,17 @@ AUTHOR/S: jrspinella
 module "mod_security_network" {
   providers = { azurerm = azurerm.security }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "7.0.0-beta2"
-
-  depends_on = [module.mod_security_scaffold_rg]
+  version   = "7.0.0-beta4"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing_resource_group_name argument to the existing resource group, 
   # and set the argument to `create_spoke_resource_group = false`. Location will be same as existing RG.
-  existing_resource_group_name = module.mod_security_scaffold_rg.resource_group_name
-  location                     = var.default_location
-  deploy_environment           = var.deploy_environment
-  org_name                     = var.org_name
-  environment                  = var.environment
-  workload_name                = local.security_short_name
+  create_spoke_resource_group = true
+  location                    = var.default_location
+  deploy_environment          = var.deploy_environment
+  org_name                    = var.org_name
+  environment                 = var.environment
+  workload_name               = local.security_short_name
 
   # (Required) Collect Hub Firewall Parameters
   # Hub Firewall details
@@ -45,9 +43,14 @@ module "mod_security_network" {
   # (Optional) Enable Customer Managed Key for Azure Storage Account
   enable_customer_managed_keys = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure Security Storage Account
-  # key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
-  
+  # key_vault_resource_id              = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
+  # key_name                            = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
+  # user_assigned_identity_id           = azurerm_user_assigned_identity.security_user_assigned_identity.id
+  # user_assigned_identity_principal_id = azurerm_user_assigned_identity.security_user_assigned_identity.principal_id
+
+  # Enable User Assigned Identity for Azure Storage Account
+  spoke_storage_user_assigned_resource_ids = [azurerm_user_assigned_identity.security_user_assigned_identity.id]
+
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.security_vnet_address_space # (Required)  Spoke Virtual Network Parameters
 
@@ -101,8 +104,8 @@ module "mod_hub_to_security_vnet_peering" {
 
   # Vnet Peerings details
   enable_different_subscription_peering           = true
-  resource_group_src_name                         = module.mod_security_scaffold_rg.resource_group_name
-  different_subscription_dest_resource_group_name = module.mod_hub_scaffold_rg.resource_group_name //data.azurerm_virtual_network.hub-vnet.resource_group_name
+  resource_group_src_name                         = module.mod_security_network.resource_group_name
+  different_subscription_dest_resource_group_name = module.mod_hub_network.resource_group_name //data.azurerm_virtual_network.hub-vnet.resource_group_name
 
   alias_subscription_id                                = var.subscription_id_hub
   vnet_src_name                                        = module.mod_security_network.virtual_network_name //data.azurerm_virtual_network.sec-vnet.name
@@ -121,18 +124,16 @@ module "mod_security_logging" {
   source    = "azurenoops/overlays-management-logging/azurerm"
   version   = "4.0.1"
 
-  depends_on = [module.mod_security_scaffold_rg]
-
   #####################################
   ## Global Settings Configuration  ###
   #####################################
 
-  existing_resource_group_name = module.mod_security_scaffold_rg.resource_group_name
-  location                     = var.default_location
-  deploy_environment           = var.deploy_environment
-  org_name                     = var.org_name
-  environment                  = var.environment
-  workload_name                = format("%s-logging", local.security_short_name)
+  create_resource_group = true
+  location              = var.default_location
+  deploy_environment    = var.deploy_environment
+  org_name              = var.org_name
+  environment           = var.environment
+  workload_name         = format("%s-logging", local.security_short_name)
 
   ########################################
   ## Automation Account Configuration  ###
@@ -174,4 +175,22 @@ module "mod_security_logging" {
 
   # Tags
   add_tags = local.security_resources_tags # Tags to be applied to all resources
+}
+
+# Create a User Assigned Identity for Azure Encryption
+resource "azurerm_user_assigned_identity" "security_user_assigned_identity" {
+  provider            = azurerm.security
+  location            = var.default_location
+  resource_group_name = module.mod_security_network.resource_group_name
+  name                = local.kv_cmk_sec_user_assigned_identity_name
+}
+
+# Create a Role Assignment for the User Assigned Identity to the Key Vault for Azure Encryption
+resource "azurerm_role_assignment" "security_user_assigned_identity_role_assignment" {
+  provider             = azurerm.security
+  depends_on           = [azurerm_user_assigned_identity.security_user_assigned_identity]
+  count                = var.enable_customer_managed_keys ? 1 : 0
+  scope                = module.mod_shared_keyvault.resource_id
+  role_definition_name = "Key Vault Crypto Officer"
+  principal_id         = azurerm_user_assigned_identity.security_user_assigned_identity.principal_id
 }
