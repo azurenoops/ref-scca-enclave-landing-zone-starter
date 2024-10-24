@@ -23,11 +23,11 @@ module "mod_id_network" {
   # To use an existing resource group, specify the existing_resource_group_name argument to the existing resource group, 
   # and set the argument to `create_spoke_resource_group = false`. Location will be same as existing RG.
   create_spoke_resource_group = true
-  location                     = var.default_location
-  deploy_environment           = var.deploy_environment
-  org_name                     = var.org_name
-  environment                  = var.environment
-  workload_name                = local.identity_short_name
+  location                    = var.default_location
+  deploy_environment          = var.deploy_environment
+  org_name                    = var.org_name
+  environment                 = var.environment
+  workload_name               = local.identity_short_name
 
   # (Required) Collect Hub Firewall Parameters
   # Hub Firewall details
@@ -40,15 +40,15 @@ module "mod_id_network" {
   # (Optional) Enable Customer Managed Key for Azure Storage Account
   enable_customer_managed_keys = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure Identity Storage Account
-  # key_vault_resource_id               = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                            = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
+  # key_vault_resource_id               = module.mod_shared_keyvault.resource_id
+  # key_name                            = "cmk-for-storage-account"
   # user_assigned_identity_id           = azurerm_user_assigned_identity.identity_user_assigned_identity.id
   # user_assigned_identity_principal_id = azurerm_user_assigned_identity.identity_user_assigned_identity.principal_id
 
   # (Optional) Enable User Assigned Identity for Azure Storage Account
   spoke_storage_user_assigned_resource_ids = [azurerm_user_assigned_identity.identity_user_assigned_identity.id]
 
-    # Provide valid VNet Address space for spoke virtual network.    
+  # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.id_vnet_address_space # (Required)  Spoke Virtual Network Parameters
 
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
@@ -114,7 +114,7 @@ module "mod_hub_to_id_vnet_peering" {
 
 # Create a User Assigned Identity for Azure Encryption
 resource "azurerm_user_assigned_identity" "identity_user_assigned_identity" {
-  provider            = azurerm.identity 
+  provider            = azurerm.identity
   location            = var.default_location
   resource_group_name = module.mod_id_network.resource_group_name
   name                = local.kv_cmk_id_user_assigned_identity_name

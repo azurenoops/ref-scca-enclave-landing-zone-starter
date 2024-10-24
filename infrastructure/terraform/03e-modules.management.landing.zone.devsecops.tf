@@ -25,11 +25,11 @@ module "mod_devsecops_network" {
   # To use an existing resource group, specify the existing_resource_group_name argument to the existing resource group, 
   # and set the argument to `create_spoke_resource_group = false`. Location will be same as existing RG.
   create_spoke_resource_group = true
-  location                     = var.default_location
-  deploy_environment           = var.deploy_environment
-  org_name                     = var.org_name
-  environment                  = var.environment
-  workload_name                = local.devsecops_short_name
+  location                    = var.default_location
+  deploy_environment          = var.deploy_environment
+  org_name                    = var.org_name
+  environment                 = var.environment
+  workload_name               = local.devsecops_short_name
 
   # (Required) Collect Hub Firewall Parameters
   # Hub Firewall details
@@ -42,8 +42,8 @@ module "mod_devsecops_network" {
   # (Optional) Enable Customer Managed Key for Azure Storage Account
   enable_customer_managed_keys = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure DevSecOps Storage Account
-  # key_vault_resource_id               = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                            = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk-for-storage-account"].name : null
+  # key_vault_resource_id               = module.mod_shared_keyvault.resource_id
+  # key_name                            = "cmk-for-storage-account"
   # user_assigned_identity_id           = azurerm_user_assigned_identity.devops_user_assigned_identity.id
   # user_assigned_identity_principal_id = azurerm_user_assigned_identity.devops_user_assigned_identity.principal_id
 
@@ -218,10 +218,6 @@ module "mod_shared_keyvault" {
       role_definition_id_or_name = "Key Vault Secrets Officer"
       principal_id               = data.azurerm_client_config.root.object_id
     },
-  /*   deployment_customer_managed_key = var.enable_customer_managed_keys ? {
-      role_definition_id_or_name = "Key Vault Crypto Officer"
-      principal_id               = data.azurerm_client_config.root.object_id
-    } : null, */
     kv_admin = {
       role_definition_id_or_name = "Key Vault Administrator"
       principal_id               = var.keyvault_admins_group_object_id
@@ -234,10 +230,6 @@ module "mod_shared_keyvault" {
       role_definition_id_or_name = "Key Vault Secrets Officer"
       principal_id               = var.keyvault_admins_group_object_id
     },
-    /* kv_admin_customer_managed_key = var.enable_customer_managed_keys ? {
-      role_definition_id_or_name = "Key Vault Crypto Officer"
-      principal_id               = var.keyvault_admins_group_object_id
-    } : null   */
   }
 
   # This is to enable the Private Endpoint for the key vault
@@ -294,7 +286,7 @@ module "mod_shared_keyvault" {
 
 # Create a User Assigned Identity for Azure Encryption
 resource "azurerm_user_assigned_identity" "devops_user_assigned_identity" {
-  provider            = azurerm.devsecops   
+  provider            = azurerm.devsecops
   location            = var.default_location
   resource_group_name = module.mod_devsecops_network.resource_group_name
   name                = local.kv_cmk_devops_user_assigned_identity_name
