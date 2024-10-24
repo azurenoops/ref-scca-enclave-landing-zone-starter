@@ -6,7 +6,7 @@
 ###########################
 
 # The prefixes to use for all resources in this deployment
-org_name           = "ano"    # This Prefix will be used on most deployed resources.  10 Characters max.
+org_name           = "anoa"    # This Prefix will be used on most deployed resources.  10 Characters max.
 deploy_environment = "prod"    # dev | test | prod
 environment        = "public" # public | usgovernment
 
@@ -83,7 +83,7 @@ hub_subnets = {
     name                                       = "hub"
     address_prefixes                           = ["10.0.128.128/26"]
     service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
   },
 }
@@ -259,7 +259,7 @@ id_subnets = {
     name                                       = "id"
     address_prefixes                           = ["10.0.130.0/24"]
     service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules = [
       {
@@ -295,7 +295,7 @@ ops_subnets = {
     name                                       = "ops"
     address_prefixes                           = ["10.0.131.0/24"]
     service_endpoints                          = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules = [
       {
@@ -311,6 +311,14 @@ ops_subnets = {
         destination_address_prefix = "10.0.131.0/24"
       }
     ]
+  },
+  ampls = {
+    name                                       = "ampls"
+    address_prefixes                           = ["10.0.131.64/27"]
+    service_endpoints                          = []
+    private_endpoint_network_policies_enabled  = "Disabled"
+    private_endpoint_service_endpoints_enabled = true
+    nsg_subnet_rules                           = []
   }
 }
 
@@ -331,7 +339,7 @@ devsecops_subnets = {
     name                                       = "devsecops"
     address_prefixes                           = ["10.0.132.0/24"]
     service_endpoints                          = ["Microsoft.Storage", "Microsoft.KeyVault"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules = [
       {
@@ -368,7 +376,7 @@ security_subnets = {
     name                                       = "security"
     address_prefixes                           = ["10.0.133.0/24"]
     service_endpoints                          = ["Microsoft.Storage", "Microsoft.KeyVault"]
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules = [
       {

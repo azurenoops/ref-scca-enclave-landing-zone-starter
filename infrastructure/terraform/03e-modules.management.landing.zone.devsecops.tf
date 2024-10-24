@@ -19,19 +19,17 @@ AUTHOR/S: jrspinella
 module "mod_devsecops_network" {
   providers = { azurerm = azurerm.devsecops }
   source    = "azurenoops/overlays-management-spoke/azurerm"
-  version   = "7.0.0-beta1"
-
-  depends_on = [module.mod_devsecops_scaffold_rg]
+  version   = "7.0.0-beta4"
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing_resource_group_name argument to the existing resource group, 
   # and set the argument to `create_spoke_resource_group = false`. Location will be same as existing RG.
-  existing_resource_group_name = module.mod_devsecops_scaffold_rg.resource_group_name
-  location                     = var.default_location
-  deploy_environment           = var.deploy_environment
-  org_name                     = var.org_name
-  environment                  = var.environment
-  workload_name                = local.devsecops_short_name
+  create_spoke_resource_group = true
+  location                    = var.default_location
+  deploy_environment          = var.deploy_environment
+  org_name                    = var.org_name
+  environment                 = var.environment
+  workload_name               = local.devsecops_short_name
 
   # (Required) Collect Hub Firewall Parameters
   # Hub Firewall details
@@ -42,11 +40,15 @@ module "mod_devsecops_network" {
   existing_log_analytics_workspace_id          = data.azurerm_log_analytics_workspace.log_analytics.workspace_id
 
   # (Optional) Enable Customer Managed Key for Azure Storage Account
-  enable_customer_managed_key = var.enable_customer_managed_keys
+  enable_customer_managed_keys = var.enable_customer_managed_keys
   # Uncomment the following lines to enable Customer Managed Key for Azure DevSecOps Storage Account
-  # key_vault_resource_id       = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource.id : null
-  # key_name                    = var.enable_customer_managed_keys ? module.mod_shared_keyvault.resource_keys["cmk_for_storage_account"].name : null
-  # user_assigned_identity_id   = var.enable_customer_managed_keys ? module.mod_managed_identity.id : null
+  # key_vault_resource_id               = module.mod_shared_keyvault.resource_id
+  # key_name                            = "cmk-for-storage-account"
+  # user_assigned_identity_id           = azurerm_user_assigned_identity.devops_user_assigned_identity.id
+  # user_assigned_identity_principal_id = azurerm_user_assigned_identity.devops_user_assigned_identity.principal_id
+
+  # Enable User Assigned Identity for Azure Storage Account
+  spoke_storage_user_assigned_resource_ids = [azurerm_user_assigned_identity.devops_user_assigned_identity.id]
 
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = var.devsecops_vnet_address_space # (Required)  Spoke Virtual Network Parameters
@@ -101,8 +103,8 @@ module "mod_hub_to_devsecops_vnet_peering" {
 
   # Vnet Peerings details
   enable_different_subscription_peering           = true
-  resource_group_src_name                         = module.mod_devsecops_scaffold_rg.resource_group_name
-  different_subscription_dest_resource_group_name = module.mod_hub_scaffold_rg.resource_group_name //data.azurerm_virtual_network.hub-vnet.resource_group_name
+  resource_group_src_name                         = module.mod_devsecops_network.resource_group_name
+  different_subscription_dest_resource_group_name = module.mod_hub_network.resource_group_name //data.azurerm_virtual_network.hub-vnet.resource_group_name
 
   alias_subscription_id                                = var.subscription_id_hub
   vnet_src_name                                        = module.mod_devsecops_network.virtual_network_name //data.azurerm_virtual_network.devsecops-vnet.name
@@ -119,13 +121,13 @@ module "mod_hub_to_devsecops_vnet_peering" {
 module "mod_shared_keyvault" {
   providers = { azurerm = azurerm.devsecops }
   source    = "azure/avm-res-keyvault-vault/azurerm"
-  version   = "0.5.3"
+  version   = "0.9.1"
 
   # By default, this module will create a resource group and 
   # provide a name for an existing resource group. If you wish 
   # to use an existing resource group, change the option 
   # to "create_key_vault_resource_group = false."   
-  resource_group_name = module.mod_devsecops_scaffold_rg.resource_group_name
+  resource_group_name = module.mod_devsecops_network.resource_group_name
   location            = var.default_location
   name                = local.key_vault_name
   tenant_id           = data.azurerm_client_config.root.tenant_id
@@ -167,10 +169,9 @@ module "mod_shared_keyvault" {
         "verify",
         "wrapKey"
       ]
-      key_type     = "RSA"
-      key_vault_id = module.mod_shared_keyvault.resource.id
-      name         = "cmk-for-disks"
-      key_size     = 2048
+      key_type = "RSA"
+      name     = "cmk-for-disks"
+      key_size = 2048
     }
     cmk_for_storage_account = {
       key_opts = [
@@ -181,10 +182,9 @@ module "mod_shared_keyvault" {
         "verify",
         "wrapKey"
       ]
-      key_type     = "RSA"
-      key_vault_id = module.mod_shared_keyvault.resource.id
-      name         = "cmk-for-storage-account"
-      key_size     = 2048
+      key_type = "RSA"
+      name     = "cmk-for-storage-account"
+      key_size = 2048
     }
   } : {}
 
@@ -203,34 +203,33 @@ module "mod_shared_keyvault" {
     create = "60s"
   } : {}
 
-  # This is adding the current user as a Key Vault Administrator
+  # This is adding the current user as a Key Vault Roles.
   role_assignments = {
     deployment_user_kv_admin = {
       role_definition_id_or_name = "Key Vault Administrator"
       principal_id               = data.azurerm_client_config.root.object_id
-    }
+    },
     deployment_user_certificates = {
       # give the deployment user access to certificates
       role_definition_id_or_name = "Key Vault Certificates Officer"
       principal_id               = data.azurerm_client_config.root.object_id
-    }
+    },
     deployment_user_secrets = {
       role_definition_id_or_name = "Key Vault Secrets Officer"
       principal_id               = data.azurerm_client_config.root.object_id
-    }
+    },
     kv_admin = {
       role_definition_id_or_name = "Key Vault Administrator"
       principal_id               = var.keyvault_admins_group_object_id
-    }
+    },
     kv_admin_user_certificates = {
       role_definition_id_or_name = "Key Vault Certificates Officer"
       principal_id               = var.keyvault_admins_group_object_id
-    }
+    },
     kv_admin_user_secrets = {
       role_definition_id_or_name = "Key Vault Secrets Officer"
       principal_id               = var.keyvault_admins_group_object_id
-    }
-
+    },
   }
 
   # This is to enable the Private Endpoint for the key vault
@@ -259,17 +258,6 @@ module "mod_shared_keyvault" {
     vm_admin_secret = {
       name            = "jumpbox-admin-password"
       expiration_date = "2028-12-31T23:59:59Z"
-      # This is to add role assignments for the secret
-      role_assignments = {
-        deployment_user_kv_admin = {
-          role_definition_id_or_name = "Key Vault Administrator"
-          principal_id               = data.azurerm_client_config.root.object_id
-        },
-        deployment_user_secrets = {
-          role_definition_id_or_name = "Key Vault Secrets Officer"
-          principal_id               = data.azurerm_client_config.root.object_id
-        }
-      }
     }
   }
 
@@ -296,17 +284,22 @@ module "mod_shared_keyvault" {
   tags = local.devsecops_resources_tags
 }
 
-# Check the private DNS A record for the private endpoint
-check "dns" {
-  data "azurerm_private_dns_a_record" "assertion" {
-    name                = module.mod_shared_keyvault.resource.name
-    zone_name           = var.environment == "public" ? "privatelink.vaultcore.azure.net" : "privatelink.vaultcore.usgovcloudapi.net"
-    resource_group_name = module.mod_hub_network.private_dns_zone_resource_group_name
-  }
-  assert {
-    condition     = one(data.azurerm_private_dns_a_record.assertion.records) == one(module.mod_shared_keyvault.private_endpoints["vault"].private_service_connection).private_ip_address
-    error_message = "The private DNS A record for the private endpoint is not correct."
-  }
+# Create a User Assigned Identity for Azure Encryption
+resource "azurerm_user_assigned_identity" "devops_user_assigned_identity" {
+  provider            = azurerm.devsecops
+  location            = var.default_location
+  resource_group_name = module.mod_devsecops_network.resource_group_name
+  name                = local.kv_cmk_devops_user_assigned_identity_name
+}
+
+# Create a Role Assignment for the User Assigned Identity to the Key Vault for Azure Encryption. If CMK is enabled, the UAI will be added to the Crypto Officer role.
+resource "azurerm_role_assignment" "devsecops_user_assigned_identity_role_assignment" {
+  provider             = azurerm.devsecops
+  depends_on           = [azurerm_user_assigned_identity.devops_user_assigned_identity]
+  count                = var.enable_customer_managed_keys ? 1 : 0
+  scope                = module.mod_shared_keyvault.resource_id
+  role_definition_name = "Key Vault Crypto Officer"
+  principal_id         = azurerm_user_assigned_identity.devops_user_assigned_identity.principal_id
 }
 
 #####################################
@@ -322,21 +315,19 @@ check "dns" {
 module "mod_bastion_windows_jmp_virtual_machine" {
   providers = { azurerm = azurerm.devsecops }
   source    = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version   = "0.11.0"
-
-  depends_on = [module.mod_shared_keyvault]
+  version   = "0.16.0"
 
   # Resource Group, location, VNet and Subnet details
-  resource_group_name                = module.mod_devsecops_scaffold_rg.resource_group_name
+  resource_group_name                = module.mod_devsecops_network.resource_group_name
   location                           = var.default_location
   name                               = local.windows_vm_name
-  virtualmachine_sku_size            = var.vm_sku_size //var.environment == "public" ? module.get_valid_sku_for_deployment_region[0].sku : var.vm_sku_size
-  zone                               = null  //var.environment == "public" ? random_integer.zone_index[0].result : null
+  sku_size                           = var.vm_sku_size //var.environment == "public" ? module.get_valid_sku_for_deployment_region[0].sku : var.vm_sku_size
+  zone                               = null            //var.environment == "public" ? random_integer.zone_index[0].result : null
   computer_name                      = local.windows_computer_name
   generate_admin_password_or_ssh_key = false
 
   # Virtual Machine Configuration
-  virtualmachine_os_type     = "Windows"
+  os_type                    = "Windows"
   admin_username             = var.vm_admin_username
   admin_password             = var.vm_admin_password         # This is a secret, do not expose it
   encryption_at_host_enabled = var.enable_encryption_at_host # only use when in IL4 or IL5
@@ -392,7 +383,7 @@ module "mod_bastion_windows_jmp_virtual_machine" {
   # Role Assignment Configuration
   role_assignments = {
     role_assignment_2 = {
-      principal_id               = data.azurerm_client_config.root.client_id
+      principal_id               = data.azurerm_client_config.root.object_id
       role_definition_id_or_name = "Virtual Machine Contributor"
       description                = "Assign the Virtual Machine Contributor role to the deployment user on this virtual machine resource scope."
     }
@@ -438,7 +429,7 @@ module "mod_bastion_windows_jmp_virtual_machine" {
 resource "azurerm_user_assigned_identity" "user_assigned_identity" {
   provider            = azurerm.devsecops
   count               = var.enable_encryption_at_host ? 1 : 0
-  resource_group_name = module.mod_devsecops_scaffold_rg.resource_group_name
+  resource_group_name = module.mod_devsecops_network.resource_group_name
   location            = var.default_location
   name                = local.vm_user_assigned_identity_name
   tags                = local.devsecops_resources_tags
@@ -448,15 +439,15 @@ resource "azurerm_user_assigned_identity" "user_assigned_identity" {
 resource "azurerm_disk_encryption_set" "disk_encryption_set" {
   provider            = azurerm.devsecops
   count               = var.enable_encryption_at_host ? 1 : 0
-  key_vault_key_id    = module.mod_shared_keyvault.resource_keys.cmk_for_disks.id
-  resource_group_name = module.mod_devsecops_scaffold_rg.resource_group_name
+  key_vault_key_id    = module.mod_shared_keyvault.keys_resource_ids["cmk-for-disks"]
+  resource_group_name = module.mod_devsecops_network.resource_group_name
   location            = var.default_location
   name                = local.vm_disk_encryption_set_name
   tags                = local.devsecops_resources_tags
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.user_assigned_identity[0].id]
+    identity_ids = [azurerm_user_assigned_identity.devops_user_assigned_identity.id]
   }
 }
 
@@ -467,7 +458,7 @@ resource "azurerm_disk_encryption_set" "disk_encryption_set" {
   version   = "0.11.0"
 
   # Resource Group, location, VNet and Subnet details
-  resource_group_name                = module.mod_devsecops_scaffold_rg.resource_group_name
+  resource_group_name                = module.mod_devsecops_network.resource_group_name
   location                           = var.default_location
   name                               = format("%s-%s-%s-%s-linux-jmp-vm", var.org_name, module.mod_azregions_lookup.location_short, local.devsecops_short_name, var.deploy_environment)
   virtualmachine_sku_size            = module.get_valid_sku_for_deployment_region.sku

@@ -27,6 +27,11 @@ locals {
   pe_key_vault_psc_name = data.azurenoopsutils_resource_name.pe_kv_psc_name.result
   pe_key_vault_nic_name = data.azurenoopsutils_resource_name.pe_kv_nic_name.result
   key_vault_lock_name   = format("%s-%s-lock", format("%s-%s-%s-%s-%s-kv", var.org_name, module.mod_azregions_lookup.location_short, local.devsecops_short_name, var.deploy_environment, var.keyvault_name), var.lock_level)
+  kv_cmk_hub_user_assigned_identity_name = format("%s-%s-%s-%s-cmk-msi", var.org_name, module.mod_azregions_lookup.location_short, var.deploy_environment, local.hub_short_name)
+  kv_cmk_id_user_assigned_identity_name = format("%s-%s-%s-%s-cmk-msi", var.org_name, module.mod_azregions_lookup.location_short, var.deploy_environment, local.identity_short_name)
+  kv_cmk_ops_user_assigned_identity_name = format("%s-%s-%s-%s-cmk-msi", var.org_name, module.mod_azregions_lookup.location_short, var.deploy_environment, local.operations_short_name)
+  kv_cmk_sec_user_assigned_identity_name = format("%s-%s-%s-%s-cmk-msi", var.org_name, module.mod_azregions_lookup.location_short, var.deploy_environment, local.security_short_name)
+  kv_cmk_devops_user_assigned_identity_name = format("%s-%s-%s-%s-cmk-msi", var.org_name, module.mod_azregions_lookup.location_short, var.deploy_environment, local.devsecops_short_name)
 
   # Windows VM
   windows_vm_name            = data.azurenoopsutils_resource_name.windows_jmp_name.result

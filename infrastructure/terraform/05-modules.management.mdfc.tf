@@ -13,8 +13,10 @@ AUTHOR/S: jrspinella
 ################################
 
 module "mod_microsoft_defender_for_cloud" {
-  source    = "azurenoops/overlays-defender-for-cloud/azurerm"
-  version   = "1.0.0"
+  source  = "azurenoops/overlays-defender-for-cloud/azurerm"
+  version = "1.0.0"
+
+  depends_on = [module.mod_logging]
 
   count = var.enable_defender_for_cloud ? 1 : 0
 
@@ -27,28 +29,4 @@ module "mod_microsoft_defender_for_cloud" {
   security_center_pricing_resource_types = var.security_center_pricing_resource_types
   security_center_alert_notifications    = var.security_center_alert_notifications
   security_center_alerts_to_admins       = var.security_center_alerts_to_admins
-
-  # Link to the Log Analytics Workspace
-  security_center_workspaces = [
-    {
-      scope_id     = var.subscription_id_hub
-      workspace_id = module.mod_logging.laws_resource_id
-    },
-    var.subscription_id_operations != null ? {
-      scope_id     = var.subscription_id_operations
-      workspace_id = module.mod_logging.laws_resource_id
-    } : null,
-    var.subscription_id_identity != null ? {
-      scope_id     = var.subscription_id_identity
-      workspace_id = module.mod_logging.laws_resource_id
-    } : null,
-    var.subscription_id_security != null ? {
-      scope_id     = var.subscription_id_security
-      workspace_id = module.mod_logging.laws_resource_id
-    } : null,
-    var.subscription_id_devsecops != null ? {
-      scope_id     = var.subscription_id_devsecops
-      workspace_id = module.mod_logging.laws_resource_id
-    } : null,
-  ]
 }

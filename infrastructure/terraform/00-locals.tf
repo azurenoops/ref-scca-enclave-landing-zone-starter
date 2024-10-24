@@ -86,12 +86,19 @@ locals {
       parent_management_group_id = "platforms"
       subscription_ids           = ["${var.subscription_id_hub}"]
     },
-    forensic = {
+    operations = {
+      display_name               = "operations"
+      management_group_name      = "operations"
+      parent_management_group_id = "platforms"
+      subscription_ids           = ["${var.subscription_id_operations}"]
+    },
+    /* UNCOMMENT IF YOU ARE USIMG FORENSICS SUB (US GOVERNMENT) */
+  /*   forensic = {
       display_name               = "forensic"
       management_group_name      = "forensic"
       parent_management_group_id = "platforms"
       subscription_ids           = ["${var.subscription_id_forensic}"]
-    },
+    }, */
      identity = {
       display_name               = "identity"
       management_group_name      = "identity"
