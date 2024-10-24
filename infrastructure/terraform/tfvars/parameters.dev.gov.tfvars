@@ -6,8 +6,8 @@
 ###########################
 
 # The prefixes to use for all resources in this deployment
-org_name           = "an5"    # This Prefix will be used on most deployed resources.  10 Characters max.
-deploy_environment = "dev"    # dev | test | prod
+org_name           = "anoa"          # This Prefix will be used on most deployed resources.  10 Characters max.
+deploy_environment = "dev"          # dev | test | prod
 environment        = "usgovernment" # public | usgovernment
 
 # The default region to deploy to
@@ -317,7 +317,7 @@ ops_subnets = {
     name                                       = "ampls"
     address_prefixes                           = ["10.0.131.64/27"]
     service_endpoints                          = []
-    private_endpoint_network_policies_enabled  = false
+    private_endpoint_network_policies_enabled  = "Disabled"
     private_endpoint_service_endpoints_enabled = true
     nsg_subnet_rules                           = []
   }
