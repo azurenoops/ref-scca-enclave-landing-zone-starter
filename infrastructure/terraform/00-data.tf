@@ -123,6 +123,6 @@ data "azurerm_subnet" "devsecops-default-snet" {
 data "azurerm_storage_account" "devsecops-storage" {
   depends_on          = [module.mod_devsecops_network]
   provider            = azurerm.devsecops
-  name                = module.mod_devsecops_network.storage_account_name
+  name                = module.mod_devsecops_network.spoke_storage_account_name
   resource_group_name = module.mod_devsecops_network.resource_group_name
 }
