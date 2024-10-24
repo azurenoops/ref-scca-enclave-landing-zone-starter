@@ -1,10 +1,13 @@
 terraform {
   # It is recommended to use remote state instead of local
-  backend "local" {}
+  #backend "local" {}
   # If you are using Azure Storage, You can update these values in order to configure your remote state. backend.conf is not required for local backend.
-  #backend "azurerm" {    
-  #  key                  = "anoa"
-  #}
+   backend "azurerm" { 
+    resource_group_name  = "tse-usgva-hub-dev-state-rg"
+    storage_account_name = "tseusgovvahubdevstatest"
+    container_name       = "tsetfstate"   
+    key                  = "tse"
+  }
   # If you are using Terraform Cloud, You can update these values in order to configure your remote state.
   /*  backend "remote" {
     organization = "{{ORGANIZATION_NAME}}"
@@ -14,11 +17,15 @@ terraform {
   }
   */
 
-  required_version = ">= 1.3"
+  required_version = ">= 1.9.2"
   required_providers {
+    azapi = {
+      source  = "azure/azapi"
+      version = "~> 1.13"
+    }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.36"
+      version = ">= 3.7.0, < 5.0"
     }
     azurenoopsutils = {
       source  = "azurenoops/azurenoopsutils"
