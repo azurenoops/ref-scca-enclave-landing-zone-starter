@@ -203,7 +203,7 @@ module "mod_shared_keyvault" {
     create = "60s"
   } : {}
 
-  # This is adding the current user as a Key Vault Roles. If CMK is enabled, the user and the UAI will be added to the Crypto Officer role.
+  # This is adding the current user as a Key Vault Roles.
   role_assignments = {
     deployment_user_kv_admin = {
       role_definition_id_or_name = "Key Vault Administrator"
@@ -292,7 +292,7 @@ resource "azurerm_user_assigned_identity" "devops_user_assigned_identity" {
   name                = local.kv_cmk_devops_user_assigned_identity_name
 }
 
-# Create a Role Assignment for the User Assigned Identity to the Key Vault for Azure Encryption
+# Create a Role Assignment for the User Assigned Identity to the Key Vault for Azure Encryption. If CMK is enabled, the UAI will be added to the Crypto Officer role.
 resource "azurerm_role_assignment" "devsecops_user_assigned_identity_role_assignment" {
   provider             = azurerm.devsecops
   depends_on           = [azurerm_user_assigned_identity.devops_user_assigned_identity]

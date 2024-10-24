@@ -120,7 +120,7 @@ resource "azurerm_user_assigned_identity" "identity_user_assigned_identity" {
   name                = local.kv_cmk_id_user_assigned_identity_name
 }
 
-# Create a Role Assignment for the User Assigned Identity to the Key Vault for Azure Encryption
+# Create a Role Assignment for the User Assigned Identity to the Key Vault for Azure Encryption. If CMK is enabled, the UAI will be added to the Crypto Officer role.
 resource "azurerm_role_assignment" "identity_user_assigned_identity_role_assignment" {
   provider             = azurerm.identity
   depends_on           = [azurerm_user_assigned_identity.identity_user_assigned_identity]
