@@ -65,7 +65,7 @@ The below scenario is how to get started on the Mission Enclave Landing Zone imp
 Manual Deployment Details:
 | Deployment Methodology | Manual Deployment |
 |--------------|--------------|
-|Terraform|[Published](https://azurenoops.github.io/terraform-overlays-baseline/deployment/landing-zone-manual)|
+|Terraform|[Published](https://azurenoops.github.io/terraform-overlays-baseline/deployment/landing-zone/landing-zone-manual/)|
 
 >NOTE: Using manual deployment to deploy the infrastructure using the Terraform CLI. This is a good option if you want to learn how to deploy the infrastructure using Terraform CLI.
 
